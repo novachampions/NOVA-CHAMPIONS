@@ -733,6 +733,7 @@ async function joinLiveRoom(roomId){
   <video id="liveVideo" autoplay playsinline controls style="width:100%;max-height:65vh;object-fit:contain"></video>
 </div>
       <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
+      ${isHost ? "" : "style='display:none'"}
 class="btn primary"
 style="display:block"
 onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)"
