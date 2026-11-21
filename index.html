@@ -918,6 +918,16 @@ async function joinLiveRoom(roomId){
 }
 
 async function leaveLiveRoom(){
+
+  if(liveKitViewerRoom){
+    try{
+      liveKitViewerRoom.disconnect();
+    }catch(e){
+      console.log(e);
+    }
+    liveKitViewerRoom=null;
+  }
+
   if(liveRoomUnsub){
     liveRoomUnsub();
     liveRoomUnsub=null;
@@ -935,9 +945,12 @@ async function leaveLiveRoom(){
   }
 
   liveRoomId=null;
+
+  window.novaLiveServerUrl=null;
+  window.novaLiveToken=null;
+
   go("live");
 }
-
 async function testScreenShare(){
   if(!navigator.mediaDevices?.getDisplayMedia){
     alert("المتصفح لا يدعم مشاركة الشاشة 📵");
