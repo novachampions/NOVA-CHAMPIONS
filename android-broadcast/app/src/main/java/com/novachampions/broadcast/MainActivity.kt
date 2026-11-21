@@ -115,7 +115,28 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+fun stopScreenBroadcast() {
+    lifecycleScope.launch {
+        try {
+            liveKitRoom?.localParticipant?.setScreenShareEnabled(false)
+            liveKitRoom?.disconnect()
+            liveKitRoom = null
 
+            Toast.makeText(
+                this@MainActivity,
+                "تم إيقاف البث",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                this@MainActivity,
+                "تعذر إيقاف البث: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+}
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (webView.canGoBack()) {
