@@ -954,7 +954,30 @@ liveChatUnsub=roomRef.collection("messages")
     alert("تعذر دخول الغرفة: "+(e.message||e));
   }
 }
+async function sendLiveMessage(){
+  if(!liveRoomId)return;
 
+  const input=document.getElementById("liveChatInput");
+  const textValue=input?.value.trim();
+
+  if(!textValue || !currentUser)return;
+
+  try{
+    await cloud.collection("liveRooms")
+      .doc(liveRoomId)
+      .collection("messages")
+      .add({
+        uid:currentUser.uid,
+        name:currentUser.email||"لاعب",
+        text:textValue,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+    input.value="";
+  }catch(e){
+    alert("تعذر إرسال الرسالة: "+(e.message||e));
+  }
+}
 async function leaveLiveRoom(){
 
     if(window.NovaAndroid &&
