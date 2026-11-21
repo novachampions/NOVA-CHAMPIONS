@@ -701,6 +701,18 @@ async function loadPlayerTeams(){
     box.innerHTML='<p class="muted">تعذر تحميل الفرق: '+esc(e.message||e)+'</p>';
   }
 }
+    async function getLiveDisplayName(uid){
+  try{
+    const snap=await cloud.collection("playerProfiles")
+      .doc(uid).get();
+
+    const profile=snap.exists?snap.data():{};
+    return String(profile.name||"لاعب").trim()||"لاعب";
+
+  }catch(e){
+    return "لاعب";
+  }
+    }
   async function createLiveRoom(){
   if(!currentUser)return alert("خاصك تسجل الدخول أولاً");
 
