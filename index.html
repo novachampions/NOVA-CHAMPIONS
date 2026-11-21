@@ -787,10 +787,39 @@ async function joinLiveRoom(roomId){
       return;
     }
 
+    const isHost=currentUser.uid===room.ownerUid;
+
+    // الحصول على بيانات الاتصال بالبث
+    const tokenResponse=await fetch(
+      "https://nova-champions-live.hamza-houssni0.workers.dev/token",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":"Bearer "+await currentUser.getIdToken()
+        },
+        body:JSON.stringify({roomId})
+      }
+    );
+
+    if(!tokenResponse.ok){
+      throw new Error("تعذر الحصول على بيانات البث: "+tokenResponse.status);
+    }
+
+    const liveTokenData=await tokenResponse.json();
+
+    if(!liveTokenData.token||!liveTokenData.serverUrl){
+      throw new Error("بيانات البث غير مكتملة");
+    }
+
+    window.novaLiveServerUrl=liveTokenData.serverUrl;
+    window.novaLiveToken=liveTokenData.token;
+
     await roomRef.collection("participants")
       .doc(currentUser.uid).set({
         uid:currentUser.uid,
         name:currentUser.email||"لاعب",
+        role:isHost?"host":"viewer",
         joinedAt:firebase.firestore.FieldValue.serverTimestamp()
       });
 
@@ -806,21 +835,71 @@ async function joinLiveRoom(roomId){
     el.innerHTML=`
       <div class="form">
         <h2>🔴 ${esc(room.name||"غرفة البث")}</h2>
-        <p class="muted">أنت الآن داخل الغرفة</p>
+
+        <p class="muted">
+          ${isHost?"أنت صاحب الغرفة":"أنت تشاهد البث المباشر"}
+        </p>
+
+        ${isHost?`
+          <button class="btn primary" onclick="startNativeScreenBroadcast()">
+            بدء مشاركة الشاشة 📺
+          </button>
+        `:`
+          <div id="liveVideo"
+            style="width:100%;min-height:220px;background:#000;border-radius:12px;overflow:hidden">
+          </div>
+        `}
 
         <h3>المشاركون</h3>
+
         <div id="liveParticipants">
           جاري تحميل المشاركين...
         </div>
-<button class="btn primary" onclick="testScreenShare()">
-  مشاركة الشاشة 📺
-</button>
+
         <button class="btn" onclick="leaveLiveRoom()">
           مغادرة الغرفة
         </button>
       </div>
     `;
 
+    // اتصال المشاهد بالبث
+    if(!isHost){
+
+      if(typeof LivekitClient==="undefined"){
+        throw new Error("مكتبة LiveKit ما تحملاتش");
+      }
+
+      if(liveKitViewerRoom){
+        liveKitViewerRoom.disconnect();
+        liveKitViewerRoom=null;
+      }
+
+      liveKitViewerRoom=new LivekitClient.Room();
+
+      liveKitViewerRoom.on(
+        LivekitClient.RoomEvent.TrackSubscribed,
+        (track)=>{
+          if(track.kind==="video"){
+            const video=track.attach();
+            video.autoplay=true;
+            video.playsInline=true;
+
+            const videoBox=document.getElementById("liveVideo");
+
+            if(videoBox){
+              videoBox.appendChild(video);
+            }
+          }
+        }
+      );
+
+      await liveKitViewerRoom.connect(
+        liveTokenData.serverUrl,
+        liveTokenData.token
+      );
+    }
+
+    // تحديث المشاركين
     liveRoomUnsub=roomRef.collection("participants")
       .onSnapshot(snap=>{
         const box=document.getElementById("liveParticipants");
