@@ -733,10 +733,9 @@ async function joinLiveRoom(roomId){
   <video id="liveVideo" autoplay playsinline controls style="width:100%;max-height:65vh;object-fit:contain"></video>
 </div>
       <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
-      ${isHost ? "" : "style='display:none'"}
-class="btn primary"
-style="display:block"
-onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)"
+      style="display:${isHost ? "block" : "none"}"
+      class="btn primary"
+      onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)">
 📡 ابدأ بث شاشة الهاتف
 </button><div id="liveParticipants" class="card">جاري التحميل...</div>
       <h3>💬 دردشة مباشرة</h3><div id="liveChatMessages" class="card" style="height:220px;overflow:auto"><p class="muted">جاري تحميل الرسائل...</p></div>
