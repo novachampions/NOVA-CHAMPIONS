@@ -754,6 +754,8 @@ const liveTokenData = await liveTokenResponse.json();
 if (!liveTokenResponse.ok) {
   throw new Error(liveTokenData.error || "تعذر الاتصال بالبث المباشر");
 }
+    window.novaLiveServerUrl = liveTokenData.serverUrl;
+window.novaLiveToken = liveTokenData.token;
     const liveRoom = new LivekitClient.Room();
 
 liveRoom.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
