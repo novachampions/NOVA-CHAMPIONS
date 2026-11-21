@@ -802,7 +802,7 @@ async function joinLiveRoom(roomId){
     }
 
     const isHost=currentUser.uid===room.ownerUid;
-
+const displayName=await getLiveDisplayName(currentUser.uid);
     // الحصول على بيانات الاتصال بالبث
     const tokenResponse=await fetch(
       "https://nova-champions-live.hamza-houssni0.workers.dev/token",
