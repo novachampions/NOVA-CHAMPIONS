@@ -21,6 +21,8 @@ class MainActivity : Activity() {
 
         webView.webViewClient = WebViewClient()
         webView.webChromeClient = WebChromeClient()
+        
+webView.addJavascriptInterface(NovaAndroidBridge(this), "NovaAndroid")
 
         setContentView(webView)
 
