@@ -832,7 +832,7 @@ async function joinLiveRoom(roomId){
     await roomRef.collection("participants")
       .doc(currentUser.uid).set({
         uid:currentUser.uid,
-        name:currentUser.email||"لاعب",
+        name:displayName,
         role:isHost?"host":"viewer",
         joinedAt:firebase.firestore.FieldValue.serverTimestamp()
       });
