@@ -757,6 +757,7 @@ if (!liveTokenResponse.ok) {
 }
     window.novaLiveServerUrl = liveTokenData.serverUrl;
 window.novaLiveToken = liveTokenData.token;
+    if (!isHost) {
     const liveRoom = new LivekitClient.Room();
 
 liveRoom.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
@@ -772,6 +773,7 @@ liveRoom.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track) => {
 });
 
 await liveRoom.connect(liveTokenData.serverUrl, liveTokenData.token);
+    }
     liveRoomUnsub=roomRef.collection("participants").onSnapshot(snap=>{
       const list=document.getElementById("liveParticipants"),count=document.getElementById("liveViewerCount");
       if(count)count.textContent=snap.size;
