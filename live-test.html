@@ -734,7 +734,7 @@ async function joinLiveRoom(roomId){
       <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
 class="btn primary"
 style="display:block"
-onclick="window.NovaAndroid.startScreenBroadcast()">
+onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)"
 📡 ابدأ بث شاشة الهاتف
 </button><div id="liveParticipants" class="card">جاري التحميل...</div>
       <h3>💬 دردشة مباشرة</h3><div id="liveChatMessages" class="card" style="height:220px;overflow:auto"><p class="muted">جاري تحميل الرسائل...</p></div>
