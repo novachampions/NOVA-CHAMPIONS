@@ -720,6 +720,7 @@ async function joinLiveRoom(roomId){
     const guest=await ensureLiveGuest();if(!guest)throw new Error("تعذر إنشاء جلسة مشاهدة.");
     const roomRef=cloud.collection("liveRooms").doc(roomId),roomSnap=await roomRef.get();
     if(!roomSnap.exists||roomSnap.data().active!==true)return alert("الغرفة غير موجودة أو مغلقة.");
+    const isHost = guest.uid === roomSnap.data().ownerUid;
     liveRoomId=roomId;
     const nick=guest.isAnonymous?"مشاهد "+guest.uid.slice(0,5):(guest.email||"لاعب");
     await roomRef.collection("participants").doc(guest.uid).set({uid:guest.uid,name:nick,joinedAt:firebase.firestore.FieldValue.serverTimestamp(),role:"viewer"});
