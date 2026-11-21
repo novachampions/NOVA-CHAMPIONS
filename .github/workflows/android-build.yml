@@ -28,7 +28,7 @@ jobs:
         working-directory: android-broadcast
         run: |
           gradle --version
-          gradle assembleDebug
+          gradle assembleDebug -Pandroid.useAndroidX=true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
