@@ -946,7 +946,29 @@ async function testScreenShare(){
 
   alert("المتصفح يدعم مشاركة الشاشة ✅");
 }
+function startNativeScreenBroadcast(){
 
+  if(!window.NovaAndroid ||
+     typeof window.NovaAndroid.startScreenBroadcast!=="function"){
+
+    alert("خاصية مشاركة الشاشة مازال ما مربوطةش بتطبيق Android");
+    return;
+  }
+
+  if(!window.novaLiveServerUrl || !window.novaLiveToken){
+    alert("بيانات البث مازال ماوجداتش. عاود الدخول للغرفة");
+    return;
+  }
+
+  try{
+    window.NovaAndroid.startScreenBroadcast(
+      window.novaLiveServerUrl,
+      window.novaLiveToken
+    );
+  }catch(e){
+    alert("تعذر تشغيل البث: "+(e.message||e));
+  }
+}
 async function playerSave(){
   const uid=currentUser?.uid;
   if(!uid)return;
