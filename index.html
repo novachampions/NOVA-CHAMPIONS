@@ -857,6 +857,21 @@ async function joinLiveRoom(roomId){
           جاري تحميل المشاركين...
         </div>
 
+<h3>💬 المحادثة</h3>
+
+<div id="liveChatMessages" class="card"
+     style="max-height:260px;overflow-y:auto;min-height:90px">
+  <p class="muted">جاري تحميل الرسائل...</p>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:8px">
+  <input id="liveChatInput" type="text"
+         placeholder="كتب رسالة..." style="flex:1">
+  <button class="btn primary" onclick="sendLiveMessage()">
+    إرسال
+  </button>
+</div>
+
         <button class="btn" onclick="leaveLiveRoom()">
           مغادرة الغرفة
         </button>
