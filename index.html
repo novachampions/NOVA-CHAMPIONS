@@ -766,7 +766,7 @@ async function loadLiveRooms(){
       return `
         <div class="card">
           <h3>${esc(room.name||"غرفة بدون اسم")}</h3>
-          <p class="muted">المنشئ: ${esc(room.ownerEmail||"لاعب")}</p>
+          <p class="muted">المنشئ: ${esc(room.ownerName||"لاعب")}</p>
           <button class="btn primary" onclick="joinLiveRoom('${doc.id}')">
             دخول الغرفة
           </button>
