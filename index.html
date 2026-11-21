@@ -1002,6 +1002,10 @@ async function leaveLiveRoom(){
     liveRoomUnsub();
     liveRoomUnsub=null;
   }
+  if(liveChatUnsub){
+  liveChatUnsub();
+  liveChatUnsub=null;
+  }
 
   if(liveRoomId && currentUser){
     try{
