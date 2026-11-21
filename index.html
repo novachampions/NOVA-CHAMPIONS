@@ -723,11 +723,12 @@ async function loadPlayerTeams(){
 
   try{
     const roomRef=cloud.collection("liveRooms").doc();
+const displayName=await getLiveDisplayName(currentUser.uid);
 
-    await roomRef.set({
-      name,
-      ownerUid:currentUser.uid,
-      ownerEmail:currentUser.email||"",
+await roomRef.set({
+  name,
+  ownerUid:currentUser.uid,
+  ownerName:displayName,
       createdAt:firebase.firestore.FieldValue.serverTimestamp(),
       active:true
     });
