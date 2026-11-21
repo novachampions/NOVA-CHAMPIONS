@@ -1,4 +1,3 @@
-
 package com.novachampions.broadcast
 
 import android.webkit.JavascriptInterface
@@ -9,6 +8,13 @@ class NovaAndroidBridge(private val activity: MainActivity) {
     fun startScreenBroadcast(serverUrl: String, token: String) {
         activity.runOnUiThread {
             activity.startScreenBroadcast(serverUrl, token)
+        }
+    }
+
+    @JavascriptInterface
+    fun stopScreenBroadcast() {
+        activity.runOnUiThread {
+            activity.stopScreenBroadcast()
         }
     }
 }
