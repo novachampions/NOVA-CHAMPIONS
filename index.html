@@ -927,7 +927,29 @@ async function joinLiveRoom(roomId){
             `<div class="card">${esc(doc.data().name||"لاعب")}</div>`
           ).join("");
       });
+if(liveChatUnsub){
+  liveChatUnsub();
+  liveChatUnsub=null;
+}
 
+liveChatUnsub=roomRef.collection("messages")
+  .orderBy("createdAt","asc")
+  .limitToLast(80)
+  .onSnapshot(snap=>{
+    const chat=document.getElementById("liveChatMessages");
+    if(!chat)return;
+
+    chat.innerHTML=snap.docs.map(doc=>{
+      const m=doc.data();
+      return `<div style="padding:8px;border-bottom:1px solid #333">
+        <b style="color:var(--gold)">${esc(m.name||"لاعب")}</b>
+        <div>${esc(m.text||"")}</div>
+      </div>`;
+    }).join("")||'<p class="muted">كن أول واحد يكتب رسالة.</p>';
+
+    chat.scrollTop=chat.scrollHeight;
+  });
+    
   }catch(e){
     alert("تعذر دخول الغرفة: "+(e.message||e));
   }
