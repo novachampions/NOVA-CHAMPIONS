@@ -731,7 +731,12 @@ async function joinLiveRoom(roomId){
 <div id="liveVideoContainer" style="width:100%;background:#000;border-radius:12px;overflow:hidden;min-height:220px;display:flex;align-items:center;justify-content:center">
   <video id="liveVideo" autoplay playsinline controls style="width:100%;max-height:65vh;object-fit:contain"></video>
 </div>
-      <h3>المشاهدون</h3><div id="liveParticipants" class="card">جاري التحميل...</div>
+      <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
+class="btn primary"
+style="display:none"
+onclick="window.NovaAndroid.startScreenBroadcast()">
+📡 ابدأ بث شاشة الهاتف
+</button><div id="liveParticipants" class="card">جاري التحميل...</div>
       <h3>💬 دردشة مباشرة</h3><div id="liveChatMessages" class="card" style="height:220px;overflow:auto"><p class="muted">جاري تحميل الرسائل...</p></div>
       <div class="row"><input id="liveChatInput" maxlength="400" placeholder="اكتب رسالة..." style="margin:0"><button class="btn primary" onclick="sendLiveMessage()">إرسال</button></div>
       <button class="btn" onclick="leaveLiveRoom()" style="margin-top:12px">مغادرة الغرفة</button></div>`;
