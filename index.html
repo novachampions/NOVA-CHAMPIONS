@@ -919,6 +919,15 @@ async function joinLiveRoom(roomId){
 
 async function leaveLiveRoom(){
 
+    if(window.NovaAndroid &&
+     typeof window.NovaAndroid.stopScreenBroadcast==="function"){
+    try{
+      window.NovaAndroid.stopScreenBroadcast();
+    }catch(e){
+      console.log(e);
+    }
+    }
+
   if(liveKitViewerRoom){
     try{
       liveKitViewerRoom.disconnect();
