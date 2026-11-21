@@ -976,20 +976,21 @@ async function sendLiveMessage(){
   if(!textValue || !currentUser)return;
 
   try{
-    await cloud.collection("liveRooms")
-      .doc(liveRoomId)
-      .collection("messages")
-      .add({
-        uid:currentUser.uid,
-        name:currentUser.email||"لاعب",
-        text:textValue,
-        createdAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
+  const displayName=await getLiveDisplayName(currentUser.uid);
 
-    input.value="";
-  }catch(e){
-    alert("تعذر إرسال الرسالة: "+(e.message||e));
-  }
+  await cloud.collection("liveRooms")
+    .doc(liveRoomId)
+    .collection("messages")
+    .add({
+      uid:currentUser.uid,
+      name:displayName,
+      text:textValue,
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+  input.value="";
+}catch(e){
+  alert("تعذر إرسال الرسالة: "+(e.message||e));
 }
 async function leaveLiveRoom(){
 
