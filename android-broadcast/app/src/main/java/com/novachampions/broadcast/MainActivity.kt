@@ -16,6 +16,8 @@ import io.livekit.android.LiveKit
 import io.livekit.android.room.Room
 import io.livekit.android.room.track.screencapture.ScreenCaptureParams
 import kotlinx.coroutines.launch
+import android.net.Uri
+import android.webkit.WebResourceRequest
 
 class MainActivity : ComponentActivity() {
 
