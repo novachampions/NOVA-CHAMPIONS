@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="NOVA CHAMPIONS">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="assets/nova-champions-logo.png">
+<title>NOVA CHAMPIONS OFFICIAL</title>
+<style>
+:root{--bg:#09090b;--panel:#151518;--gold:#d8b45a;--muted:#aaa;--line:#333}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f6f3ea;font-family:Arial,sans-serif}
+header{padding:22px 16px;background:linear-gradient(135deg,#171717,#080808);border-bottom:1px solid #80652d;text-align:center}
+.logo{font-size:12px;letter-spacing:4px;color:var(--gold)}h1{margin:8px 0;color:var(--gold);font-size:25px}header p{margin:0;color:#bbb;font-size:12px}
+nav{display:flex;gap:7px;overflow:auto;padding:10px;background:#101012;position:sticky;top:0;z-index:2}
+button,select,input{font:inherit}nav button,.btn{border:1px solid #6e5728;background:#1a1915;color:var(--gold);border-radius:10px;padding:10px 12px;white-space:nowrap}
+nav button.active,.btn.primary{background:var(--gold);color:#111;border-color:var(--gold);font-weight:bold}
+main{padding:14px;max-width:760px;margin:auto}.hero{border:1px solid #765e2c;border-radius:16px;padding:18px;background:radial-gradient(circle at top,#302719,#151515 65%);text-align:center}
+.hero strong{font-size:19px;color:var(--gold)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px}.stat b{display:block;color:var(--gold);font-size:21px;margin-bottom:4px}
+h2{color:var(--gold);font-size:18px;margin:18px 2px 10px}.muted{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.card h3{margin:0 0 7px;font-size:15px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #292929}.row:last-child{border:0}
+input,select,textarea{width:100%;background:#0d0d0f;color:white;border:1px solid #48413a;border-radius:9px;padding:11px;margin:5px 0 10px}textarea{min-height:76px;resize:vertical}
+label{font-size:13px;color:#ccc}.form{background:var(--panel);padding:14px;border:1px solid var(--line);border-radius:13px;margin:10px 0}
+.small{font-size:11px;color:#aaa}.pill{font-size:11px;color:#111;background:var(--gold);border-radius:20px;padding:4px 8px}
+.standings-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;padding:14px 15px;border:1px solid #5d4b29;border-radius:15px;background:linear-gradient(120deg,#211d14,#151518 68%)}
+.standings-head strong{display:block;color:var(--gold);font-size:16px;margin-bottom:5px}.standings-head .muted{font-size:12px}
+.standings-scroll{overflow-x:auto;border:1px solid #38332a;border-radius:14px;background:linear-gradient(160deg,#171719,#101012);box-shadow:0 8px 24px #0005;overscroll-behavior-x:contain}
+.standings-table{width:100%;min-width:610px;border-collapse:separate;border-spacing:0;font-size:12px;font-variant-numeric:tabular-nums}
+.standings-table th{padding:13px 8px;color:#d8c18b;background:#242016;font-size:11px;white-space:nowrap;border-bottom:1px solid #66532c}
+.standings-table td{padding:12px 8px;text-align:center;border-bottom:1px solid #29292c;color:#e8e5dc;white-space:nowrap}
+.standings-table tbody tr{background:#171719;transition:background .15s}.standings-table tbody tr:nth-child(even){background:#1b1b1e}.standings-table tbody tr:hover{background:#28251e}.standings-table tbody tr:last-child td{border-bottom:0}
+.standings-table .rank-cell{width:48px}.rank-badge{display:inline-flex;width:27px;height:27px;align-items:center;justify-content:center;border-radius:9px;background:#29292d;color:#c8c4ba;font-weight:800}
+.rank-badge.gold{background:linear-gradient(145deg,#f4d77e,#b88b32);color:#211807}.rank-badge.silver{background:linear-gradient(145deg,#e5e7eb,#9299a4);color:#17191d}.rank-badge.bronze{background:linear-gradient(145deg,#d99a67,#87502d);color:#1c1009}
+.standings-table .team-cell{text-align:start;min-width:145px;font-weight:700;color:#fff}.team-mark{display:inline-flex;width:29px;height:29px;margin-inline-end:8px;vertical-align:middle;align-items:center;justify-content:center;border-radius:9px;border:1px solid #65532e;background:#292317;color:var(--gold);font-size:11px;font-weight:800}
+.standings-table .points-cell{color:#f2cf72;font-weight:900;font-size:14px}.standings-table .gd-positive{color:#8ed3a2}.standings-table .gd-negative{color:#ef9999}
+.standings-note{display:flex;gap:14px;flex-wrap:wrap;padding:10px 12px;color:#b9b5aa;font-size:11px}.standings-note span{display:inline-flex;align-items:center;gap:6px}.standings-note i{width:8px;height:8px;border-radius:50%;background:#d8b45a;display:inline-block}.competition-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}.competition-tab{border:1px solid #51452e;background:#19191c;color:#d7d2c5;border-radius:12px;padding:12px 8px;font-weight:800;cursor:pointer}.competition-tab.active{background:linear-gradient(135deg,#5b4824,#2b2418);border-color:#d4ad54;color:#ffe09a;box-shadow:0 5px 16px #0005}.competition-subhead{margin:14px 0 8px;color:var(--gold);font-weight:800}.stage-card{border:1px solid #39342b;background:#171719;border-radius:13px;padding:12px;margin:9px 0}.stage-match{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 2px;border-bottom:1px solid #2b2b2e}.stage-match:last-child{border-bottom:0}.stage-score{color:var(--gold);font-weight:900;white-space:nowrap}.cup-bracket{display:flex;gap:12px;overflow-x:auto;padding:8px 2px 14px;align-items:stretch}.cup-round{flex:0 0 min(250px,78vw);min-width:min(250px,78vw);border:1px solid #4a3d25;border-radius:13px;background:#121214;padding:10px}.cup-round-title{color:var(--gold);font-weight:900;text-align:center;margin:2px 0 10px}.cup-tie{border:1px solid #39342b;border-radius:10px;background:#1a1a1d;padding:9px;margin:10px 0}.cup-side{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 2px;font-size:13px}.cup-side+ .cup-side{border-top:1px solid #303034}.cup-side.winner{color:#f3d47e;font-weight:900}.cup-side small{color:#aaa;font-weight:700}.cup-aggregate{font-size:11px;color:#aaa;text-align:center;padding-top:6px}.cup-bye{border:1px dashed #6b572e;border-radius:9px;padding:8px;margin:8px 0;color:#d8c18b;font-size:12px}@media(max-width:420px){.competition-tab{font-size:12px;padding:10px 3px}}
+@media(max-width:520px){.standings-head{padding:12px}.standings-table{min-width:590px}.standings-table th,.standings-table td{padding:10px 7px}}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.danger{border-color:#8b3939;color:#ff9999;background:#241313}
+footer{text-align:center;color:#777;padding:25px;font-size:11px}
+.hidden{display:none!important}.round-tabs{display:flex;gap:7px;overflow-x:auto;padding:6px 0;margin:8px 0}.round-tabs button{min-width:76px}.match-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}.match-score{color:var(--gold);font-weight:bold;font-size:18px;white-space:nowrap}.leg-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.leg-tabs button.active{background:var(--gold);color:#111;font-weight:bold}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.admin-tile{background:linear-gradient(145deg,#211d14,#151518);border:1px solid #70592c;border-radius:13px;padding:13px}.admin-tile b{display:block;color:var(--gold);font-size:23px;margin-top:5px}.admin-section{margin:14px 0}.admin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.btn.sm{padding:7px 9px;font-size:12px}.admin-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.admin-note{border-inline-start:3px solid var(--gold);padding:8px 10px;background:#17150f;border-radius:7px;color:#ddd;font-size:12px;margin:10px 0}@media(min-width:600px){main{max-width:900px}.admin-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* NOVA CHAMPIONS official newspaper */
+.news-masthead{background:#f4f0e6;color:#171717;border:1px solid #c7b98f;padding:15px 14px;margin:10px 0 16px;box-shadow:0 5px 18px #0005;text-align:center}
+.news-kicker{font-size:10px;letter-spacing:3px;color:#78602e;font-weight:900}.news-masthead h2{font-family:Georgia,serif;color:#151515;font-size:clamp(27px,7vw,42px);letter-spacing:1px;margin:7px 0 2px}.news-masthead p{color:#5e584b;margin:4px 0;font-size:11px}.news-rule{height:3px;background:#171717;margin:10px 0 3px;border-top:1px solid #171717;border-bottom:1px solid #171717}
+.news-lead{background:#f4f0e6;color:#181818;border-radius:3px;overflow:hidden;border:1px solid #c6b98e;margin:12px 0 16px}.news-lead img{width:100%;height:230px;object-fit:cover;display:block}.news-lead-copy{padding:14px}.news-category{display:inline-block;background:#b08b3d;color:#111;padding:4px 8px;font-size:10px;font-weight:900;letter-spacing:.5px}.news-lead h3{font-family:Georgia,serif;font-size:23px;line-height:1.35;margin:9px 0;color:#171717}.news-meta{font-size:11px;color:#746b59;border-bottom:1px solid #d6cdb8;padding-bottom:8px}.news-excerpt{font-size:13px;line-height:1.8;color:#37332b}.news-read{background:#171717;color:#f4e5b9;border:0;padding:9px 13px;border-radius:2px;font-weight:bold}
+.news-section-title{display:flex;align-items:center;gap:10px;color:#e4c777;font-weight:900;margin:18px 0 10px}.news-section-title:after{content:'';height:1px;background:#64502a;flex:1}.news-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.news-card{background:#f4f0e6;color:#171717;border:1px solid #c6b98e;overflow:hidden;border-radius:3px}.news-card img{width:100%;height:125px;object-fit:cover;display:block}.news-card-copy{padding:10px}.news-card h3{font-family:Georgia,serif;font-size:15px;line-height:1.4;margin:7px 0;color:#171717}.news-card .news-meta{font-size:10px}.news-card p{font-size:11px;line-height:1.6;color:#514a3c}.news-article{background:#f4f0e6;color:#1b1b1b;padding:15px;border:1px solid #c6b98e;border-radius:3px}.news-article h1{font-family:Georgia,serif;color:#171717;font-size:25px;line-height:1.4}.news-article img{width:100%;max-height:360px;object-fit:cover;margin:12px 0}.news-article-body{white-space:pre-wrap;font-size:15px;line-height:2;color:#29251e}.news-admin-item{display:flex;gap:10px;align-items:center}.news-admin-item img{width:74px;height:60px;object-fit:cover;border-radius:5px}.news-upload-note{font-size:11px;color:#b9ae94;margin-top:-5px}@media(min-width:620px){.news-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.news-lead{display:grid;grid-template-columns:1.1fr 1fr;direction:ltr}.news-lead-copy{direction:rtl}.news-lead img{height:100%;min-height:270px}.news-card img{height:150px}}
+
+#nova-splash-screen{position:fixed;inset:0;z-index:99999;background:#05070c url('assets/nova-splash.png') center center/cover no-repeat;display:flex;align-items:flex-end;justify-content:center;padding:28px 18px;opacity:1;visibility:visible;transition:opacity .55s ease,visibility .55s ease}
+#nova-splash-screen:after{content:'BY HOUSSNI';font-weight:900;letter-spacing:4px;color:#f1d17b;text-shadow:0 2px 14px #000; padding:8px 16px;border:1px solid #d8b45a;border-radius:30px;background:#08090dcc;margin-bottom:12px}
+#nova-splash-screen.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+@media(prefers-reduced-motion:reduce){#nova-splash-screen{transition:none}}
+.team-link{background:transparent;border:0;color:var(--gold);font-weight:bold;padding:3px;white-space:normal;text-decoration:underline;cursor:pointer}
+</style></head>
+<body>
+<div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
+<header><img src="assets/nova-champions-logo.png" alt="NOVA CHAMPIONS logo" style="display:block;width:min(190px,55vw);height:auto;max-height:190px;object-fit:contain;margin:0 auto 10px;border-radius:14px"><div class="logo">THE HOME OF CHAMPIONS</div><h1>NOVA CHAMPIONS</h1><p>OFFICIAL • FOOTBALL TOURNAMENTS</p></header>
+<nav id="nav"></nav><main id="app"></main><footer>NOVA CHAMPIONS OFFICIAL • Cloud Edition</footer>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+  <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBYaSpBtPKicbOMHiwarSvyAY5CDZfj5Nc",
+  authDomain: "nova-champions.firebaseapp.com",
+  databaseURL: "https://nova-champions-default-rtdb.firebaseio.com",
+  projectId: "nova-champions",
+  storageBucket: "nova-champions.firebasestorage.app",
+  messagingSenderId: "828515640270",
+  appId: "1:828515640270:web:08070587749b019a0c419f",
+  measurementId: "G-0BT5EFXPP2"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const cloud = firebase.firestore();
+let cloudReady = false;
+let syncError = "";
+let adminCheck = {state:"not_checked", uid:"", path:"admins/—", exists:null, role:"—", error:""};
+let unsubLeagues = null, unsubMatches = null, unsubTeams = null, unsubArticles = null, unsubPredictions = null, legacyMigrationRunning = false;
+let articles=[], predictions=[], articleEditingId="", openedArticleId="";
+const cloudinaryConfig={cloudName:"qkkji4xm",uploadPreset:"nova_news"};
+const words={
+ar:{news:"الجريدة",predictions:"Pronostics",home:"الرئيسية",live:"البث المباشر",leagues:"البطولات",matches:"المباريات",table:"الترتيب",admin:"الإدارة",welcome:"مرحباً بك في عالم الأبطال",subtitle:"تابع البطولات والنتائج والترتيب في مكان واحد",competitions:"البطولات",teams:"الفرق",played:"المباريات",latest:"آخر النتائج",noMatches:"لا توجد مباريات بعد",noLeagues:"لا توجد بطولات بعد",createLeague:"إنشاء بطولة",competitionType:"نظام البطولة",leagueMode:"دوري",cupMode:"كأس",championsMode:"Champions League",directQualifiers:"المتأهلون مباشرة",playoffTeams:"فرق الملحق",playoffFormat:"نظام الملحق",knockoutFormat:"نظام الإقصائيات",leaguePhase:"مرحلة الدوري",playoffStage:"الملحق",knockoutStage:"الأدوار الإقصائية",nextChampionsStage:"إنشاء المرحلة التالية",championsNeedTeams:"خاص Champions League على الأقل 9 فرق باش كل فريق يلعب 8 مباريات ضد منافسين مختلفين.",cupFormat:"طريقة الكأس",singleMatch:"مباراة واحدة",homeAway:"ذهاب وإياب",nextCupRound:"إنشاء الجولة التالية",cupWinner:"المتأهل",cupNoStandings:"هاد البطولة بنظام الكأس والإقصاء، ما فيهاش ترتيب بالنقاط.",leagueName:"اسم البطولة",season:"الموسم",add:"إضافة",teamName:"اسم الفريق",addTeam:"إضافة فريق",match:"مباراة جديدة",homeTeam:"الفريق الأول",awayTeam:"الفريق الثاني",score1:"أهداف الأول",score2:"أهداف الثاني",save:"حفظ النتيجة",login:"دخول المدير",username:"البريد الإلكتروني",password:"كلمة السر",logout:"خروج",dashboard:"لوحة التحكم",totalLeagues:"عدد البطولات",totalTeams:"عدد الفرق",totalMatches:"عدد المباريات",manageLeagues:"إدارة البطولات",manageTeams:"إدارة الفرق",manageMatches:"إدارة المباريات",editTeam:"تعديل الفريق",deleteTeam:"حذف الفريق",edit:"تعديل",delete:"حذف",editLeague:"تعديل البطولة",deleteLeague:"حذف البطولة",editMatch:"تعديل النتيجة",comments:"تعليقات المباراة",saveMatch:"حفظ المباراة",deleteMatch:"حذف المباراة",confirmDelete:"واش متأكد من الحذف؟",noAdminLeagues:"ما كايناش بطولات حالياً",noAdminMatches:"ما كايناش مباريات حالياً",openLeagues:"فتح البطولات",openMatches:"فتح المباريات",adminHint:"سجّل الدخول بالبريد الإلكتروني وكلمة السر المسجلين في Firebase",chooseLeague:"اختر البطولة",chooseRound:"اختر الجولة للعمل عليها",standings:"جدول الترتيب",pts:"نقاط",p:"لعب",w:"فاز",d:"تعادل",l:"خسر",gf:"له",ga:"عليه",gd:"الفارق",language:"اللغة",empty:"لا توجد بيانات حالياً",saved:"تم الحفظ",badLogin:"معلومات الدخول غير صحيحة",setPassword:"كلمة سر حساب Firebase",change:"تغيير",demo:"البيانات متزامنة عبر Firebase.",draw:"إجراء القرعة العشوائية وإنشاء الجولات",firstLeg:"الذهاب",secondLeg:"الإياب",round:"الجولة",noSchedule:"لم يتم إنشاء برنامج المباريات بعد",generate:"إنشاء القرعة والجولات",scheduleExists:"تم إنشاء برنامج هذه البطولة من قبل.",needTeams:"أضف فريقين على الأقل قبل إجراء القرعة.",scheduleConfirm:"سيتم إجراء القرعة وإنشاء مباريات البطولة. هل تريد المتابعة؟",scheduled:"برنامج البطولة",noRoundMatches:"لا توجد مباريات في هذه الجولة."},
+fr:{news:"Journal",predictions:"Pronostics",home:"Accueil",live:"Direct",leagues:"Championnats",matches:"Matchs",table:"Classement",admin:"Admin",welcome:"Bienvenue chez les champions",subtitle:"Suivez les compétitions, résultats et classements",competitions:"Compétitions",teams:"Équipes",played:"Matchs",latest:"Derniers résultats",noMatches:"Aucun match",noLeagues:"Aucun championnat",createLeague:"Créer un championnat",competitionType:"Format",leagueMode:"Ligue",cupMode:"Coupe",championsMode:"Champions League",directQualifiers:"Qualifiés directs",playoffTeams:"Équipes en barrage",playoffFormat:"Format du barrage",knockoutFormat:"Format des éliminatoires",leaguePhase:"Phase de ligue",playoffStage:"Barrages",knockoutStage:"Élimination directe",nextChampionsStage:"Créer la phase suivante",championsNeedTeams:"La Champions League nécessite au moins 9 équipes pour jouer 8 matchs contre 8 adversaires différents.",cupFormat:"Format de la coupe",singleMatch:"Match unique",homeAway:"Aller-retour",nextCupRound:"Créer le tour suivant",cupWinner:"Qualifié",cupNoStandings:"Cette compétition est une coupe à élimination directe, sans classement par points.",leagueName:"Nom du championnat",season:"Saison",add:"Ajouter",teamName:"Nom de l'équipe",addTeam:"Ajouter équipe",match:"Nouveau match",homeTeam:"Équipe 1",awayTeam:"Équipe 2",score1:"Buts équipe 1",score2:"Buts équipe 2",save:"Enregistrer",login:"Connexion admin",username:"E-mail",password:"Mot de passe",logout:"Déconnexion",dashboard:"Tableau de bord",totalLeagues:"Championnats",totalTeams:"Équipes",totalMatches:"Matchs",manageLeagues:"Gestion des championnats",manageTeams:"Gestion des équipes",manageMatches:"Gestion des matchs",editTeam:"Modifier équipe",deleteTeam:"Supprimer équipe",edit:"Modifier",delete:"Supprimer",editLeague:"Modifier le championnat",deleteLeague:"Supprimer le championnat",editMatch:"Modifier le score",comments:"Commentaires du match",saveMatch:"Enregistrer le match",deleteMatch:"Supprimer le match",confirmDelete:"Confirmer la suppression ?",noAdminLeagues:"Aucun championnat",noAdminMatches:"Aucun match",openLeagues:"Voir les championnats",openMatches:"Voir les matchs",adminHint:"Connectez-vous avec votre compte Firebase administrateur",chooseLeague:"Choisir championnat",chooseRound:"Choisir la journée à gérer",standings:"Classement",pts:"Pts",p:"J",w:"G",d:"N",l:"P",gf:"BP",ga:"BC",gd:"Diff",language:"Langue",empty:"Aucune donnée",saved:"Enregistré",badLogin:"Identifiants incorrects",setPassword:"Mot de passe Firebase",change:"Changer",demo:"Données synchronisées via Firebase.",draw:"Tirage aléatoire et création des journées",firstLeg:"Aller",secondLeg:"Retour",round:"Journée",noSchedule:"Aucun calendrier créé",generate:"Créer le tirage et le calendrier",scheduleExists:"Le calendrier de ce championnat existe déjà.",needTeams:"Ajoutez au moins deux équipes.",scheduleConfirm:"Effectuer le tirage et créer les matchs maintenant ?",scheduled:"Calendrier",noRoundMatches:"Aucun match pour cette journée."},
+en:{news:"News",predictions:"Predictions",home:"Home",live:"Live",leagues:"Leagues",matches:"Matches",table:"Standings",admin:"Admin",welcome:"Welcome to the home of champions",subtitle:"Follow competitions, results and standings",competitions:"Competitions",teams:"Teams",played:"Matches",latest:"Latest results",noMatches:"No matches yet",noLeagues:"No leagues yet",createLeague:"Create competition",competitionType:"Competition format",leagueMode:"League",cupMode:"Cup",championsMode:"Champions League",directQualifiers:"Direct qualifiers",playoffTeams:"Playoff teams",playoffFormat:"Playoff format",knockoutFormat:"Knockout format",leaguePhase:"League phase",playoffStage:"Playoffs",knockoutStage:"Knockout rounds",nextChampionsStage:"Create next stage",championsNeedTeams:"Champions League needs at least 9 teams so each team can play 8 different opponents.",cupFormat:"Cup format",singleMatch:"Single match",homeAway:"Home and away",nextCupRound:"Create next round",cupWinner:"Qualified",cupNoStandings:"This is a knockout cup, so there is no points table.",leagueName:"League name",season:"Season",add:"Add",teamName:"Team name",addTeam:"Add team",match:"New match",homeTeam:"Home team",awayTeam:"Away team",score1:"Home goals",score2:"Away goals",save:"Save result",login:"Admin login",username:"Email address",password:"Password",logout:"Logout",dashboard:"Admin dashboard",totalLeagues:"Leagues",totalTeams:"Teams",totalMatches:"Matches",manageLeagues:"Manage leagues",manageTeams:"Manage teams",manageMatches:"Manage matches",editTeam:"Edit team",deleteTeam:"Delete team",edit:"Edit",delete:"Delete",editLeague:"Edit league",deleteLeague:"Delete league",editMatch:"Edit score",comments:"Match comments",saveMatch:"Save match",deleteMatch:"Delete match",confirmDelete:"Are you sure you want to delete this?",noAdminLeagues:"No leagues yet",noAdminMatches:"No matches yet",openLeagues:"Open leagues",openMatches:"Open matches",adminHint:"Sign in with the administrator email and password registered in Firebase",chooseLeague:"Choose league",chooseRound:"Choose the round to manage",standings:"Standings",pts:"Pts",p:"P",w:"W",d:"D",l:"L",gf:"GF",ga:"GA",gd:"GD",language:"Language",empty:"No data yet",saved:"Saved",badLogin:"Incorrect login details",setPassword:"Firebase account password",change:"Change",demo:"Data is synchronized through Firebase.",draw:"Random draw and fixture generation",firstLeg:"First leg",secondLeg:"Second leg",round:"Round",noSchedule:"No fixture schedule has been created",generate:"Generate draw and fixtures",scheduleExists:"This league already has a fixture schedule.",needTeams:"Add at least two teams first.",scheduleConfirm:"Draw teams and generate the competition matches now?",scheduled:"League fixtures",noRoundMatches:"No matches in this round."}
+};
+let lang=localStorage.novaLang||"ar", page="home", db={leagues:[],matches:[],teams:[]}, isAdmin=false, currentUser=null;
+let selectedRound=1, selectedLeg="home";
+const t=k=>words[lang][k]||k, dir=()=>lang==="ar"?"rtl":"ltr";
+async function persist(){
+  localStorage.novaDB=JSON.stringify(db);
+  if(!isAdmin) return;
+  try {
+    const batch=cloud.batch();
+    db.leagues.forEach(l=>{const id=String(l.id);batch.set(cloud.collection("leagues").doc(id),{...l,id:l.id,teams:l.teams||[]});});
+    db.matches.forEach(m=>{const id=String(m.id || (m.id="M"+Date.now()+Math.random().toString(16).slice(2)));batch.set(cloud.collection("matches").doc(id),m);});
+    (db.teams||[]).forEach(team=>{const id=String(team.id);batch.set(cloud.collection("teams").doc(id),team);});
+    await batch.commit(); syncError="";
+  } catch(e){syncError=e.message||"Firestore write failed";alert("Firebase: "+syncError);}
+}
+function startCloudSync(){
+  if(unsubLeagues) unsubLeagues(); if(unsubMatches) unsubMatches(); if(unsubTeams) unsubTeams(); if(unsubArticles) unsubArticles(); if(unsubPredictions) unsubPredictions();
+  unsubLeagues=cloud.collection("leagues").onSnapshot(snap=>{db.leagues=snap.docs.map(d=>d.data());cloudReady=true;localStorage.novaDB=JSON.stringify(db);migrateLegacyTeams();render();},e=>{syncError=e.message;render();});
+  unsubMatches=cloud.collection("matches").onSnapshot(snap=>{db.matches=snap.docs.map(d=>d.data());cloudReady=true;localStorage.novaDB=JSON.stringify(db);render();},e=>{syncError=e.message;render();});
+  unsubTeams=cloud.collection("teams").onSnapshot(snap=>{db.teams=snap.docs.map(d=>({...d.data(),id:d.data().id||d.id})).filter(x=>x.name);cloudReady=true;localStorage.novaDB=JSON.stringify(db);migrateLegacyTeams();render();},e=>{syncError=e.message;render();});
+  unsubArticles=cloud.collection("articles").onSnapshot(snap=>{articles=snap.docs.map(d=>({...d.data(),id:d.id})).sort((a,b)=>(b.publishedAt||0)-(a.publishedAt||0));render();},e=>{syncError=e.message;render();});
+  unsubPredictions=cloud.collection("predictions").onSnapshot(snap=>{predictions=snap.docs.map(d=>({...d.data(),id:d.id}));render();},e=>{syncError=e.message;render();});
+}
+auth.onAuthStateChanged(async user=>{
+  currentUser=user; isAdmin=false;
+  if(user){
+    adminCheck={state:"checking",uid:user.uid,path:"admins/"+user.uid,exists:null,role:"—",error:""};
+    render();
+    try {
+      // Force a server read so an old local cache cannot mislead the admin check.
+      const adminDoc=await cloud.collection("admins").doc(user.uid).get({source:"server"});
+      const data=adminDoc.exists ? adminDoc.data() : null;
+      adminCheck={state:adminDoc.exists && data && data.role==="admin" ? "authorized":"not_authorized",uid:user.uid,path:"admins/"+user.uid,exists:adminDoc.exists,role:data && data.role!==undefined ? String(data.role):"(missing)",error:""};
+      isAdmin=adminCheck.state==="authorized";
+      if(isAdmin)migrateLegacyTeams();
+      // Keep the session active when the document is missing, so diagnostics remain visible.
+    } catch(e) {
+      adminCheck={state:"read_error",uid:user.uid,path:"admins/"+user.uid,exists:null,role:"—",error:(e.code?e.code+" — ":"")+e.message};
+      isAdmin=false;
+    }
+  } else {
+    adminCheck={state:"signed_out",uid:"",path:"admins/—",exists:null,role:"—",error:""};
+  }
+  render();
+});
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function current(){return db.leagues.find(x=>x.id===selected)||db.leagues[0]}
+let selected=null;
+    let liveRoomId = null;
+let livePeers = {};
+let liveSignalUnsubs = [];
+let liveRoomUnsub = null;
+let liveScreenStream = null;
+let liveLocalStream = null;
+let selectedTeamProfile="";
+let tableMode="league";
+let adminMatchLeague="";
+let adminMatchRound="";
+let adminMatchLeg="home";
+function nav(){document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
+function go(p){page=p;render()}function setLang(v){lang=v;localStorage.novaLang=v;render()}
+function teamStats(name){const out={fans:0,p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0};const master=(db.teams||[]).find(x=>x.name===name);out.fans=Number(master?.fans||0);const counted=db.matches.filter(m=>(m.h===name||m.a===name)&&m.hs!==null&&m.as!==null&&Number.isFinite(Number(m.hs))&&Number.isFinite(Number(m.as)));const cupGroups=new Map();counted.filter(m=>m.cup||String(m.id).startsWith("CUP_")).forEach(m=>{const l=db.leagues.find(x=>String(x.id)===String(m.league));const key=[String(m.league),Number(m.round)||1,...[String(m.h||""),String(m.a||"")].sort(),l?.cupFormat==="homeAway"?(m.leg||"home"):"single"].join("|");if(!cupGroups.has(key))cupGroups.set(key,m);});const nonCup=counted.filter(m=>!(m.cup||String(m.id).startsWith("CUP_")));[...nonCup,...cupGroups.values()].forEach(m=>{const home=m.h===name,forUs=Number(home?m.hs:m.as),against=Number(home?m.as:m.hs);out.p++;out.gf+=forUs;out.ga+=against;if(forUs>against){out.w++;out.pts+=3}else if(forUs<against){out.l++}else{out.d++;out.pts++;}});out.gd=out.gf-out.ga;return out;}
+function registryTeamId(name){return "TEAM_"+encodeURIComponent(name).slice(0,700);}
+function migrateLegacyTeams(){if(!isAdmin||legacyMigrationRunning||!db.leagues.length)return;legacyMigrationRunning=true;(async()=>{try{const names=[...new Set(db.leagues.flatMap(l=>l.teams||[]).filter(Boolean))];for(const name of names){const id=registryTeamId(name);if((db.teams||[]).some(x=>x.name===name))continue;const ref=cloud.collection("teams").doc(id),snap=await ref.get();if(!snap.exists){const team={id,name,fans:0};await ref.set(team);db.teams.push(team);}}localStorage.novaDB=JSON.stringify(db);}catch(e){syncError=e.message||String(e);}finally{legacyMigrationRunning=false;render();}})()}
+
+async function loadAdminPlayerTeams(){
+  if(!isAdmin)return;
+
+  const box=document.getElementById("playerTeamsAdminList");
+  if(!box)return;
+
+  box.innerHTML='<p class="muted">جاري تحميل فرق اللاعبين...</p>';
+
+  try{
+    const [teamsSnap,profilesSnap,bannedSnap]=await Promise.all([
+      cloud.collection("playerTeams").get(),
+      cloud.collection("playerProfiles").get(),
+      cloud.collection("bannedUsers").get()
+    ]);
+
+    const profiles={};
+    profilesSnap.docs.forEach(d=>profiles[d.id]=d.data());
+
+    const banned={};
+    bannedSnap.docs.forEach(d=>banned[d.id]=true);
+
+    if(!teamsSnap.size){
+      box.innerHTML='<p class="muted">لا توجد فرق لاعبين حالياً</p>';
+      return;
+    }
+
+    box.innerHTML=teamsSnap.docs.map(doc=>{
+      const team=doc.data();
+      const uid=doc.id;
+      const owner=profiles[team.ownerUid]||{};
+      const st=teamStats(team.name);
+      const isBlocked=!!banned[uid];
+
+      return `<div class="card">
+        <h3>${esc(team.name||"")}</h3>
+        <p>صاحب الفريق: ${esc(owner.name||"غير معروف")}</p>
+        <p>الهاتف: ${esc(owner.phone||"—")}</p>
+        <p>التقييم: ${Number(team.overall)||0} | التشكيلة: ${esc(team.formation||"—")}</p>
+        <p>${isBlocked?"🔴 الحساب محظور":"🟢 الحساب نشيط"}</p>
+        <div class="stats">
+          <div class="stat"><b>${st.p}</b>مباريات</div>
+          <div class="stat"><b>${st.w}</b>انتصارات</div>
+          <div class="stat"><b>${st.d}</b>تعادلات</div>
+          <div class="stat"><b>${st.l}</b>هزائم</div>
+          <div class="stat"><b>${st.gf}:${st.ga}</b>الأهداف</div>
+          <div class="stat"><b>${st.pts}</b>النقاط</div>
+        </div>
+        <button class="btn ${isBlocked?"primary":"danger"}"
+          onclick="togglePlayerBan('${uid}',${isBlocked})">
+          ${isBlocked?"رفع الحظر":"حظر اللاعب"}
+        </button>
+      </div>`;
+    }).join("");
+
+  }catch(e){
+    box.innerHTML='<p class="muted">خطأ: '+esc(e.message||e)+'</p>';
+  }
+}
+
+async function togglePlayerBan(uid,isBlocked){
+  if(!isAdmin || !uid)return;
+
+  const action=isBlocked?"رفع الحظر عن اللاعب":"حظر اللاعب";
+
+  if(!confirm("واش متأكد من "+action+"؟"))return;
+
+  try{
+    const ref=cloud.collection("bannedUsers").doc(uid);
+
+    if(isBlocked){
+      await ref.delete();
+      alert("تم رفع الحظر بنجاح");
+    }else{
+      await ref.set({
+        uid:uid,
+        bannedAt:Date.now()
+      });
+      alert("تم حظر اللاعب بنجاح");
+    }
+
+    await loadAdminPlayerTeams();
+
+  }catch(e){
+    alert("تعذر تنفيذ العملية: "+(e.message||e));
+  }
+}
+  
+function adminTeamsManager(){const teams=db.teams||[];return `<section class="admin-section"><h2>${t("manageTeams")}</h2><div class="form"><label>${t("teamName")}</label><input id="registryTeamName" placeholder="${t("teamName")}"><label>عدد الأنصار / Fans</label><input id="registryTeamFans" type="number" min="0" step="1" value="0"><label>رقم WhatsApp (مع مفتاح الدولة)</label><input id="registryTeamWhatsapp" type="tel" placeholder="+2126XXXXXXXX"><label>لائحة اللاعبين (كل لاعب فسطر)</label><textarea id="registryTeamPlayers" placeholder="اسم اللاعب الأول&#10;اسم اللاعب الثاني"></textarea><label>صورة حساب الفريق</label><input id="registryTeamImage" type="file" accept="image/*"><button class="btn primary" onclick="createRegistryTeam()">${t("addTeam")}</button></div>${teams.length?teams.map(team=>{const st=teamStats(team.name);return `<div class="card"><div class="row"><div style="display:flex;align-items:center;gap:10px">${team.imageUrl?`<img src="${esc(team.imageUrl)}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:50%">`:`<span class="team-mark">${esc(team.name.slice(0,2).toUpperCase())}</span>`}<b>${esc(team.name)}</b></div><span class="pill">${st.fans} Fans</span></div><div class="stats"><div class="stat"><b>${st.p}</b>${t("played")}</div><div class="stat"><b>${st.w}-${st.d}-${st.l}</b>W-D-L</div><div class="stat"><b>${st.gf}:${st.ga}</b>GF / GA</div><div class="stat"><b>${st.gd}</b>GD</div><div class="stat"><b>${st.pts}</b>${t("pts")}</div><div class="stat"><b>${st.fans}</b>Fans</div></div><div class="admin-actions"><button class="btn sm" onclick="editRegistryTeam('${encodeURIComponent(team.id)}')">${t("edit")}</button><label class="btn sm" style="display:inline-block">تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="updateTeamLogo('${encodeURIComponent(team.id)}',this)"></label><button class="btn danger sm" onclick="deleteRegistryTeam('${encodeURIComponent(team.id)}')">${t("delete")}</button></div></div>`}).join(""):`<p class="muted">${t("empty")}</p>`}</section>`}async function uploadTeamImage(file){if(!file)return "";if(!file.type.startsWith("image/"))throw new Error("اختار صورة صالحة");if(file.size>5*1024*1024)throw new Error("حجم الصورة خاصو يكون أقل من 5MB");const data=new FormData();data.append("file",file);data.append("upload_preset","nova_teams");data.append("folder","nova-teams");const res=await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,{method:"POST",body:data});const json=await res.json();if(!res.ok||!json.secure_url)throw new Error(json.error?.message||"فشل رفع الصورة");return json.secure_url}
+async function createRegistryTeam(){if(!isAdmin)return;const name=document.getElementById("registryTeamName")?.value.trim(),fans=Number(document.getElementById("registryTeamFans")?.value||0),whatsapp=(document.getElementById("registryTeamWhatsapp")?.value||"").trim(),players=(document.getElementById("registryTeamPlayers")?.value||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean),file=document.getElementById("registryTeamImage")?.files?.[0];if(!name)return;if((db.teams||[]).some(x=>x.name.toLowerCase()===name.toLowerCase()))return alert("الفريق مسجل من قبل");if(whatsapp&&!/^\+?[0-9]{8,15}$/.test(whatsapp.replace(/[\s()-]/g,"")))return alert("رقم WhatsApp غير صحيح، استعمل مفتاح الدولة");try{const imageUrl=await uploadTeamImage(file);const team={id:registryTeamId(name),name,fans:Number.isFinite(fans)&&fans>=0?fans:0,whatsapp,players,imageUrl};await cloud.collection("teams").doc(team.id).set(team);db.teams.push(team);localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("تعذر تسجيل الفريق: "+(e.message||e))}}
+async function editRegistryTeam(encodedId){if(!isAdmin)return;const id=decodeURIComponent(encodedId),team=(db.teams||[]).find(x=>x.id===id);if(!team)return;const name=prompt(t("editTeam"),team.name);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean!==team.name&&(db.teams||[]).some(x=>x.name.toLowerCase()===clean.toLowerCase()))return alert("الفريق موجود مسبقاً");const fansText=prompt("عدد الأنصار / Fans",String(team.fans||0));if(fansText===null)return;const fans=Number(fansText);if(!Number.isInteger(fans)||fans<0)return alert("عدد الأنصار غير صحيح");const phone=prompt("رقم WhatsApp مع مفتاح الدولة",team.whatsapp||"");if(phone===null)return;const whatsapp=phone.trim();if(whatsapp&&!/^\+?[0-9]{8,15}$/.test(whatsapp.replace(/[\s()-]/g,"")))return alert("رقم WhatsApp غير صحيح");const playersText=prompt("لائحة اللاعبين، كل لاعب فسطر",(team.players||[]).join("\n"));if(playersText===null)return;const old=team.name;team.name=clean;team.fans=fans;team.whatsapp=whatsapp;team.players=playersText.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(old!==clean){db.leagues.forEach(l=>{l.teams=(l.teams||[]).map(n=>n===old?clean:n)});db.matches.forEach(m=>{if(m.h===old)m.h=clean;if(m.a===old)m.a=clean});}try{const batch=cloud.batch();batch.set(cloud.collection("teams").doc(id),team);if(old!==clean){db.leagues.forEach(l=>batch.set(cloud.collection("leagues").doc(String(l.id)),{...l}));db.matches.forEach(m=>batch.set(cloud.collection("matches").doc(String(m.id)),m));}await batch.commit();localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("Firebase: "+(e.message||e))}}
+async function updateTeamLogo(encodedId,input){if(!isAdmin)return;const id=decodeURIComponent(encodedId),team=(db.teams||[]).find(x=>x.id===id),file=input?.files?.[0];if(!team||!file)return;try{team.imageUrl=await uploadTeamImage(file);await cloud.collection("teams").doc(id).set(team);localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("تعذر تحديث الصورة: "+(e.message||e))}}
+async function deleteRegistryTeam(encodedId){if(!isAdmin)return;const id=decodeURIComponent(encodedId),team=(db.teams||[]).find(x=>x.id===id);if(!team)return;if(db.leagues.some(l=>(l.teams||[]).includes(team.name))||db.matches.some(m=>m.h===team.name||m.a===team.name))return alert("هاد الفريق مشارك فبطولة أو عندو مباريات. حيدو من البطولة أولاً قبل الحذف.");if(!confirm(t("confirmDelete")+" "+team.name))return;try{await cloud.collection("teams").doc(id).delete();db.teams=db.teams.filter(x=>x.id!==id);localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("Firebase: "+(e.message||e))}}
+function standings(l){let a=l.teams.map(name=>({name,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}));db.matches.filter(m=>m.league===l.id && (l.mode!=="champions"||m.stage==="league") && m.hs!==null && m.as!==null && Number.isFinite(Number(m.hs)) && Number.isFinite(Number(m.as))).forEach(m=>{let x=a.find(z=>z.name===m.h),y=a.find(z=>z.name===m.a);if(!x||!y)return;x.p++;y.p++;x.gf+=m.hs;x.ga+=m.as;y.gf+=m.as;y.ga+=m.hs;if(m.hs>m.as){x.w++;y.l++;x.pts+=3}else if(m.hs<m.as){y.w++;x.l++;y.pts+=3}else{x.d++;y.d++;x.pts++;y.pts++}});a.forEach(x=>x.gd=x.gf-x.ga);return a.sort((x,y)=>y.pts-x.pts||y.gd-x.gd||y.gf-x.gf)}
+function leagueSelect(){return `<select id="leaguePick" onchange="selected=this.value;render()"><option value="">${t("chooseLeague")}</option>${db.leagues.map(l=>`<option value="${l.id}" ${selected===l.id?"selected":""}>${esc(l.name)} • ${esc(l.season)}</option>`).join("")}</select>`}
+function tableModeSelect(){const labels=lang==="ar"?["الدوري","الكأس","Champions League"]:lang==="fr"?["Ligue","Coupe","Champions League"]:["League","Cup","Champions League"];return `<div class="competition-tabs"><button class="competition-tab ${tableMode==="league"?"active":""}" onclick="tableMode='league';selected=null;render()">${labels[0]}</button><button class="competition-tab ${tableMode==="cup"?"active":""}" onclick="tableMode='cup';selected=null;render()">${labels[1]}</button><button class="competition-tab ${tableMode==="champions"?"active":""}" onclick="tableMode='champions';selected=null;render()">${labels[2]}</button></div>`}
+function tableModeLeagueSelect(){const list=db.leagues.filter(x=>(x.mode||"league")===tableMode);if(selected&&!list.some(x=>String(x.id)===String(selected)))selected=null;if(!selected&&list.length)selected=String(list[0].id);return `<select id="leaguePick" onchange="selected=this.value;render()"><option value="">${t("chooseLeague")}</option>${list.map(x=>`<option value="${x.id}" ${String(selected)===String(x.id)?"selected":""}>${esc(x.name)} • ${esc(x.season||"")}</option>`).join("")}</select>`}
+function uniqueCupFixtures(matches,l){
+ if(!l||l.mode!=="cup")return matches||[];
+ const isHomeAway=l.cupFormat==="homeAway",groups=new Map();
+ (matches||[]).forEach(m=>{
+  const round=Number(m.round)||1,teams=[String(m.h||""),String(m.a||"")].sort((a,b)=>a.localeCompare(b));
+  const leg=isHomeAway?(m.leg||"home"):"single";
+  const key=[round,teams[0],teams[1],leg].join("|"),old=groups.get(key);
+  if(!old){groups.set(key,m);return;}
+  const oldDone=old.hs!==null&&old.as!==null,newDone=m.hs!==null&&m.as!==null;
+  if(!oldDone&&newDone)groups.set(key,m);
+ });
+ return [...groups.values()];
+}
+function cupTieKey(m){return String(m.id).replace(/_away$/,'');}
+function cupTieWinner(pair,l){if(!pair.length||pair.some(m=>m.hs===null||m.as===null))return null;const first=pair.find(m=>m.leg!=='away')||pair[0],a=first.h,b=first.a;let sa=0,sb=0;pair.forEach(m=>{sa+=Number(m.h===a?m.hs:m.as);sb+=Number(m.h===a?m.as:m.hs)});return sa>sb?a:sb>sa?b:null;}
+function cupClassementView(l){
+ const scheduled=uniqueCupFixtures(db.matches.filter(m=>String(m.league)===String(l.id)&&m.schedule&&(m.cup||String(m.id).startsWith('CUP_'))),l);
+ const rounds=[...new Set(scheduled.map(m=>Number(m.round)))].sort((a,b)=>a-b);
+ const byeEntries=(l.cupByes||[]);
+ const format=l.cupFormat==='homeAway'?'homeAway':'single';
+ const bracket=rounds.length?`<div class="cup-bracket">${rounds.map((r,idx)=>{
+   const roundMatches=scheduled.filter(m=>Number(m.round)===r),ties={};
+   roundMatches.forEach(m=>{const key=format==='homeAway'?cupTieKey(m):String(m.id);(ties[key]=ties[key]||[]).push(m)});
+   const cards=Object.values(ties).map(pair=>{const first=pair.find(m=>m.leg!=='away')||pair[0],winner=cupTieWinner(pair,l);let scoreA=null,scoreB=null;if(pair.every(m=>m.hs!==null&&m.as!==null)){scoreA=0;scoreB=0;pair.forEach(m=>{scoreA+=Number(m.h===first.h?m.hs:m.as);scoreB+=Number(m.h===first.h?m.as:m.hs)});}
+     const side=(name,score,isWinner)=>`<div class="cup-side ${isWinner?'winner':''}"><span>${esc(name)}</span><b>${score===null?'—':score}</b></div>`;
+     return `<div class="cup-tie">${side(first.h,scoreA,winner===first.h)}${side(first.a,scoreB,winner===first.a)}${format==='homeAway'?`<div class="cup-aggregate">${lang==='ar'?'مجموع الذهاب والإياب':lang==='fr'?'Score cumulé':'Aggregate score'}</div>`:''}${winner?`<div class="cup-aggregate">${lang==='ar'?'المتأهل':'Qualified'}: <b>${esc(winner)}</b></div>`:''}</div>`;
+   }).join('');
+   const byes=byeEntries.filter(x=>Number(x.round)===r).flatMap(x=>x.teams||[]);
+   const title=lang==='ar'?`الدور ${r}`:lang==='fr'?`Tour ${r}`:`Round ${r}`;
+   return `<section class="cup-round"><div class="cup-round-title">${title}</div>${cards||`<p class="muted">${t('empty')}</p>`}${byes.map(n=>`<div class="cup-bye">${lang==='ar'?'تأهل مباشر:':lang==='fr'?'Exempt :':'BYE:'} ${esc(n)}</div>`).join('')}</section>`;
+ }).join('')}</div>`:`<div class="card"><p class="muted">${t('noSchedule')}</p></div>`;
+ const lastRound=rounds.length?rounds[rounds.length-1]:0,lastMatches=scheduled.filter(m=>Number(m.round)===lastRound);
+ let champion='';if(lastRound&&lastMatches.length){const ties={};lastMatches.forEach(m=>{const key=format==='homeAway'?cupTieKey(m):String(m.id);(ties[key]=ties[key]||[]).push(m)});const vals=Object.values(ties);if(vals.length===1)champion=cupTieWinner(vals[0],l)||'';}
+ return `<div class="standings-head"><div><strong>${esc(l.name)}</strong><div class="muted">${esc(l.season||'')} • ${(l.teams||[]).length} ${t('teams')}</div></div><span class="pill">${lang==='ar'?'الكأس': 'CUP'}</span></div><div class="competition-subhead">${lang==='ar'?'جدول الإقصائيات':lang==='fr'?'Tableau éliminatoire':'Knockout bracket'}</div>${bracket}${champion?`<div class="stage-card" style="text-align:center"><div class="competition-subhead">🏆 ${lang==='ar'?'بطل الكأس':lang==='fr'?'Vainqueur de la coupe':'Cup champion'}</div><strong style="color:var(--gold);font-size:18px">${esc(champion)}</strong></div>`:''}<button class="btn primary" onclick="go('matches');selected='${String(l.id)}'">${t('matches')}</button>`;
+}
+function championsClassementView(l){const rows=standings(l),ms=db.matches.filter(m=>String(m.league)===String(l.id)&&m.champions),stages=[{key:"playoff",label:t("playoffStage")},{key:"knockout",label:t("knockoutStage")}];return `<div class="standings-head"><div><strong>${esc(l.name)}</strong><div class="muted">${esc(l.season||"")} • ${(l.teams||[]).length} ${t("teams")} • 8 ${lang==="ar"?"مباريات لكل فريق":"matches per team"}</div></div><span class="pill">CHAMPIONS LEAGUE</span></div><div class="competition-subhead">${t("leaguePhase")}</div><div class="standings-scroll"><table class="standings-table"><thead><tr><th>#</th><th style="text-align:start">${t("teams")}</th><th>${t("p")}</th><th>${t("w")}</th><th>${t("d")}</th><th>${t("l")}</th><th>${t("gf")}</th><th>${t("ga")}</th><th>${t("gd")}</th><th>${t("pts")}</th></tr></thead><tbody>${rows.map((x,i)=>`<tr><td><span class="rank-badge ${i===0?"gold":i===1?"silver":i===2?"bronze":""}">${i+1}</span></td><td class="team-cell"><span class="team-mark">${esc((x.name||"?").trim().slice(0,2).toUpperCase())}</span>${esc(x.name)}</td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td class="${x.gd>0?"gd-positive":x.gd<0?"gd-negative":""}">${x.gd>0?"+":""}${x.gd}</td><td class="points-cell">${x.pts}</td></tr>`).join("")||`<tr><td colspan="10" class="muted">${t("empty")}</td></tr>`}</tbody></table></div><div class="competition-subhead">${lang==="ar"?"المراحل الإقصائية":lang==="fr"?"Phases à élimination":"Knockout stages"}</div>${stages.map(stage=>{const matches=ms.filter(m=>m.stage===stage.key);return matches.length?`<div class="stage-card"><b>${stage.label}</b>${matches.map(m=>`<div class="stage-match"><span>${esc(m.h)}</span><b class="stage-score">${m.hs===null||m.as===null?"— : —":`${m.hs} - ${m.as}`}</b><span>${esc(m.a)}</span></div>`).join("")}</div>`:""}).join("")||`<p class="muted">${t("empty")}</p>`}<button class="btn primary" onclick="go('matches');selected='${String(l.id)}'">${t("matches")}</button>`}
+
+function openTeamProfile(encodedName){selectedTeamProfile=decodeURIComponent(encodedName);page="teamProfile";render()}
+
+async function teamProfileView(){
+  const name=selectedTeamProfile;
+  const team=(db.teams||[]).find(x=>x.name===name)||{name};
+  const st=teamStats(name);
+
+  let playerTeam={};
+  let owner={};
+
+  try{
+    const snap=await cloud.collection("playerTeams")
+      .where("name","==",name).limit(1).get();
+
+    if(!snap.empty){
+      playerTeam=snap.docs[0].data();
+      const profile=await cloud.collection("playerProfiles")
+        .doc(playerTeam.ownerUid).get();
+      if(profile.exists) owner=profile.data();
+    }
+  }catch(e){
+    console.log("Player team lookup:",e);
+  }
+
+  const image=team.imageUrl||playerTeam.logoUrl||"";
+  const phone=(team.whatsapp||owner.phone||"").replace(/\D/g,"");
+  const players=team.players||[];
+
+  const el=document.getElementById("app");
+  if(!el)return;
+
+  el.innerHTML=`<button class="btn" onclick="page='matches';render()">← رجوع للمباريات</button>
+  <section class="card" style="text-align:center;margin-top:12px">
+    ${image?`<img src="${esc(image)}" alt="صورة الفريق" style="width:112px;height:112px;object-fit:cover;border-radius:50%;border:2px solid var(--gold)">`:`<div class="team-mark" style="width:90px;height:90px;border-radius:50%;margin:12px auto;font-size:25px">${esc(name.slice(0,2).toUpperCase())}</div>`}
+    <h2>${esc(name)}</h2>
+    ${owner.name?`<p>صاحب الفريق: ${esc(owner.name)}</p>`:""}
+    <div class="stats">
+      <div class="stat"><b>${st.p}</b>المباريات</div>
+      <div class="stat"><b>${st.w}</b>انتصارات</div>
+      <div class="stat"><b>${st.d}</b>تعادلات</div>
+      <div class="stat"><b>${st.l}</b>هزائم</div>
+      <div class="stat"><b>${st.gf}</b>أهداف مسجلة</div>
+      <div class="stat"><b>${st.ga}</b>أهداف مستقبلة</div>
+      <div class="stat"><b>${st.pts}</b>النقاط</div>
+      <div class="stat"><b>${st.fans}</b>الأنصار</div>
+      <div class="stat"><b>${st.p?Math.round(st.w/st.p*100):0}%</b>نسبة الفوز</div>
+    </div>
+    ${players.length?`<h3>لائحة اللاعبين</h3><div class="card">${players.map((p,i)=>`<div class="row"><span>${i+1}. ${esc(p)}</span></div>`).join("")}</div>`:""}
+    ${phone?`<a class="btn primary" style="display:block;text-decoration:none;margin-top:14px" href="https://web.whatsapp.com/send?phone=${phone}" target="_blank" rel="noopener noreferrer">تواصل عبر WhatsApp</a>`:`<p class="muted">رقم WhatsApp غير متوفر</p>`}
+  </section>`;
+}
+  
+function matchesView(l){
+  if(!l)return `<h2>${t("matches")}</h2>${leagueSelect()}<p class="muted">${t("noLeagues")}</p>`;
+  const leagueMatches=db.matches.filter(m=>String(m.league)===String(l.id));
+  const scheduled=uniqueCupFixtures(leagueMatches.filter(m=>m.schedule),l.mode==="cup"?l:null);
+  const rounds=[...new Set(scheduled.map(m=>Number(m.round)))].sort((a,b)=>a-b);
+  if(rounds.length&&!rounds.includes(Number(selectedRound)))selectedRound=rounds[0];
+  const roundLegs=[...new Set(scheduled.filter(m=>Number(m.round)===Number(selectedRound)).map(m=>m.leg))];const matchLeg=l.mode==="champions"?(roundLegs.includes("single")?"single":roundLegs.includes("away")?(selectedLeg==="away"?"away":"home"):"home"):(l.mode==="cup"&&l.cupFormat!=="homeAway"?"single":selectedLeg);const visible=scheduled.filter(m=>m.leg===matchLeg&&Number(m.round)===Number(selectedRound));
+  let html=`<h2>${t("matches")}</h2>${leagueSelect()}<div class="card"><b>${esc(l.name)} — ${esc(l.season||"")}</b><div class="muted">${t("scheduled")}</div></div>`;
+  if((l.mode!=="cup"||l.cupFormat==="homeAway")&&roundLegs.includes("home")&&roundLegs.includes("away"))html+=`<div class="leg-tabs"><button class="btn ${selectedLeg==="home"?"active":""}" onclick="selectedLeg='home';selectedRound=1;render()">${t("firstLeg")}</button><button class="btn ${selectedLeg==="away"?"active":""}" onclick="selectedLeg='away';selectedRound=1;render()">${t("secondLeg")}</button></div>`;
+  if(rounds.length){html+=`<div class="round-tabs">`+rounds.map(r=>`<button class="btn ${Number(selectedRound)===r?"primary":""}" onclick="selectedRound=${r};render()">${t("round")} ${r}</button>`).join("")+`</div>`;
+    html+=visible.length?visible.map(m=>`<div class="match-card"><div class="row"><span><button class="team-link" onclick="openTeamProfile('${encodeURIComponent(m.h)}')">${esc(m.h)}</button></span><b class="match-score">${m.hs===null||m.as===null?"— : —":m.hs+" - "+m.as}</b><span><button class="team-link" onclick="openTeamProfile('${encodeURIComponent(m.a)}')">${esc(m.a)}</button></span></div><div class="muted">${m.champions?(m.stage==="league"?t("leaguePhase"):m.stage==="playoff"?t("playoffStage"):t("knockoutStage"))+" • ":""}${t("round")} ${m.round}</div>${m.comments?`<p class="muted">${t("comments")}: ${esc(m.comments)}</p>`:""}</div>`).join(""):`<p class="muted">${t("noRoundMatches")}</p>`;
+  }else{html+=`<p class="muted">${t("noSchedule")}</p>`;}
+  if(isAdmin&&!scheduled.length)html+=`<div class="form"><h3>${t("draw")}</h3><p class="muted">${(l.teams||[]).length} ${t("teams")}</p><button class="btn primary" onclick="generateSchedule('${String(l.id)}')">${t("generate")}</button></div>`;
+  const manual=leagueMatches.filter(m=>!m.schedule);if(manual.length)html+=`<h3>${t("match")}</h3>`+manual.map(m=>`<div class="match-card"><div class="row"><span><button class="team-link" onclick="openTeamProfile('${encodeURIComponent(m.h)}')">${esc(m.h)}</button></span><b class="match-score">${m.hs??"—"} - ${m.as??"—"}</b><span><button class="team-link" onclick="openTeamProfile('${encodeURIComponent(m.a)}')">${esc(m.a)}</button></span></div>${m.comments?`<p class="muted">${t("comments")}: ${esc(m.comments)}</p>`:""}</div>`).join("");
+  return html;
+}
+function adminMatchesManager(){
+  const leagues=db.leagues||[];
+  if(!leagues.length)return `<section class="admin-section"><h2>${t("manageMatches")}</h2><p class="muted">${t("noAdminLeagues")}</p></section>`;
+  if(!leagues.some(x=>String(x.id)===String(adminMatchLeague)))adminMatchLeague=String(leagues[0].id);
+  const league=leagues.find(x=>String(x.id)===String(adminMatchLeague))||leagues[0];
+  const leagueMatches=db.matches.filter(m=>String(m.league)===String(league.id));
+  const scheduled=uniqueCupFixtures(leagueMatches.filter(m=>m.schedule),league.mode==="cup"?league:null);
+  const rounds=[...new Set(scheduled.map(m=>Number(m.round)))].filter(Number.isFinite).sort((a,b)=>a-b);
+  if(!rounds.some(r=>String(r)===String(adminMatchRound)))adminMatchRound=rounds.length?String(rounds[0]):"manual";
+  const isManual=adminMatchRound==="manual";
+  const cupSingle=league.mode==="cup"&&league.cupFormat!=="homeAway";const selectedRoundMatches=scheduled.filter(m=>Number(m.round)===Number(adminMatchRound));const roundLegs=[...new Set(selectedRoundMatches.map(m=>m.leg))];const adminLeg=league.mode==="champions"?(roundLegs.includes("single")?"single":roundLegs.includes("home")||roundLegs.includes("away")?adminMatchLeg:"home"):(cupSingle?"single":adminMatchLeg);const matches=isManual?leagueMatches.filter(m=>!m.schedule):scheduled.filter(m=>Number(m.round)===Number(adminMatchRound)&&m.leg===adminLeg);
+  const controls=`<div class="form"><label>${t("chooseLeague")}</label><select onchange="adminMatchLeague=this.value;adminMatchRound='';render()">${leagues.map(x=>`<option value="${esc(x.id)}" ${String(x.id)===String(league.id)?"selected":""}>${esc(x.name)} • ${esc(x.season||"")}</option>`).join("")}</select><label>${t("chooseRound")}</label><select onchange="adminMatchRound=this.value;render()">${rounds.map(r=>`<option value="${r}" ${String(r)===String(adminMatchRound)?"selected":""}>${t("round")} ${r}</option>`).join("")}${leagueMatches.some(m=>!m.schedule)?`<option value="manual" ${isManual?"selected":""}>${t("match")}</option>`:""}</select>${!isManual&&rounds.length&&(!cupSingle)&&roundLegs.includes("home")&&roundLegs.includes("away")?`<div class="leg-tabs"><button class="btn ${adminMatchLeg==="home"?"active":""}" onclick="adminMatchLeg='home';render()">${t("firstLeg")}</button><button class="btn ${adminMatchLeg==="away"?"active":""}" onclick="adminMatchLeg='away';render()">${t("secondLeg")}</button></div>`:""}</div>`;
+  const cards=matches.map(m=>{const mid=encodeURIComponent(String(m.id));return `<div class="card"><div class="row"><span>${esc(m.h)}</span><b style="color:var(--gold)">${m.hs??"—"} - ${m.as??"—"}</b><span>${esc(m.a)}</span></div><div class="muted">${esc(league.name)}${m.champions?` • ${m.stage==="league"?t("leaguePhase"):m.stage==="playoff"?t("playoffStage"):t("knockoutStage")}`:""}${m.schedule?` • ${t("round")} ${m.round}${league.mode==="cup"&&league.cupFormat!=="homeAway"?"":` • ${m.leg==="home"?t("firstLeg"):t("secondLeg")}`}`:""}</div><label>${t("score1")}</label><input id="matchHs-${mid}" type="number" min="0" step="1" inputmode="numeric" placeholder="0" value="${m.hs??""}"><label>${t("score2")}</label><input id="matchAs-${mid}" type="number" min="0" step="1" inputmode="numeric" placeholder="0" value="${m.as??""}"><label>${t("comments")}</label><textarea id="matchComments-${mid}" placeholder="${t("comments")}">${esc(m.comments||"")}</textarea><div class="admin-actions"><button class="btn primary sm" onclick="saveMatchDetails('${mid}')">${t("saveMatch")}</button><button class="btn sm" onclick="toggleMatchPredictions('${mid}')">${m.predictionsClosed?"فتح التوقعات":"إغلاق التوقعات"}</button><button class="btn danger sm" onclick="deleteMatch('${mid}')">${t("delete")}</button></div></div>`}).join("");
+  return `<section class="admin-section"><h2>${t("manageMatches")}</h2>${controls}${league.mode==="champions"&&scheduled.length?`<button class="btn primary" onclick="generateNextChampionsStage('${String(league.id)}')">${t("nextChampionsStage")}</button>`:""}${league.mode==="cup"&&scheduled.length?`<button class="btn primary" onclick="generateNextCupRound('${String(league.id)}')">${t("nextCupRound")}</button>`:""}${cards||`<p class="muted">${t("noRoundMatches")}</p>`}</section>`;
+}
+function predictionPoints(pred,m){
+ if(!m||m.hs===null||m.as===null||m.hs===undefined||m.as===undefined)return 0;
+ const ph=Number(pred.homeGoals),pa=Number(pred.awayGoals),rh=Number(m.hs),ra=Number(m.as);
+ if(ph===rh&&pa===ra)return 3;
+ const predicted=ph>pa?"h":ph<pa?"a":"d",actual=rh>ra?"h":rh<ra?"a":"d";
+ return predicted===actual?1:0;
+}
+function predictionsPage(){
+ const all=db.matches.map(m=>({...m,leagueInfo:db.leagues.find(l=>String(l.id)===String(m.league))}));
+ const upcoming=all.filter(m=>m.leagueInfo&&m.hs==null&&m.as==null&&!m.predictionsClosed);
+ const ranked={};predictions.forEach(pred=>{const name=String(pred.nickname||"").trim();if(!name)return;const match=db.matches.find(m=>String(m.id)===String(pred.matchId));if(!ranked[name])ranked[name]={name,points:0,count:0};ranked[name].count++;ranked[name].points+=predictionPoints(pred,match);});
+ const leaderboard=Object.values(ranked).sort((a,b)=>b.points-a.points||b.count-a.count||a.name.localeCompare(b.name));
+ const cards=upcoming.map(m=>{const id=encodeURIComponent(String(m.id));const comp=m.leagueInfo.mode==="cup"?"Coupe":m.leagueInfo.mode==="champions"?"Champions League":"Ligue";return `<div class="match-card"><div class="muted">${esc(m.leagueInfo.name)} • ${comp}${m.round?` • ${t("round")} ${m.round}`:""}</div><div class="row"><b>${esc(m.h)}</b><span class="match-score">VS</span><b>${esc(m.a)}</b></div><label>${lang==="ar"?"الاسم المستعار":"Nickname"}</label><input id="pred-name-${id}" maxlength="24" placeholder="${lang==="ar"?"كتب اسمك المستعار":"Your nickname"}"><div class="grid"><div><label>${esc(m.h)} — ${lang==="ar"?"الأهداف":"Goals"}</label><input id="pred-home-${id}" type="number" min="0" max="20" step="1" inputmode="numeric" placeholder="0"></div><div><label>${esc(m.a)} — ${lang==="ar"?"الأهداف":"Goals"}</label><input id="pred-away-${id}" type="number" min="0" max="20" step="1" inputmode="numeric" placeholder="0"></div></div><button class="btn primary" onclick="submitPrediction('${id}')">${lang==="ar"?"تأكيد التوقع":"Submit prediction"}</button></div>`}).join("");
+ return `<div class="hero"><strong>⚽ PRONOSTICS NOVA CHAMPIONS</strong><p>${lang==="ar"?"توقع النتيجة الصحيحة وجمع النقاط وتنافس مع المتابعين":"Predict the score, earn points and compete with followers"}</p><span class="pill">3 نقاط للنتيجة الصحيحة • 1 نقطة للتوقع الصحيح للفائز أو التعادل</span></div><h2>${lang==="ar"?"المباريات المفتوحة للتوقع":"Open predictions"}</h2>${cards||`<p class="muted">${lang==="ar"?"ما كايناش دابا مقابلات مفتوحة للتوقع.":"No matches are currently open for predictions."}</p>`}<h2>${lang==="ar"?"ترتيب المتابعين":"Followers leaderboard"}</h2>${leaderboard.length?`<div class="card">${leaderboard.map((x,i)=>`<div class="row"><b>#${i+1}　${esc(x.name)}</b><span class="pill">${x.points} ${lang==="ar"?"نقطة":"pts"}</span></div>`).join("")}</div>`:`<p class="muted">${lang==="ar"?"الترتيب غادي يبان منين يشاركو المتابعين.":"The leaderboard will appear when followers participate."}</p>`}<p class="small">${lang==="ar"?"التوقع كيتسجل مرة وحدة لكل اسم مستعار فكل مقابلة. ما كاينش حساب ولا كلمة مرور. النقاط كتتحسب من بعد تسجيل النتيجة.":"One prediction per nickname per match. No account or password required. Points are calculated after the result is entered."}</p>`;
+}
+async function submitPrediction(encodedMatchId){
+ const matchId=decodeURIComponent(encodedMatchId),m=db.matches.find(x=>String(x.id)===matchId);
+ if(!m||m.predictionsClosed||m.hs!=null||m.as!=null)return alert(lang==="ar"?"هاد المقابلة تلعبات أو التوقعات مسدودة.":"This match has a recorded score or predictions are closed.");
+ const key=encodeURIComponent(matchId),nickname=document.getElementById("pred-name-"+key)?.value.trim(),home=document.getElementById("pred-home-"+key)?.value,away=document.getElementById("pred-away-"+key)?.value;
+ if(!nickname||nickname.length<2)return alert(lang==="ar"?"كتب اسم مستعار من جوج حروف على الأقل.":"Enter a nickname with at least 2 characters.");
+ if(home===""||away===""||!/^\d{1,2}$/.test(home)||!/^\d{1,2}$/.test(away)||Number(home)>20||Number(away)>20)return alert(lang==="ar"?"دخل نتيجة صحيحة بين 0 و20.":"Enter a valid score from 0 to 20.");
+ const docId=encodeURIComponent(matchId)+"__"+encodeURIComponent(nickname.toLocaleLowerCase());
+ if(predictions.some(p=>p.id===docId))return alert(lang==="ar"?"هاد الاسم سبق ليه توقع فهاد المقابلة.":"This nickname has already predicted this match.");
+ try{await cloud.collection("predictions").doc(docId).set({matchId,nickname,homeGoals:Number(home),awayGoals:Number(away),createdAt:Date.now()});alert(lang==="ar"?"تسجل التوقع بنجاح!":"Prediction submitted!");}
+ catch(e){alert(e.code==="permission-denied"?(lang==="ar"?"ما قدرناش نسجلو التوقع. تأكد من قواعد Firestore وأن التوقعات مازال مفتوحة.":"Could not submit. Check Firestore rules and whether predictions are open."):(e.message||"Prediction error"));}
+}
+async function toggleMatchPredictions(encodedId){
+ if(!isAdmin)return;const id=decodeURIComponent(encodedId),m=db.matches.find(x=>String(x.id)===id);if(!m)return;m.predictionsClosed=!m.predictionsClosed;try{await cloud.collection("matches").doc(id).set(m);localStorage.novaDB=JSON.stringify(db);render();}catch(e){m.predictionsClosed=!m.predictionsClosed;alert("Firebase: "+(e.message||e));}
+}
+function newsDate(ts){try{return new Date(Number(ts)||Date.now()).toLocaleDateString(lang==="ar"?"ar-MA":lang==="fr"?"fr-FR":"en-GB",{year:"numeric",month:"long",day:"numeric"})}catch(e){return ""}}
+function newsCategory(cat){const map={ar:{general:"أخبار عامة",results:"نتائج ومباريات",transfers:"انتقالات",announcements:"إعلانات رسمية",reports:"تقارير وتحليلات"},fr:{general:"Actualités",results:"Résultats et matchs",transfers:"Transferts",announcements:"Communiqués officiels",reports:"Analyses"},en:{general:"General news",results:"Results & matches",transfers:"Transfers",announcements:"Official announcements",reports:"Reports & analysis"}};return (map[lang]||map.ar)[cat]||map.ar.general}
+function newsPage(){const sorted=articles.filter(a=>a.published!==false).sort((a,b)=>(b.publishedAt||0)-(a.publishedAt||0));if(openedArticleId){const a=sorted.find(x=>x.id===openedArticleId);if(a)return `<button class="btn" onclick="openedArticleId='';render()">← ${lang==='ar'?'العودة للجريدة':'Back to news'}</button><article class="news-article"><span class="news-category">${newsCategory(a.category)}</span><h1>${esc(a.title)}</h1><div class="news-meta">NOVA CHAMPIONS OFFICIAL • ${newsDate(a.publishedAt)}</div>${a.imageUrl?`<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}">`:''}<div class="news-article-body">${esc(a.body||'')}</div></article>`;openedArticleId='';}const lead=sorted[0],rest=sorted.slice(1);return `<div class="news-masthead"><div class="news-kicker">THE OFFICIAL SPORTS NEWSPAPER</div><h2>NOVA CHAMPIONS</h2><p>${lang==='ar'?'الجريدة الرسمية • أخبار • تقارير • نتائج • تغطية حصرية':lang==='fr'?'LE JOURNAL OFFICIEL • ACTUALITÉS • RÉSULTATS':'THE OFFICIAL JOURNAL • NEWS • REPORTS • RESULTS'}</p><div class="news-rule"></div><p>${newsDate(Date.now())}　|　EDITION OFFICIELLE</p></div>${lead?`<div class="news-section-title">${lang==='ar'?'الخبر الرئيسي':lang==='fr'?'À LA UNE':'TOP STORY'}</div><article class="news-lead">${lead.imageUrl?`<img src="${esc(lead.imageUrl)}" alt="${esc(lead.title)}">`:''}<div class="news-lead-copy"><span class="news-category">${newsCategory(lead.category)}</span><h3>${esc(lead.title)}</h3><div class="news-meta">NOVA CHAMPIONS • ${newsDate(lead.publishedAt)}</div><p class="news-excerpt">${esc(lead.excerpt||String(lead.body||'').slice(0,180))}</p><button class="news-read" onclick="openedArticleId='${lead.id}';render()">${lang==='ar'?'اقرأ المقال كاملاً ←':lang==='fr'?'Lire l’article ←':'Read full story ←'}</button></div></article>`:''}<div class="news-section-title">${lang==='ar'?'آخر الأخبار والمقالات':lang==='fr'?'DERNIÈRES ACTUALITÉS':'LATEST STORIES'}</div>${rest.length?`<div class="news-grid">${rest.map(a=>`<article class="news-card">${a.imageUrl?`<img src="${esc(a.imageUrl)}" alt="${esc(a.title)}">`:''}<div class="news-card-copy"><span class="news-category">${newsCategory(a.category)}</span><h3>${esc(a.title)}</h3><div class="news-meta">${newsDate(a.publishedAt)}</div><p>${esc(a.excerpt||String(a.body||'').slice(0,95))}</p><button class="news-read" onclick="openedArticleId='${a.id}';render()">${lang==='ar'?'اقرأ المزيد':'Read more'}</button></div></article>`).join('')}</div>`:!lead?`<div class="news-article" style="text-align:center"><h3>${lang==='ar'?'مرحباً بكم في جريدة NOVA CHAMPIONS':'Welcome to NOVA CHAMPIONS News'}</h3><p>${lang==='ar'?'قريباً ستجدون هنا آخر الأخبار والمقالات والصور الرسمية.':'Official news and stories will appear here soon.'}</p></div>`:''}`}
+function adminNewsManager(){return `<section class="admin-section"><h2>📰 إدارة الجريدة والأخبار</h2><div class="form"><h3>${articleEditingId?(lang==='ar'?'تعديل المقال':'Edit article'):(lang==='ar'?'نشر مقال جديد':'Publish new article')}</h3><label>عنوان المقال</label><input id="newsTitle" maxlength="140" placeholder="عنوان الخبر أو المقال"><label>التصنيف</label><select id="newsCategory"><option value="general">أخبار عامة</option><option value="results">نتائج ومباريات</option><option value="transfers">انتقالات</option><option value="announcements">إعلانات رسمية</option><option value="reports">تقارير وتحليلات</option></select><label>مقدمة قصيرة</label><textarea id="newsExcerpt" maxlength="300" placeholder="ملخص يظهر في واجهة الجريدة"></textarea><label>نص المقال الكامل</label><textarea id="newsBody" style="min-height:180px" placeholder="اكتب المقال هنا..."></textarea><label>صورة المقال</label><input id="newsImage" type="file" accept="image/*"><div class="news-upload-note">يمكنك رفع صورة من الهاتف (JPG / PNG / WEBP، حتى 5MB) عبر Cloudinary. ${articleEditingId?'إذا لم تختر صورة جديدة فستبقى الصورة الحالية.':''}</div><button class="btn primary" id="publishNewsBtn" onclick="publishNewsArticle()">${articleEditingId?'حفظ التعديلات':'نشر المقال'}</button>${articleEditingId?` <button class="btn" onclick="resetNewsEditor()">إلغاء التعديل</button>`:''}</div><h3>${lang==='ar'?'المقالات المنشورة':'Published articles'} (${articles.length})</h3>${articles.map(a=>`<div class="card news-admin-item"><img src="${esc(a.imageUrl||'assets/nova-champions-logo.png')}" alt=""><div style="flex:1;min-width:0"><b>${esc(a.title)}</b><div class="muted">${newsDate(a.publishedAt)} • ${newsCategory(a.category)}</div><div class="admin-actions"><button class="btn sm" onclick="editNewsArticle('${a.id}')">تعديل</button><button class="btn danger sm" onclick="deleteNewsArticle('${a.id}')">حذف</button><button class="btn sm" onclick="openedArticleId='${a.id}';go('news')">عرض</button></div></div></div>`).join('')||`<p class="muted">لا توجد مقالات بعد.</p>`}</section>`}
+function resetNewsEditor(){articleEditingId='';render()}
+function editNewsArticle(id){const a=articles.find(x=>x.id===id);if(!a)return;articleEditingId=id;render();document.getElementById('newsTitle').value=a.title||'';document.getElementById('newsCategory').value=a.category||'general';document.getElementById('newsExcerpt').value=a.excerpt||'';document.getElementById('newsBody').value=a.body||'';}
+async function uploadNewsImage(file){
+  const endpoint=`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
+  const form=new FormData();form.append('file',file);form.append('upload_preset',cloudinaryConfig.uploadPreset);
+  const response=await fetch(endpoint,{method:'POST',body:form});
+  const result=await response.json();
+  if(!response.ok)throw new Error(result?.error?.message||'فشل رفع الصورة إلى Cloudinary.');
+  if(!result.secure_url)throw new Error('Cloudinary لم يرجع رابط الصورة.');
+  return {imageUrl:result.secure_url,imagePublicId:result.public_id||''};
+}
+async function publishNewsArticle(){if(!isAdmin)return;const title=document.getElementById('newsTitle')?.value.trim(),category=document.getElementById('newsCategory')?.value||'general',excerpt=document.getElementById('newsExcerpt')?.value.trim()||'',body=document.getElementById('newsBody')?.value.trim(),file=document.getElementById('newsImage')?.files?.[0];if(!title||!body)return alert('كتب عنوان المقال ونصه أولاً.');const existingArticle=articles.find(x=>x.id===articleEditingId);if(!file&&!existingArticle?.imageUrl)return alert('اختار صورة للمقال قبل النشر.');if(file&&(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024))return alert('اختار صورة JPG أو PNG أو WEBP، ويكون الحجم أقل من 5MB.');const btn=document.getElementById('publishNewsBtn');if(btn){btn.disabled=true;btn.textContent='جاري النشر...';}try{let old=articles.find(x=>x.id===articleEditingId),imageUrl=old?.imageUrl||'',imagePublicId=old?.imagePublicId||'';if(file){const uploaded=await uploadNewsImage(file);imageUrl=uploaded.imageUrl;imagePublicId=uploaded.imagePublicId;}if(!imageUrl)throw new Error('الصورة غير موجودة.');const id=articleEditingId||('NEWS_'+Date.now()),article={id,title,category,excerpt,body,imageUrl,imagePublicId,published:true,publishedAt:old?.publishedAt||Date.now(),updatedAt:Date.now()};await cloud.collection('articles').doc(id).set(article);articles=[article,...articles.filter(x=>x.id!==id)].sort((a,b)=>b.publishedAt-a.publishedAt);articleEditingId='';alert('تم حفظ المقال بنجاح.');render();}catch(e){alert('تعذر نشر المقال: '+(e.message||e)+'\nتأكد من إعدادات Cloudinary وFirestore Rules.');if(btn){btn.disabled=false;btn.textContent='إعادة المحاولة';}}}
+async function deleteNewsArticle(id){if(!isAdmin||!confirm('واش متأكد بغيتي تحذف هاد المقال؟'))return;try{await cloud.collection('articles').doc(id).delete();articles=articles.filter(x=>x.id!==id);if(openedArticleId===id)openedArticleId='';render()}catch(e){alert('تعذر حذف المقال: '+(e.message||e))}}
+
+function render(){nav();let el=document.getElementById("app");let l=current();
+if(page==="player"){
+  if(!currentUser){
+    el.innerHTML=`<div class="form">
+      <h2>حساب اللاعب | Player Account</h2>
+      <h3>تسجيل الدخول</h3>
+      <input id="playerEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="playerPassword" type="password" placeholder="كلمة المرور">
+      <button class="btn primary" onclick="playerLogin()">دخول</button>
+      <button class="btn" onclick="playerResetPassword()">نسيت كلمة المرور؟</button>
+      <hr>
+      <h3>إنشاء حساب جديد</h3>
+      <input id="regName" placeholder="الاسم الكامل">
+      <input id="regEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="regPhone" type="tel" placeholder="رقم الهاتف">
+      <input id="regPassword" type="password" placeholder="كلمة المرور">
+      <h3>إنشاء الفريق الخاص بك</h3>
+      <input id="regTeam" placeholder="اسم الفريق">
+      <label>تقييم الفريق (100 حتى 160)</label>
+      <input id="regOverall" type="number" min="100" max="160" value="100">
+      <label>التشكيلة</label>
+      <select id="regFormation">
+        <option value="4-3-3">4-3-3</option>
+        <option value="4-4-2">4-4-2</option>
+        <option value="3-5-2">3-5-2</option>
+        <option value="4-2-3-1">4-2-3-1</option>
+      </select>
+      <button class="btn primary" onclick="playerRegister()">إنشاء الحساب والفريق</button>
+      <p id="playerError" class="muted"></p>
+    </div>`;
+  }else{
+  playerDashboard();
+  }
+}
+if(page==="live"){
+  el.innerHTML=`
+    <div class="form">
+      <h2>🔴 NOVA LIVE ROOMS</h2>
+      <p>غرف عامة للمشاهدة والتفاعل مع مباريات NOVA CHAMPIONS.</p>
+      ${currentUser && !currentUser.isAnonymous ? `<input id="liveRoomNick" maxlength="24" placeholder="الاسم المستعار الذي سيظهر للناس"><input id="liveRoomName" maxlength="70" placeholder="اسم الغرفة / المباراة"><button class="btn primary" onclick="createLiveRoom()">إنشاء غرفة جديدة</button>` : `<p class="muted">يمكنك دخول الغرف كمشاهد. إنشاء غرفة جديدة يتطلب حساب لاعب.</p>`}
+      <div id="liveRoomsList"><p class="muted">جاري تحميل الغرف...</p></div>
+    </div>
+  `;
+  loadLiveRooms();
+}
+if(page==="home"){el.innerHTML=`<section class="hero"><strong>${t("welcome")}</strong><p>${t("subtitle")}</p><span class="pill">NOVA CHAMPIONS OFFICIAL</span></section><div class="stats"><div class="stat"><b>${db.leagues.length}</b>${t("competitions")}</div><div class="stat"><b>${db.leagues.reduce((n,x)=>n+x.teams.length,0)}</b>${t("teams")}</div><div class="stat"><b>${db.matches.length}</b>${t("played")}</div></div><h2>${t("competitions")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><button class="btn" onclick="selected='${x.id}';go('table')">${t("table")}</button></div>`).join(""):`<p class="muted">${t("noLeagues")}</p>`}<h2>${t("latest")}</h2>${db.matches.slice(-5).reverse().map(m=>`<div class="row"><span>${esc(m.h)}</span><b style="color:var(--gold)">${m.hs} - ${m.as}</b><span>${esc(m.a)}</span></div>`).join("")||`<p class="muted">${t("noMatches")}</p>`}<p class="small">${t("demo")}</p>`}
+if(page==="news"){el.innerHTML=newsPage()}
+if(page==="predictions"){el.innerHTML=predictionsPage()}
+if(page==="leagues"){el.innerHTML=`<h2>${t("competitions")}</h2>${db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${x.teams.length}</span></div>`).join("")||`<p class="muted">${t("noLeagues")}</p>`}${isAdmin?`<div class="form"><h3>${t("createLeague")}</h3><input id="lname" placeholder="${t("leagueName")}"><input id="season" placeholder="${t("season")}" value="Season 1"><label>${t("competitionType")}</label><select id="competitionType" onchange="document.getElementById('cupFormatWrap').classList.toggle('hidden',this.value!=='cup');document.getElementById('championsFormatWrap').classList.toggle('hidden',this.value!=='champions')"><option value="league">${t("leagueMode")}</option><option value="cup">${t("cupMode")}</option><option value="champions">${t("championsMode")}</option></select><div id="championsFormatWrap" class="hidden"><label>${t("directQualifiers")}</label><input id="champDirect" type="number" min="0" step="1" value="8"><label>${t("playoffTeams")}</label><input id="champPlayoff" type="number" min="0" step="1" value="16"><label>${t("playoffFormat")}</label><select id="champPlayoffFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><label>${t("knockoutFormat")}</label><select id="champKnockoutFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><p class="muted">8 مباريات لكل فريق • قرعة عشوائية بلا تكرار الخصوم</p></div><div id="cupFormatWrap" class="hidden"><label>${t("cupFormat")}</label><select id="cupFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select></div><label>اختار الفرق المشاركة / Select teams</label><div class="form" id="leagueTeamChoices">${(db.teams||[]).length?(db.teams||[]).map(team=>`<label style="display:block;padding:6px"><input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">${esc(team.name)} — ${Number(team.fans||0)} Fans</label>`).join(""):`<p class="muted">سجل الفرق أولاً من لوحة Admin ← Gestion des équipes</p>`}</div><button class="btn" onclick="loadPlayerTeams()">عرض فرق اللاعبين المسجلين</button><button class="btn primary" onclick="addLeague()">${t("add")}</button></div>`:""}`}
+if(page==="matches"){el.innerHTML=matchesView(l)}
+if(page==="table"){const list=db.leagues.filter(x=>(x.mode||"league")===tableMode);if(selected&&!list.some(x=>String(x.id)===String(selected)))selected=null;if(!selected&&list.length)selected=String(list[0].id);const tl=list.find(x=>String(x.id)===String(selected));el.innerHTML=`<h2>${t("standings")}</h2>${tableModeSelect()}${tableModeLeagueSelect()}${!list.length?`<div class="card"><p class="muted">${t("noLeagues")}</p>${isAdmin?`<button class="btn primary" onclick="go('leagues')">${t("createLeague")}</button>`:""}</div>`:!tl?`<p class="muted">${t("chooseLeague")}</p>`:tableMode==="cup"?cupClassementView(tl):tableMode==="champions"?championsClassementView(tl):(()=>{const rows=standings(tl);return `<div class="standings-head"><div><strong>${esc(tl.name)}</strong><div class="muted">${esc(tl.season||"")} • ${tl.teams.length} ${t("teams")}</div></div><span class="pill">LEAGUE TABLE</span></div><div class="standings-scroll"><table class="standings-table"><thead><tr><th class="rank-cell">#</th><th style="text-align:start">${t("teams")}</th><th>${t("p")}</th><th>${t("w")}</th><th>${t("d")}</th><th>${t("l")}</th><th>${t("gf")}</th><th>${t("ga")}</th><th>${t("gd")}</th><th>${t("pts")}</th></tr></thead><tbody>${rows.map((x,i)=>`<tr><td class="rank-cell"><span class="rank-badge ${i===0?"gold":i===1?"silver":i===2?"bronze":""}">${i+1}</span></td><td class="team-cell"><span class="team-mark">${esc((x.name||"?").trim().slice(0,2).toUpperCase())}</span>${esc(x.name)}</td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td class="${x.gd>0?"gd-positive":x.gd<0?"gd-negative":""}">${x.gd>0?"+":""}${x.gd}</td><td class="points-cell">${x.pts}</td></tr>`).join("")||`<tr><td colspan="10" class="muted">${t("empty")}</td></tr>`}</tbody></table></div><div class="standings-note"><span><i></i>${lang==="ar"?"الترتيب حسب النقاط ثم فارق الأهداف":"Points, then goal difference"}</span><span>${lang==="ar"?"اسحب الجدول أفقياً لرؤية جميع الإحصائيات":"Swipe horizontally to view all stats"}</span></div>${isAdmin?`<div class="form"><h3>${t("addTeam")}</h3><input id="teamName" placeholder="${t("teamName")}"><button class="btn primary" onclick="addTeam()">${t("add")}</button></div>`:""}`})()}`;}
+if(page==="admin"){el.innerHTML=isAdmin?`<div class="admin-head"><div><h2>${t("dashboard")}</h2><span class="pill">ADMIN_NOVA • ${esc(currentUser?.email||"Admin")}</span></div><button class="btn danger" onclick="auth.signOut()">${t("logout")}</button></div><div class="admin-grid"><div class="admin-tile">${t("totalLeagues")}<b>${db.leagues.length}</b></div><div class="admin-tile">${t("totalTeams")}<b>${(db.teams||[]).length}</b></div><div class="admin-tile">${t("totalMatches")}<b>${db.matches.length}</b></div><div class="admin-tile">Firebase<b style="font-size:15px">${cloudReady?"ONLINE":"CONNECTING"}</b></div></div><div class="admin-note">${t("demo")} ${syncError?" • "+esc(syncError):""}</div><div class="grid admin-section"><button class="btn primary" onclick="go('leagues')">${t("openLeagues")}</button><button class="btn primary" onclick="go('matches')">${t("openMatches")}</button></div><section class="admin-section"><h2>${t("manageLeagues")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${(x.teams||[]).length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${(x.teams||[]).length}</span></div><div class="admin-actions"><button class="btn sm" onclick="editLeague('${String(x.id)}')">${t("edit")}</button><button class="btn danger sm" onclick="deleteLeague('${String(x.id)}')">${t("delete")}</button><button class="btn sm" onclick="selected='${String(x.id)}';go('table')">${t("table")}</button></div></div>`).join(""):`<p class="muted">${t("noAdminLeagues")}</p>`}</section>${adminTeamsManager()}
+<section class="admin-section">
+  <h2>فرق اللاعبين المسجلين</h2>
+  <div id="playerTeamsAdminList">
+    <p class="muted">جاري تحميل الفرق...</p>
+  </div>
+</section>
+${adminNewsManager()}${adminMatchesManager()}`:`<h2>${t("login")}</h2><div class="form"><p class="muted">${t("adminHint")}</p>${currentUser?`<div class="card"><b>Firebase admin check</b><p>Project ID: <code>${esc(firebase.app().options.projectId)}</code></p><p>Signed-in UID: <code>${esc(adminCheck.uid||currentUser.uid)}</code></p><p>Document path: <code>${esc(adminCheck.path)}</code></p><p>Document exists: <b>${adminCheck.exists===null?"not confirmed":String(adminCheck.exists)}</b></p><p>Role field: <b>${esc(adminCheck.role)}</b></p><p>Status: <b>${esc(adminCheck.state)}</b></p>${adminCheck.error?`<p style="color:#f88">${esc(adminCheck.error)}</p>`:""}<button class="btn" onclick="auth.signOut()">${t("logout")}</button></div>`:`<label>${t("username")}</label><input id="user" type="email" placeholder="admin@example.com" autocomplete="username"><label>${t("password")}</label><input id="pass" type="password" autocomplete="current-password"><button class="btn primary" onclick="login()">${t("login")}</button><p id="err" class="muted"></p>`}</div>`}
+if(page==="admin" && isAdmin) loadAdminPlayerTeams();
+if(page==="teamProfile"){
+  el.innerHTML='<p class="muted">جاري تحميل معلومات الفريق...</p>';
+  teamProfileView();
+}
+}
+async function login(){
+  const email=document.getElementById("user").value.trim(), password=document.getElementById("pass").value;
+  const err=document.getElementById("err");
+  if(!email||!password){err.textContent=t("badLogin");return;}
+  try {await auth.signInWithEmailAndPassword(email,password);}
+  catch(e){err.textContent=e.code==="auth/invalid-credential"?t("badLogin"):(e.message||t("badLogin"));}
+}
+function addLeague(){if(!isAdmin)return;let n=document.getElementById("lname").value.trim(),s=document.getElementById("season").value.trim(),mode=document.getElementById("competitionType")?.value||"league",cupFormat=document.getElementById("cupFormat")?.value||"single";if(!n)return;const directQualifiers=Math.max(0,Number(document.getElementById("champDirect")?.value||8)),playoffTeams=Math.max(0,Number(document.getElementById("champPlayoff")?.value||16)),playoffFormat=document.getElementById("champPlayoffFormat")?.value||"single",knockoutFormat=document.getElementById("champKnockoutFormat")?.value||"single";const teams=[...document.querySelectorAll(".league-team-choice:checked")].map(x=>x.value);if(teams.length<2)return alert(t("needTeams"));if(mode==="champions"&&((teams.length<9||(teams.length%2!==0&&teams.length!==9))||directQualifiers+playoffTeams>teams.length||playoffTeams%2!==0||directQualifiers+playoffTeams<2))return alert(t("championsNeedTeams")+"\nتأكد أن عدد المتأهلين والملحق لا يتجاوز عدد الفرق، وعدد فرق الملحق زوجي.");let id="L"+Date.now();db.leagues.push({id,name:n,season:s,teams,mode,cupFormat,directQualifiers,playoffTeams,playoffFormat,knockoutFormat,cupByes:[]});selected=id;persist();render()}
+function addTeam(){let n=document.getElementById("teamName").value.trim(),l=current();if(!n||!l)return;if(!l.teams.includes(n))l.teams.push(n);persist();render()}
+async function adminAddTeam(encodedLeagueId){if(!isAdmin)return;const id=decodeURIComponent(encodedLeagueId),l=db.leagues.find(x=>String(x.id)===id),input=document.getElementById("adminTeam-"+id);if(!l||!input)return;const name=input.value.trim();if(!name)return;if((l.teams||[]).includes(name))return alert("الفريق موجود مسبقاً");l.teams=l.teams||[];l.teams.push(name);await persist();render()}
+async function editTeam(encodedLeagueId,encodedTeam){if(!isAdmin)return;const id=decodeURIComponent(encodedLeagueId),oldName=decodeURIComponent(encodedTeam),l=db.leagues.find(x=>String(x.id)===id);if(!l)return;const next=prompt(t("editTeam"),oldName);if(next===null)return;const name=next.trim();if(!name)return alert(t("teamName"));if(name!==oldName&&(l.teams||[]).includes(name))return alert("الفريق موجود مسبقاً");l.teams=(l.teams||[]).map(x=>x===oldName?name:x);db.matches.forEach(m=>{if(String(m.league)===id){if(m.h===oldName)m.h=name;if(m.a===oldName)m.a=name}});await persist();render()}
+async function deleteTeam(encodedLeagueId,encodedTeam){if(!isAdmin)return;const id=decodeURIComponent(encodedLeagueId),name=decodeURIComponent(encodedTeam),l=db.leagues.find(x=>String(x.id)===id);if(!l)return;if(db.matches.some(m=>String(m.league)===id&&(m.h===name||m.a===name)))return alert("لا يمكن حذف الفريق لأنه مرتبط بمباريات. عدّل أو احذف المباريات أولاً.");if(!confirm(t("confirmDelete")+" "+name))return;l.teams=(l.teams||[]).filter(x=>x!==name);await persist();render()}
+async function generateSchedule(leagueId){if(!isAdmin)return;const l=db.leagues.find(x=>String(x.id)===String(leagueId));if(!l)return;if(l.mode==="cup")return generateCupSchedule(l);if(l.mode==="champions")return generateChampionsLeagueSchedule(l);const teams=(l.teams||[]).slice();if(teams.length<2)return alert(t("needTeams"));if(db.matches.some(m=>String(m.league)===String(leagueId)))return alert(t("scheduleExists"));if(!confirm(t("scheduleConfirm")))return;for(let i=teams.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[teams[i],teams[j]]=[teams[j],teams[i]];}const rotation=teams.slice();if(rotation.length%2)rotation.push(null);const totalRounds=rotation.length-1,half=rotation.length/2,fixtures=[];for(let r=0;r<totalRounds;r++){for(let i=0;i<half;i++){const a=rotation[i],b=rotation[rotation.length-1-i];if(a&&b){let home=a,away=b;if((r+i)%2){home=b;away=a;}fixtures.push({round:r+1,leg:"home",h:home,a:away});fixtures.push({round:r+1,leg:"away",h:away,a:home});}}const fixed=rotation[0],rest=rotation.slice(1);rest.unshift(rest.pop());rotation.splice(0,rotation.length,fixed,...rest);}const batch=cloud.batch(),created=[];fixtures.forEach((m,index)=>{const id="SCH_"+String(leagueId)+"_"+m.leg+"_"+m.round+"_"+index;const record={id,league:String(leagueId),h:m.h,a:m.a,hs:null,as:null,round:m.round,leg:m.leg,schedule:true};created.push(record);batch.set(cloud.collection("matches").doc(id),record);});try{await batch.commit();db.matches.push(...created);localStorage.novaDB=JSON.stringify(db);selected=String(leagueId);selectedRound=1;selectedLeg="home";render();}catch(e){alert("Firebase: "+(e.message||e));}}
+function shuffled(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+async function generateChampionsLeagueSchedule(l){
+ if(!isAdmin)return;const teams=shuffled(l.teams||[]);if(teams.length<9||(teams.length%2!==0&&teams.length!==9))return alert(t("championsNeedTeams")+"\nاستعمل 9 فرق أو عدداً زوجياً من 10 فما فوق.");if(db.matches.some(m=>String(m.league)===String(l.id)))return alert(t("scheduleExists"));if(!confirm(t("scheduleConfirm")+"\\nChampions League: 8 مباريات لكل فريق."))return;
+ const rotation=teams.slice();if(rotation.length%2)rotation.push(null);const rounds=rotation.length-1,half=rotation.length/2,created=[];
+ const roundsToGenerate=teams.length===9?9:8;for(let r=0;r<roundsToGenerate;r++){for(let i=0;i<half;i++){const a=rotation[i],b=rotation[rotation.length-1-i];if(a&&b){const flip=Math.random()<.5;created.push({id:"CHL_"+l.id+"_"+(r+1)+"_"+i,league:String(l.id),h:flip?b:a,a:flip?a:b,hs:null,as:null,round:r+1,leg:"home",schedule:true,champions:true,stage:"league"});}}const fixed=rotation[0],rest=rotation.slice(1);rest.unshift(rest.pop());rotation.splice(0,rotation.length,fixed,...rest);}
+ try{const batch=cloud.batch();created.forEach(m=>batch.set(cloud.collection("matches").doc(m.id),m));batch.set(cloud.collection("leagues").doc(String(l.id)),{...l,championsStarted:true});await batch.commit();db.matches.push(...created);l.championsStarted=true;localStorage.novaDB=JSON.stringify(db);selected=String(l.id);selectedRound=1;selectedLeg="home";render();}catch(e){alert("Firebase: "+(e.message||e));}
+}
+function championsWinners(l,round){const all=db.matches.filter(m=>String(m.league)===String(l.id)&&m.champions&&m.stage!=="league"&&Number(m.round)===round);const groups={};all.forEach(m=>{const key=String(m.id).replace(/_away$/ ,"");(groups[key]=groups[key]||[]).push(m)});const winners=[];for(const pair of Object.values(groups)){if(pair.some(m=>m.hs===null||m.as===null))return null;const a=pair[0].h,b=pair[0].a;let sa=0,sb=0;pair.forEach(m=>{sa+=Number(m.h===a?m.hs:m.as);sb+=Number(m.h===b?m.hs:m.as)});let winner=sa>sb?a:sb>sa?b:null;if(!winner){winner=prompt("تعادل. كتب اسم الفريق المتأهل بعد ركلات الترجيح: ");if(winner!==a&&winner!==b)return null;}winners.push(winner);}return winners;}
+async function generateNextChampionsStage(leagueId){if(!isAdmin)return;const l=db.leagues.find(x=>String(x.id)===String(leagueId));if(!l||l.mode!=="champions")return;const all=db.matches.filter(m=>String(m.league)===String(l.id)&&m.champions);const leaguePhase=all.filter(m=>m.stage==="league");if(leaguePhase.length===0||leaguePhase.some(m=>m.hs===null||m.as===null))return alert("خاصك تسجل نتائج مباريات مرحلة الدوري الثمانية أولاً.");const standingsRows=standings(l);const staged=all.filter(m=>m.stage!=="league");
+ if(!staged.length){const direct=Number(l.directQualifiers||0),count=Number(l.playoffTeams||0);if(direct+count>standingsRows.length||count%2)return alert("إعدادات التأهل غير صحيحة.");let playoff=standingsRows.slice(direct,direct+count).map(x=>x.name);if(playoff.length<2)return alert("خاص فريقين على الأقل فالملحق.");playoff=shuffled(playoff);const created=[];for(let i=0;i<playoff.length;i+=2){const base={id:"CHL_"+l.id+"_P_"+i,league:String(l.id),h:playoff[i],a:playoff[i+1],hs:null,as:null,round:9,leg:l.playoffFormat==="homeAway"?"home":"single",schedule:true,champions:true,stage:"playoff"};created.push(base);if(l.playoffFormat==="homeAway")created.push({...base,id:base.id+"_away",h:playoff[i+1],a:playoff[i],leg:"away"});}l.championsDirect=standingsRows.slice(0,direct).map(x=>x.name);try{const batch=cloud.batch();created.forEach(m=>batch.set(cloud.collection("matches").doc(m.id),m));batch.set(cloud.collection("leagues").doc(String(l.id)),{...l});await batch.commit();db.matches.push(...created);localStorage.novaDB=JSON.stringify(db);selected=String(l.id);selectedRound=9;selectedLeg=l.playoffFormat==="homeAway"?"home":"single";render();}catch(e){alert("Firebase: "+(e.message||e));}return;}
+ const rounds=[...new Set(staged.map(m=>Number(m.round)))].sort((a,b)=>a-b),prev=rounds[rounds.length-1];if(staged.some(m=>Number(m.round)===prev&&(m.hs===null||m.as===null)))return alert("سجل نتائج المرحلة الحالية كاملة أولاً.");let winners=championsWinners(l,prev);if(!winners)return alert("تعذر تحديد المتأهلين. راجع النتائج.");let direct=l.championsDirect||[];if(staged.every(m=>m.stage==="playoff")){winners=winners.concat(direct);}if(winners.length===1){alert("بطل NOVA Champions League: "+winners[0]);return;}if(winners.length%2!==0)return alert("عدد المتأهلين خاصو يكون زوجي. راجع إعدادات التأهل.");winners=shuffled(winners);const next=prev+1,created=[];for(let i=0;i<winners.length;i+=2){const base={id:"CHL_"+l.id+"_K_"+next+"_"+i,league:String(l.id),h:winners[i],a:winners[i+1],hs:null,as:null,round:next,leg:l.knockoutFormat==="homeAway"?"home":"single",schedule:true,champions:true,stage:"knockout"};created.push(base);if(l.knockoutFormat==="homeAway")created.push({...base,id:base.id+"_away",h:winners[i+1],a:winners[i],leg:"away"});}try{const batch=cloud.batch();created.forEach(m=>batch.set(cloud.collection("matches").doc(m.id),m));await batch.commit();db.matches.push(...created);localStorage.novaDB=JSON.stringify(db);selected=String(l.id);selectedRound=next;selectedLeg=l.knockoutFormat==="homeAway"?"home":"single";render();}catch(e){alert("Firebase: "+(e.message||e));}}
+async function generateCupSchedule(l){const teams=[...new Set((l.teams||[]).map(x=>String(x||"").trim()).filter(Boolean))];if(teams.length<2)return alert(t("needTeams"));if(db.matches.some(m=>String(m.league)===String(l.id)))return alert(t("scheduleExists"));if(!confirm(t("scheduleConfirm")))return;for(let i=teams.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[teams[i],teams[j]]=[teams[j],teams[i]];}const bye=teams.length%2?teams.pop():null,created=[];for(let i=0;i<teams.length;i+=2){const isHomeAway=l.cupFormat==="homeAway";const pair={id:"CUP_"+String(l.id)+"_1_"+i,league:String(l.id),h:teams[i],a:teams[i+1],hs:null,as:null,round:1,leg:isHomeAway?"home":"single",schedule:true,cup:true};created.push(pair);if(isHomeAway)created.push({...pair,id:pair.id+"_away",h:teams[i+1],a:teams[i],leg:"away"});}l.cupByes=bye?[{round:1,teams:[bye]}]:[];try{const batch=cloud.batch();created.forEach(m=>batch.set(cloud.collection("matches").doc(m.id),m));batch.set(cloud.collection("leagues").doc(String(l.id)),{...l});await batch.commit();db.matches.push(...created);localStorage.novaDB=JSON.stringify(db);selected=String(l.id);selectedRound=1;selectedLeg=l.cupFormat==="homeAway"?"home":"single";render();}catch(e){alert("Firebase: "+(e.message||e));}}
+async function generateNextCupRound(leagueId){if(!isAdmin)return;const l=db.leagues.find(x=>String(x.id)===String(leagueId));if(!l||l.mode!=="cup")return;const all=uniqueCupFixtures(db.matches.filter(m=>String(m.league)===String(leagueId)&& (m.cup||String(m.id).startsWith("CUP_"))),l),rounds=[...new Set(all.map(m=>Number(m.round)))].sort((a,b)=>a-b);if(!rounds.length)return;const prev=rounds[rounds.length-1];if(all.some(m=>Number(m.round)===prev&&(m.hs===null||m.as===null)))return alert("خاصك تسجل نتائج جميع مباريات هاد الجولة أولاً.");let winners=[];const groups={};all.filter(m=>Number(m.round)===prev).forEach(m=>{const key=l.cupFormat==="homeAway"?String(m.id).replace(/_away$/," ").trim():String(m.id);(groups[key]=groups[key]||[]).push(m)});for(const pair of Object.values(groups)){let a=pair[0].h,b=pair[0].a,scoreA=0,scoreB=0;pair.forEach(m=>{scoreA+=Number(m.h===a?m.hs:m.as);scoreB+=Number(m.h===b?m.hs:m.as)});let winner=scoreA>scoreB?a:scoreB>scoreA?b:null;if(!winner){winner=prompt(t("cupWinner")+" ("+a+" / "+b+") — كتب اسم الفريق المتأهل:");if(winner!==null)winner=winner.trim();if(winner!==a&&winner!==b)return alert("الاسم خاصو يكون واحد من الفريقين: "+a+" أو "+b); }winners.push(winner);}const byeEntry=(l.cupByes||[]).find(x=>Number(x.round)===prev);if(byeEntry)winners.push(...byeEntry.teams);if(winners.length<2){alert("مبروك! بطل الكأس هو: "+(winners[0]||""));return;}for(let i=winners.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[winners[i],winners[j]]=[winners[j],winners[i]];}const bye=winners.length%2?winners.pop():null,next=prev+1,created=[];for(let i=0;i<winners.length;i+=2){const base={id:"CUP_"+String(l.id)+"_"+next+"_"+i,league:String(l.id),h:winners[i],a:winners[i+1],hs:null,as:null,round:next,schedule:true,cup:true};created.push({...base,leg:l.cupFormat==="homeAway"?"home":"single"});if(l.cupFormat==="homeAway")created.push({...base,id:base.id+"_away",h:winners[i+1],a:winners[i],leg:"away"});}l.cupByes=l.cupByes||[];if(bye)l.cupByes.push({round:next,teams:[bye]});try{const batch=cloud.batch();created.forEach(m=>batch.set(cloud.collection("matches").doc(m.id),m));batch.set(cloud.collection("leagues").doc(String(l.id)),{...l});await batch.commit();db.matches.push(...created);localStorage.novaDB=JSON.stringify(db);selected=String(l.id);selectedRound=next;selectedLeg=l.cupFormat==="homeAway"?"home":"single";render();}catch(e){alert("Firebase: "+(e.message||e));}}
+function addMatch(){let l=current(),h=document.getElementById("mh").value,a=document.getElementById("ma").value,hs=Number(document.getElementById("hs").value),as=Number(document.getElementById("as").value);if(!l||!h||!a||h===a||!Number.isFinite(hs)||!Number.isFinite(as))return;db.matches.push({id:"M"+Date.now(),league:l.id,h,a,hs,as});persist();render()}
+async function editLeague(id){if(!isAdmin)return;const l=db.leagues.find(x=>String(x.id)===String(id));if(!l)return;const name=prompt(t("editLeague"),l.name);if(name===null)return;const season=prompt(t("season"),l.season||"");if(season===null)return;if(!name.trim())return alert(t("leagueName"));l.name=name.trim();l.season=season.trim();await persist();render()}
+async function deleteLeague(id){if(!isAdmin||!confirm(t("confirmDelete")))return;const related=db.matches.filter(m=>String(m.league)===String(id));try{const batch=cloud.batch();batch.delete(cloud.collection("leagues").doc(String(id)));related.forEach(m=>batch.delete(cloud.collection("matches").doc(String(m.id))));await batch.commit();db.leagues=db.leagues.filter(l=>String(l.id)!==String(id));db.matches=db.matches.filter(m=>String(m.league)!==String(id));localStorage.novaDB=JSON.stringify(db);if(String(selected)===String(id))selected=null;render()}catch(e){alert("Firebase: "+(e.message||e))}}
+async function saveMatchDetails(encodedId){
+  if(!isAdmin)return;
+  const id=decodeURIComponent(encodedId),m=db.matches.find(x=>String(x.id)===id);
+  if(!m)return;
+  const key=encodeURIComponent(id);
+  const hsValue=document.getElementById("matchHs-"+key)?.value.trim()??"";
+  const asValue=document.getElementById("matchAs-"+key)?.value.trim()??"";
+  const comments=document.getElementById("matchComments-"+key)?.value.trim()??"";
+  if((hsValue==="")!==(asValue===""))return alert("دخل نتيجة الفريقين بجوج، أو خلي الخانتين فارغتين.");
+  if(hsValue!==""&&(!/^\d+$/.test(hsValue)||!/^\d+$/.test(asValue)))return alert("النتيجة خاصها تكون أرقام صحيحة موجبة أو صفر.");
+  m.hs=hsValue===""?null:Number(hsValue);
+  m.as=asValue===""?null:Number(asValue);
+  m.comments=comments;
+  await persist();
+  render();
+}
+async function editMatch(id){return saveMatchDetails(encodeURIComponent(String(id)));}
+async function deleteMatch(id){if(!isAdmin||!confirm(t("confirmDelete")))return;try{await cloud.collection("matches").doc(String(id)).delete();db.matches=db.matches.filter(m=>String(m.id)!==String(id));localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("Firebase: "+(e.message||e))}}
+
+async function playerLogin(){
+  const email=document.getElementById("playerEmail")?.value.trim();
+  const password=document.getElementById("playerPassword")?.value;
+  const err=document.getElementById("playerError");
+  if(!email||!password){if(err)err.textContent="دخل البريد الإلكتروني وكلمة المرور";return;}
+  try{
+    await auth.signInWithEmailAndPassword(email,password);
+    go("player");
+  }catch(e){
+    if(err)err.textContent=e.message||"تعذر تسجيل الدخول";
+  }
+}
+
+async function playerRegister(){
+  const name=document.getElementById("regName")?.value.trim();
+  const email=document.getElementById("regEmail")?.value.trim();
+  const phone=document.getElementById("regPhone")?.value.trim();
+  const password=document.getElementById("regPassword")?.value;
+  const teamName=document.getElementById("regTeam")?.value.trim();
+  const overall=Number(document.getElementById("regOverall")?.value);
+  const formation=document.getElementById("regFormation")?.value;
+  const err=document.getElementById("playerError");
+
+  if(!name||!email||!phone||!password||!teamName){
+    if(err)err.textContent="عمر جميع الخانات";
+    return;
+  }
+  if(password.length<6){
+    if(err)err.textContent="كلمة المرور خاصها تكون 6 أحرف على الأقل";
+    return;
+  }
+  if(!Number.isInteger(overall)||overall<100||overall>160){
+    if(err)err.textContent="التقييم خاصو يكون بين 100 و160";
+    return;
+  }
+
+  try{
+    if(err)err.textContent="جاري إنشاء الحساب...";
+    const credential=await auth.createUserWithEmailAndPassword(email,password);
+    const uid=credential.user.uid;
+    const now=Date.now();
+
+    await cloud.collection("playerProfiles").doc(uid).set({
+      uid,name,phone,createdAt:now,updatedAt:now
+    });
+
+    await cloud.collection("playerTeams").doc(uid).set({
+      ownerUid:uid,
+      name:teamName,
+      overall,
+      formation,
+      logoUrl:"",
+      createdAt:now,
+      updatedAt:now
+    });
+
+    go("player");
+  }catch(e){
+    if(err)err.textContent=e.message||"تعذر إنشاء الحساب";
+  }
+}
+
+async function playerResetPassword(){
+  const email=document.getElementById("playerEmail")?.value.trim();
+  const err=document.getElementById("playerError");
+  if(!email){
+    if(err)err.textContent="دخل البريد الإلكتروني أولاً";
+    return;
+  }
+  try{
+    await auth.sendPasswordResetEmail(email);
+    if(err)err.textContent="تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني";
+  }catch(e){
+    if(err)err.textContent=e.message||"تعذر إرسال الرابط";
+  }
+  }
+  
+async function playerDashboard(){
+  const el=document.getElementById("app");
+  const uid=currentUser?.uid;
+  if(!uid)return;
+
+  el.innerHTML='<p>جاري تحميل معلوماتك...</p>';
+
+  try{
+    const [profileDoc,teamDoc]=await Promise.all([
+      cloud.collection("playerProfiles").doc(uid).get(),
+      cloud.collection("playerTeams").doc(uid).get()
+    ]);
+
+    const p=profileDoc.exists?profileDoc.data():{};
+    const team=teamDoc.exists?teamDoc.data():{};
+
+    if(!currentUser||currentUser.uid!==uid)return;
+
+    el.innerHTML=`<div class="form">
+      <h2>حساب اللاعب</h2>
+      <label>الاسم الكامل</label>
+      <input id="editPlayerName" value="${esc(p.name||"")}">
+
+      <label>البريد الإلكتروني</label>
+      <input value="${esc(currentUser.email||"")}" disabled>
+
+      <label>رقم الهاتف</label>
+      <input id="editPlayerPhone" value="${esc(p.phone||"")}">
+
+      <h3>الفريق ديالك</h3>
+      <label>اسم الفريق</label>
+      <input id="editPlayerTeam" value="${esc(team.name||"")}"
+      <label>تقييم الفريق</label>
+      <input id="editPlayerOverall" type="number" min="100" max="160" value="${Number(team.overall)||100}">
+<label>صورة الفريق (اختيارية)</label>
+<input id="editPlayerLogo" type="file" accept="image/*">
+
+      <label>التشكيلة</label>
+      <select id="editPlayerFormation">
+        ${["4-3-3","4-4-2","3-5-2","4-2-3-1"].map(f=>`<option value="${f}" ${team.formation===f?"selected":""}>${f}</option>`).join("")}
+      </select>
+
+      <button class="btn primary" onclick="playerSave()">حفظ التعديلات</button>
+      <p id="playerEditError" class="muted"></p>
+      <button class="btn danger" onclick="auth.signOut()">تسجيل الخروج</button>
+    </div>`;
+  }catch(e){
+    el.innerHTML="تعذر تحميل المعلومات: "+esc(e.message||e);
+  }
+}
+async function loadPlayerTeams(){
+  if(!isAdmin)return;
+
+  const box=document.getElementById("leagueTeamChoices");
+  if(!box)return;
+
+  box.innerHTML='<p class="muted">جاري تحميل فرق اللاعبين...</p>';
+
+  try{
+    const snap=await cloud.collection("playerTeams").get();
+
+    const teams=snap.docs.map(doc=>doc.data());
+
+    box.innerHTML=
+      (db.teams||[]).map(team=>`
+        <label style="display:block;padding:6px">
+          <input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">
+          ${esc(team.name)}
+        </label>
+      `).join("")+
+      teams.map(team=>`
+        <label style="display:block;padding:6px">
+          <input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">
+          ${esc(team.name)} — فريق لاعب
+        </label>
+      `).join("");
+
+    if(!teams.length && !(db.teams||[]).length){
+      box.innerHTML='<p class="muted">لا توجد فرق مسجلة حالياً</p>';
+    }
+  }catch(e){
+    box.innerHTML='<p class="muted">تعذر تحميل الفرق: '+esc(e.message||e)+'</p>';
+  }
+}
+async function ensureLiveGuest(){
+  // Reuse an existing Firebase session; otherwise create an anonymous viewer session.
+  if(auth.currentUser)return auth.currentUser;
+  const credential = await auth.signInAnonymously();
+  return credential.user || auth.currentUser;
+}
+async function createLiveRoom(){
+  if(!currentUser || currentUser.isAnonymous)return alert("خاصك تدخل بحساب لاعب باش تنشئ غرفة.");
+  const input=document.getElementById("liveRoomName"),name=input?.value.trim();
+  const nickInput=document.getElementById("liveRoomNick"),ownerName=nickInput?.value.trim();
+  if(!ownerName)return alert("كتب الاسم المستعار اللي غادي يبان للناس.");
+  if(!name)return alert("كتب اسم الغرفة أو المباراة.");
+  try{
+    const ref=cloud.collection("liveRooms").doc();
+    await ref.set({name,ownerUid:currentUser.uid,ownerName,createdAt:firebase.firestore.FieldValue.serverTimestamp(),active:true,public:true,viewerCount:0});
+    input.value="";if(nickInput)nickInput.value="";alert("تم إنشاء الغرفة. يمكن لأي مشاهد الدخول إليها.");loadLiveRooms();
+  }catch(e){alert("تعذر إنشاء الغرفة: "+(e.message||e));}
+}
+async function loadLiveRooms(){
+  const box=document.getElementById("liveRoomsList");if(!box)return;
+  box.innerHTML='<p class="muted">جاري تحميل الغرف...</p>';
+  try{
+    const snap=await cloud.collection("liveRooms").where("active","==",true).get();
+    if(!document.getElementById("liveRoomsList"))return;
+    if(snap.empty){box.innerHTML='<p class="muted">لا توجد غرف مفتوحة حالياً.</p>';return;}
+    box.innerHTML=snap.docs.map(doc=>{const room=doc.data();return `<div class="card" style="margin:10px 0"><h3>🔴 ${esc(room.name||"غرفة NOVA")}</h3><p class="muted">${esc(room.ownerName||"منظم NOVA")} • غرفة عامة</p><button class="btn primary" onclick="joinLiveRoom('${doc.id}')">دخول ومشاهدة</button></div>`}).join("");
+  }catch(e){box.innerHTML='<p class="muted">تعذر تحميل الغرف: '+esc(e.message||e)+'</p><p class="small">تأكد من صلاحيات Firestore.</p>';}
+}
+async function joinLiveRoom(roomId){
+  try{
+    const guest=await ensureLiveGuest();if(!guest)throw new Error("تعذر إنشاء جلسة مشاهدة.");
+    const roomRef=cloud.collection("liveRooms").doc(roomId),roomSnap=await roomRef.get();
+    if(!roomSnap.exists||roomSnap.data().active!==true)return alert("الغرفة غير موجودة أو مغلقة.");
+    const isHost = guest.uid === roomSnap.data().ownerUid;
+    liveRoomId=roomId;
+    const nick=guest.isAnonymous?"مشاهد "+guest.uid.slice(0,5):(guest.email||"لاعب");
+    await roomRef.collection("participants").doc(guest.uid).set({uid:guest.uid,name:nick,joinedAt:firebase.firestore.FieldValue.serverTimestamp(),role:"viewer"});
+    if(liveRoomUnsub)liveRoomUnsub();
+    document.getElementById("app").innerHTML=`
+      <div class="form"><h2>🔴 ${esc(roomSnap.data().name||"غرفة NOVA")}</h2>
+      <div class="stats"><div class="stat"><b id="liveViewerCount">1</b>مشاهدون الآن</div><div class="stat"><b>PUBLIC</b>دخول عام</div><div class="stat"><b>LIVE</b>غرفة مفتوحة</div></div>
+      <div class="card"><h3>📺 شاشة المباراة</h3><div id="liveVideoNotice" class="muted">جاري تجهيز البث المباشر...</div>
+<div id="liveVideoContainer" style="width:100%;background:#000;border-radius:12px;overflow:hidden;min-height:220px;display:flex;align-items:center;justify-content:center">
+  <video id="liveVideo" autoplay playsinline controls style="width:100%;max-height:65vh;object-fit:contain"></video>
+</div>
+      <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
+      style="display:${isHost ? "block" : "none"}"
+      class="btn primary"
+      onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)">
+📡 ابدأ بث شاشة الهاتف
+</button><div id="liveParticipants" class="card">جاري التحميل...</div>
+      <h3>💬 دردشة مباشرة</h3><div id="liveChatMessages" class="card" style="height:220px;overflow:auto"><p class="muted">جاري تحميل الرسائل...</p></div>
+      <div class="row"><input id="liveChatInput" maxlength="400" placeholder="اكتب رسالة..." style="margin:0"><button class="btn primary" onclick="sendLiveMessage()">إرسال</button></div>
+      <button class="btn" onclick="leaveLiveRoom()" style="margin-top:12px">مغادرة الغرفة</button></div>`;
+    const liveTokenResponse = await fetch("https://nova-champions-live.hamza-houssni0.workers.dev/token", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + await guest.getIdToken()
+  },
+  body: JSON.stringify({ roomId })
+});
+
+const liveTokenData = await liveTokenResponse.json();
+
+if (!liveTokenResponse.ok) {
+  throw new Error(liveTokenData.error || "تعذر الاتصال بالبث المباشر");
+}
+    window.novaLiveServerUrl = liveTokenData.serverUrl;
+window.novaLiveToken = liveTokenData.token;
+    if (!isHost) {
+    const liveRoom = new LivekitClient.Room();
+
+liveRoom.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
+  if (track.kind === "video") {
+    const videoElement = document.getElementById("liveVideo");
+    if (videoElement) track.attach(videoElement);
+  }
+});
+
+liveRoom.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track) => {
+  const videoElement = document.getElementById("liveVideo");
+  if (videoElement) track.detach(videoElement);
+});
+
+await liveRoom.connect(liveTokenData.serverUrl, liveTokenData.token);
+    }
+    liveRoomUnsub=roomRef.collection("participants").onSnapshot(snap=>{
+      const list=document.getElementById("liveParticipants"),count=document.getElementById("liveViewerCount");
+      if(count)count.textContent=snap.size;
+      if(list)list.innerHTML=snap.docs.map(d=>`<div class="row"><span>${esc(d.data().name||"مشاهد")}</span><span class="pill">${d.id===roomSnap.data().ownerUid?"HOST":"VIEWER"}</span></div>`).join("")||'<p class="muted">لا يوجد مشاهدون.</p>';
+    });
+    if(liveChatUnsub)liveChatUnsub();
+    liveChatUnsub=roomRef.collection("messages").orderBy("createdAt","asc").limitToLast(80).onSnapshot(snap=>{
+      const chat=document.getElementById("liveChatMessages");if(!chat)return;
+      chat.innerHTML=snap.docs.map(d=>{const m=d.data();return `<div style="padding:6px 2px;border-bottom:1px solid #333"><b style="color:var(--gold)">${esc(m.name||"مشاهد")}</b><div>${esc(m.text||"")}</div></div>`}).join("")||'<p class="muted">كن أول واحد يكتب رسالة.</p>';
+      chat.scrollTop=chat.scrollHeight;
+    });
+  }catch(e){alert("تعذر دخول الغرفة: "+(e.message||e)+"\nتأكد من تفعيل Anonymous sign-in في Firebase Authentication.");}
+}
+let liveChatUnsub=null;
+async function sendLiveMessage(){
+  if(!liveRoomId)return;const input=document.getElementById("liveChatInput"),textValue=input?.value.trim();if(!textValue)return;
+  const user=auth.currentUser;if(!user)return;
+  try{await cloud.collection("liveRooms").doc(liveRoomId).collection("messages").add({uid:user.uid,name:user.isAnonymous?"مشاهد "+user.uid.slice(0,5):(user.email||"لاعب"),text:textValue,createdAt:firebase.firestore.FieldValue.serverTimestamp()});input.value="";}
+  catch(e){alert("تعذر إرسال الرسالة: "+(e.message||e));}
+}
+async function leaveLiveRoom(){
+  if(liveRoomUnsub){liveRoomUnsub();liveRoomUnsub=null;}if(liveChatUnsub){liveChatUnsub();liveChatUnsub=null;}
+  const uid=auth.currentUser?.uid;
+  if(liveRoomId&&uid){try{await cloud.collection("liveRooms").doc(liveRoomId).collection("participants").doc(uid).delete();}catch(e){console.warn(e);}}
+  liveRoomId=null;go("live");
+}
+
+async function playerSave(){
+  const uid=currentUser?.uid;
+  if(!uid)return;
+
+  const name=document.getElementById("editPlayerName").value.trim();
+  const phone=document.getElementById("editPlayerPhone").value.trim();
+  const teamName=document.getElementById("editPlayerTeam").value.trim();
+  const overall=Number(document.getElementById("editPlayerOverall").value);
+  const formation=document.getElementById("editPlayerFormation").value;
+  const err=document.getElementById("playerEditError");
+
+  if(!name||!phone||!teamName){
+    err.textContent="عمر جميع الخانات";
+    return;
+  }
+
+  if(!Number.isInteger(overall)||overall<100||overall>160){
+    err.textContent="التقييم خاصو يكون بين 100 و160";
+    return;
+  }
+
+  try{
+    err.textContent="جاري الحفظ...";
+    const now=Date.now();
+    const logoFile=document.getElementById("editPlayerLogo")?.files?.[0];
+const oldTeam=(await cloud.collection("playerTeams").doc(uid).get()).data()||{};
+const logoUrl=logoFile?await uploadTeamImage(logoFile):(oldTeam.logoUrl||"");
+
+    await cloud.collection("playerProfiles").doc(uid).update({
+      name,phone,updatedAt:now
+    });
+
+    await cloud.collection("playerTeams").doc(uid).update({
+  name:teamName,overall,formation,logoUrl,updatedAt:now
+});
+
+    err.textContent="تم حفظ التعديلات بنجاح ❤️";
+  }catch(e){
+    err.textContent="تعذر الحفظ: "+(e.message||e);
+  }
+}
+  
+startCloudSync();
+render();
+
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target?.id==='liveChatInput')sendLiveMessage();});
+window.addEventListener('load',()=>{const splash=document.getElementById('nova-splash-screen');if(splash)setTimeout(()=>splash.classList.add('is-hidden'),2600);});
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err)));}
+  </script></body></html>
