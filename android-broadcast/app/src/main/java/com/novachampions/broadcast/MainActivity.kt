@@ -98,7 +98,7 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun handleExternalLink(url: String): Boolean {
+        private fun handleExternalLink(url: String): Boolean {
         val uri = Uri.parse(url)
         val scheme = uri.scheme ?: return false
         val host = uri.host ?: ""
@@ -112,27 +112,9 @@ class MainActivity : ComponentActivity() {
         if (!isWhatsApp) return false
 
         return try {
-    val intent = Intent(Intent.ACTION_VIEW, uri)
-
-    if (intent.resolveActivity(packageManager) != null) {
-        startActivity(intent)
-    } else {
-        val browserIntent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://api.whatsapp.com/send?phone=" +
-                uri.getQueryParameter("phone").orEmpty())
-        )
-        startActivity(browserIntent)
-    }
-    true
-} catch (e: Exception) {
-    Toast.makeText(
-        this,
-        "تعذر فتح WhatsApp",
-        Toast.LENGTH_LONG
-    ).show()
-    true
-}
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            true
+        } catch (e: Exception) {
             Toast.makeText(
                 this,
                 "تعذر فتح WhatsApp. تأكد من تثبيته.",
