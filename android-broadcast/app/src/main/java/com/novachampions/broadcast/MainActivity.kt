@@ -112,9 +112,27 @@ class MainActivity : ComponentActivity() {
         if (!isWhatsApp) return false
 
         return try {
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-            true
-        } catch (e: Exception) {
+    val intent = Intent(Intent.ACTION_VIEW, uri)
+
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    } else {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://api.whatsapp.com/send?phone=" +
+                uri.getQueryParameter("phone").orEmpty())
+        )
+        startActivity(browserIntent)
+    }
+    true
+} catch (e: Exception) {
+    Toast.makeText(
+        this,
+        "تعذر فتح WhatsApp",
+        Toast.LENGTH_LONG
+    ).show()
+    true
+}
             Toast.makeText(
                 this,
                 "تعذر فتح WhatsApp. تأكد من تثبيته.",
