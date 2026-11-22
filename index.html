@@ -290,23 +290,36 @@ async function teamProfileView(){
   const team=(db.teams||[]).find(x=>x.name===name)||{name};
   const st=teamStats(name);
 
+  
   let playerTeam={};
   let owner={};
 
   try{
     const snap=await cloud.collection("playerTeams")
-      .where("name","==",name).limit(1).get();
+      .where("name","==",name).get();
 
-    if(!snap.empty){
-      playerTeam=snap.docs[0].data();
+    for(const doc of snap.docs){
+      const candidate=doc.data();
+      const uid=candidate.ownerUid||doc.id;
+
       const profile=await cloud.collection("playerProfiles")
-        .doc(playerTeam.ownerUid).get();
-      if(profile.exists) owner=profile.data();
+        .doc(uid).get();
+
+      if(profile.exists){
+        const data=profile.data();
+
+        if(!owner.name || data.phone){
+          playerTeam=candidate;
+          owner=data;
+        }
+
+        if(data.phone) break;
+      }
     }
   }catch(e){
     console.log("Player team lookup:",e);
   }
-
+  
   const image=team.imageUrl||playerTeam.logoUrl||"";
   const phone=(team.whatsapp||owner.phone||"").replace(/\D/g,"");
   const players=team.players||[];
