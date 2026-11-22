@@ -331,7 +331,7 @@ async function teamProfileView(){
       <div class="stat"><b>${st.p?Math.round(st.w/st.p*100):0}%</b>نسبة الفوز</div>
     </div>
     ${players.length?`<h3>لائحة اللاعبين</h3><div class="card">${players.map((p,i)=>`<div class="row"><span>${i+1}. ${esc(p)}</span></div>`).join("")}</div>`:""}
-    ${phone?`<a class="btn primary" style="display:block;text-decoration:none;margin-top:14px" href="https://wa.me/${phone}" target="_blank">تواصل عبر WhatsApp</a>`:`<p class="muted">رقم WhatsApp غير متوفر</p>`}
+    ${phone?`<a class="btn primary" style="display:block;text-decoration:none;margin-top:14px" href="https://web.whatsapp.com/send?phone=${phone}" target="_blank" rel="noopener noreferrer">تواصل عبر WhatsApp</a>`:`<p class="muted">رقم WhatsApp غير متوفر</p>`}
   </section>`;
 }
   
