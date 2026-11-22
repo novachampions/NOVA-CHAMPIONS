@@ -870,4 +870,51 @@ render();
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target?.id==='liveChatInput')sendLiveMessage();});
 window.addEventListener('load',()=>{const splash=document.getElementById('nova-splash-screen');if(splash)setTimeout(()=>splash.classList.add('is-hidden'),2600);});
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err)));}
+ // NOVA CHAMPIONS BACKGROUND MUSIC
+const novaMusic = document.getElementById("novaMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+let musicEnabled = localStorage.getItem("novaMusicEnabled") !== "false";
+
+function updateMusicButton() {
+    musicToggle.textContent = musicEnabled
+        ? "🔇 إيقاف الموسيقى"
+        : "🎵 تشغيل الموسيقى";
+}
+
+async function playNovaMusic() {
+    if (!novaMusic || !musicEnabled) return;
+
+    try {
+        await novaMusic.play();
+    } catch (error) {
+        console.log("Music waiting for user interaction");
+    }
+}
+
+updateMusicButton();
+
+if (musicEnabled) {
+    playNovaMusic();
+}
+
+musicToggle.addEventListener("click", async () => {
+    musicEnabled = !musicEnabled;
+
+    localStorage.setItem("novaMusicEnabled", musicEnabled);
+
+    if (musicEnabled) {
+        await playNovaMusic();
+    } else {
+        novaMusic.pause();
+    }
+
+    updateMusicButton();
+});
+
+document.addEventListener("pointerdown", () => {
+    if (musicEnabled && novaMusic.paused) {
+        playNovaMusic();
+    }
+}, { once: true });
   </script></body></html>
