@@ -98,6 +98,32 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private fun handleExternalLink(url: String): Boolean {
+        val uri = Uri.parse(url)
+        val scheme = uri.scheme ?: return false
+        val host = uri.host ?: ""
+
+        val isWhatsApp =
+            scheme.equals("whatsapp", true) ||
+            host.equals("api.whatsapp.com", true) ||
+            host.equals("wa.me", true) ||
+            host.equals("www.whatsapp.com", true)
+
+        if (!isWhatsApp) return false
+
+        return try {
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            true
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "تعذر فتح WhatsApp. تأكد من تثبيته.",
+                Toast.LENGTH_LONG
+            ).show()
+            true
+        }
+    }
+    
     fun startScreenBroadcast(serverUrl: String, token: String) {
         pendingServerUrl = serverUrl
         pendingToken = token
