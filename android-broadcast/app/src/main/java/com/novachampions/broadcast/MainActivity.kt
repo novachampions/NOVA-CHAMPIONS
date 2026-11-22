@@ -67,7 +67,23 @@ class MainActivity : ComponentActivity() {
         webView.settings.domStorageEnabled = true
         webView.settings.mediaPlaybackRequiresUserGesture = false
 
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+
+    override fun shouldOverrideUrlLoading(
+        view: WebView?,
+        request: WebResourceRequest
+    ): Boolean {
+        return handleExternalLink(request.url.toString())
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun shouldOverrideUrlLoading(
+        view: WebView?,
+        url: String?
+    ): Boolean {
+        return handleExternalLink(url ?: return false)
+    }
+        }
         webView.webChromeClient = WebChromeClient()
 
         webView.addJavascriptInterface(
