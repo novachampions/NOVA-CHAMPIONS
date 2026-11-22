@@ -54,12 +54,13 @@ footer{text-align:center;color:#777;padding:25px;font-size:11px}
 .team-link{background:transparent;border:0;color:var(--gold);font-weight:bold;padding:3px;white-space:normal;text-decoration:underline;cursor:pointer}
 </style></head>
 <body>
-<div id="nova-splash-screen" class="is-hidden" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
+<div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
 <header><img src="assets/nova-champions-logo.png" alt="NOVA CHAMPIONS logo" style="display:block;width:min(190px,55vw);height:auto;max-height:190px;object-fit:contain;margin:0 auto 10px;border-radius:14px"><div class="logo">THE HOME OF CHAMPIONS</div><h1>NOVA CHAMPIONS</h1><p>OFFICIAL • FOOTBALL TOURNAMENTS</p></header>
 <nav id="nav"></nav><main id="app"></main><footer>NOVA CHAMPIONS OFFICIAL • Cloud Edition</footer>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
   <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBYaSpBtPKicbOMHiwarSvyAY5CDZfj5Nc",
@@ -86,8 +87,7 @@ fr:{news:"Journal",predictions:"Pronostics",home:"Accueil",live:"Direct",leagues
 en:{news:"News",predictions:"Predictions",home:"Home",live:"Live",leagues:"Leagues",matches:"Matches",table:"Standings",admin:"Admin",welcome:"Welcome to the home of champions",subtitle:"Follow competitions, results and standings",competitions:"Competitions",teams:"Teams",played:"Matches",latest:"Latest results",noMatches:"No matches yet",noLeagues:"No leagues yet",createLeague:"Create competition",competitionType:"Competition format",leagueMode:"League",cupMode:"Cup",championsMode:"Champions League",directQualifiers:"Direct qualifiers",playoffTeams:"Playoff teams",playoffFormat:"Playoff format",knockoutFormat:"Knockout format",leaguePhase:"League phase",playoffStage:"Playoffs",knockoutStage:"Knockout rounds",nextChampionsStage:"Create next stage",championsNeedTeams:"Champions League needs at least 9 teams so each team can play 8 different opponents.",cupFormat:"Cup format",singleMatch:"Single match",homeAway:"Home and away",nextCupRound:"Create next round",cupWinner:"Qualified",cupNoStandings:"This is a knockout cup, so there is no points table.",leagueName:"League name",season:"Season",add:"Add",teamName:"Team name",addTeam:"Add team",match:"New match",homeTeam:"Home team",awayTeam:"Away team",score1:"Home goals",score2:"Away goals",save:"Save result",login:"Admin login",username:"Email address",password:"Password",logout:"Logout",dashboard:"Admin dashboard",totalLeagues:"Leagues",totalTeams:"Teams",totalMatches:"Matches",manageLeagues:"Manage leagues",manageTeams:"Manage teams",manageMatches:"Manage matches",editTeam:"Edit team",deleteTeam:"Delete team",edit:"Edit",delete:"Delete",editLeague:"Edit league",deleteLeague:"Delete league",editMatch:"Edit score",comments:"Match comments",saveMatch:"Save match",deleteMatch:"Delete match",confirmDelete:"Are you sure you want to delete this?",noAdminLeagues:"No leagues yet",noAdminMatches:"No matches yet",openLeagues:"Open leagues",openMatches:"Open matches",adminHint:"Sign in with the administrator email and password registered in Firebase",chooseLeague:"Choose league",chooseRound:"Choose the round to manage",standings:"Standings",pts:"Pts",p:"P",w:"W",d:"D",l:"L",gf:"GF",ga:"GA",gd:"GD",language:"Language",empty:"No data yet",saved:"Saved",badLogin:"Incorrect login details",setPassword:"Firebase account password",change:"Change",demo:"Data is synchronized through Firebase.",draw:"Random draw and fixture generation",firstLeg:"First leg",secondLeg:"Second leg",round:"Round",noSchedule:"No fixture schedule has been created",generate:"Generate draw and fixtures",scheduleExists:"This league already has a fixture schedule.",needTeams:"Add at least two teams first.",scheduleConfirm:"Draw teams and generate the competition matches now?",scheduled:"League fixtures",noRoundMatches:"No matches in this round."}
 };
 let lang=localStorage.novaLang||"ar", page="home", db={leagues:[],matches:[],teams:[]}, isAdmin=false, currentUser=null;
-let liveKitViewerRoom = null;
-    let selectedRound=1, selectedLeg="home";
+let selectedRound=1, selectedLeg="home";
 const t=k=>words[lang][k]||k, dir=()=>lang==="ar"?"rtl":"ltr";
 async function persist(){
   localStorage.novaDB=JSON.stringify(db);
@@ -137,7 +137,6 @@ let selected=null;
 let livePeers = {};
 let liveSignalUnsubs = [];
 let liveRoomUnsub = null;
-    let liveChatUnsub = null;
 let liveScreenStream = null;
 let liveLocalStream = null;
 let selectedTeamProfile="";
@@ -449,28 +448,15 @@ if(page==="player"){
   }
 }
 if(page==="live"){
-  if(!currentUser){
-    el.innerHTML=`
-      <div class="form">
-        <h2>${t("live")}</h2>
-        <p>خاصك تسجل الدخول لحساب اللاعب باش تنشئ أو تدخل لغرفة.</p>
-        <button class="btn primary" onclick="go('player')">تسجيل الدخول</button>
-      </div>
-    `;
-  }else{
-    el.innerHTML=`
-      <div class="form">
-        <h2>غرف البث المباشر 🔴</h2>
-        <p>مرحبا بك في غرف NOVA CHAMPIONS</p>
-        <input id="liveRoomName" placeholder="اسم الغرفة">
-        <button class="btn primary" onclick="createLiveRoom()">إنشاء غرفة</button>
-        <div id="liveRoomsList">
-          <p class="muted">جاري تحميل الغرف...</p>
-        </div>
-      </div>
-    `;
-    loadLiveRooms();
-  }
+  el.innerHTML=`
+    <div class="form">
+      <h2>🔴 NOVA LIVE ROOMS</h2>
+      <p>غرف عامة للمشاهدة والتفاعل مع مباريات NOVA CHAMPIONS.</p>
+      ${currentUser && !currentUser.isAnonymous ? `<input id="liveRoomNick" maxlength="24" placeholder="الاسم المستعار الذي سيظهر للناس"><input id="liveRoomName" maxlength="70" placeholder="اسم الغرفة / المباراة"><button class="btn primary" onclick="createLiveRoom()">إنشاء غرفة جديدة</button>` : `<p class="muted">يمكنك دخول الغرف كمشاهد. إنشاء غرفة جديدة يتطلب حساب لاعب.</p>`}
+      <div id="liveRoomsList"><p class="muted">جاري تحميل الغرف...</p></div>
+    </div>
+  `;
+  loadLiveRooms();
 }
 if(page==="home"){el.innerHTML=`<section class="hero"><strong>${t("welcome")}</strong><p>${t("subtitle")}</p><span class="pill">NOVA CHAMPIONS OFFICIAL</span></section><div class="stats"><div class="stat"><b>${db.leagues.length}</b>${t("competitions")}</div><div class="stat"><b>${db.leagues.reduce((n,x)=>n+x.teams.length,0)}</b>${t("teams")}</div><div class="stat"><b>${db.matches.length}</b>${t("played")}</div></div><h2>${t("competitions")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><button class="btn" onclick="selected='${x.id}';go('table')">${t("table")}</button></div>`).join(""):`<p class="muted">${t("noLeagues")}</p>`}<h2>${t("latest")}</h2>${db.matches.slice(-5).reverse().map(m=>`<div class="row"><span>${esc(m.h)}</span><b style="color:var(--gold)">${m.hs} - ${m.as}</b><span>${esc(m.a)}</span></div>`).join("")||`<p class="muted">${t("noMatches")}</p>`}<p class="small">${t("demo")}</p>`}
 if(page==="news"){el.innerHTML=newsPage()}
@@ -701,375 +687,120 @@ async function loadPlayerTeams(){
     box.innerHTML='<p class="muted">تعذر تحميل الفرق: '+esc(e.message||e)+'</p>';
   }
 }
-    async function getLiveDisplayName(uid){
-  try{
-    const snap=await cloud.collection("playerProfiles")
-      .doc(uid).get();
-
-    const profile=snap.exists?snap.data():{};
-    return String(profile.name||"لاعب").trim()||"لاعب";
-
-  }catch(e){
-    return "لاعب";
-  }
-    }
-  async function createLiveRoom(){
-  if(!currentUser)return alert("خاصك تسجل الدخول أولاً");
-
-  const input=document.getElementById("liveRoomName");
-  const name=input?.value.trim();
-
-  if(!name)return alert("كتب اسم الغرفة");
-
-  try{
-    const roomRef=cloud.collection("liveRooms").doc();
-const displayName=await getLiveDisplayName(currentUser.uid);
-
-await roomRef.set({
-  name,
-  ownerUid:currentUser.uid,
-  ownerName:displayName,
-      createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-      active:true
-    });
-
-    input.value="";
-    alert("تم إنشاء الغرفة بنجاح");
-    loadLiveRooms();
-
-  }catch(e){
-    alert("تعذر إنشاء الغرفة: "+(e.message||e));
-  }
+async function ensureLiveGuest(){
+  // Reuse an existing Firebase session; otherwise create an anonymous viewer session.
+  if(auth.currentUser)return auth.currentUser;
+  const credential = await auth.signInAnonymously();
+  return credential.user || auth.currentUser;
 }
-
+async function createLiveRoom(){
+  if(!currentUser || currentUser.isAnonymous)return alert("خاصك تدخل بحساب لاعب باش تنشئ غرفة.");
+  const input=document.getElementById("liveRoomName"),name=input?.value.trim();
+  const nickInput=document.getElementById("liveRoomNick"),ownerName=nickInput?.value.trim();
+  if(!ownerName)return alert("كتب الاسم المستعار اللي غادي يبان للناس.");
+  if(!name)return alert("كتب اسم الغرفة أو المباراة.");
+  try{
+    const ref=cloud.collection("liveRooms").doc();
+    await ref.set({name,ownerUid:currentUser.uid,ownerName,createdAt:firebase.firestore.FieldValue.serverTimestamp(),active:true,public:true,viewerCount:0});
+    input.value="";if(nickInput)nickInput.value="";alert("تم إنشاء الغرفة. يمكن لأي مشاهد الدخول إليها.");loadLiveRooms();
+  }catch(e){alert("تعذر إنشاء الغرفة: "+(e.message||e));}
+}
 async function loadLiveRooms(){
-  const box=document.getElementById("liveRoomsList");
-  if(!box||!currentUser)return;
-
+  const box=document.getElementById("liveRoomsList");if(!box)return;
   box.innerHTML='<p class="muted">جاري تحميل الغرف...</p>';
-
   try{
-    const snap=await cloud.collection("liveRooms")
-      .where("active","==",true)
-      .get();
-
+    const snap=await cloud.collection("liveRooms").where("active","==",true).get();
     if(!document.getElementById("liveRoomsList"))return;
-
-    if(snap.empty){
-      box.innerHTML='<p class="muted">لا توجد غرف بث حالياً</p>';
-      return;
-    }
-
-    box.innerHTML=snap.docs.map(doc=>{
-      const room=doc.data();
-
-      return `
-        <div class="card">
-          <h3>${esc(room.name||"غرفة بدون اسم")}</h3>
-          <p class="muted">المنشئ: ${esc(room.ownerName||"لاعب")}</p>
-          <button class="btn primary" onclick="joinLiveRoom('${doc.id}')">
-            دخول الغرفة
-          </button>
-        </div>
-      `;
-    }).join("");
-
-  }catch(e){
-    box.innerHTML='<p class="muted">تعذر تحميل الغرف: '+esc(e.message||e)+'</p>';
-  }
+    if(snap.empty){box.innerHTML='<p class="muted">لا توجد غرف مفتوحة حالياً.</p>';return;}
+    box.innerHTML=snap.docs.map(doc=>{const room=doc.data();return `<div class="card" style="margin:10px 0"><h3>🔴 ${esc(room.name||"غرفة NOVA")}</h3><p class="muted">${esc(room.ownerName||"منظم NOVA")} • غرفة عامة</p><button class="btn primary" onclick="joinLiveRoom('${doc.id}')">دخول ومشاهدة</button></div>`}).join("");
+  }catch(e){box.innerHTML='<p class="muted">تعذر تحميل الغرف: '+esc(e.message||e)+'</p><p class="small">تأكد من صلاحيات Firestore.</p>';}
 }
-
 async function joinLiveRoom(roomId){
-  if(!currentUser){
-    alert("خاصك تسجل الدخول أولاً");
-    return;
-  }
-
   try{
-    const roomRef=cloud.collection("liveRooms").doc(roomId);
-    const roomSnap=await roomRef.get();
-
-    if(!roomSnap.exists){
-      alert("الغرفة غير موجودة");
-      return;
-    }
-
-    const room=roomSnap.data();
-
-    if(room.active!==true){
-      alert("هاد الغرفة مغلقة");
-      return;
-    }
-
-    const isHost=currentUser.uid===room.ownerUid;
-const displayName=await getLiveDisplayName(currentUser.uid);
-    // الحصول على بيانات الاتصال بالبث
-    const tokenResponse=await fetch(
-      "https://nova-champions-live.hamza-houssni0.workers.dev/token",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization":"Bearer "+await currentUser.getIdToken()
-        },
-        body:JSON.stringify({roomId})
-      }
-    );
-
-    if(!tokenResponse.ok){
-      throw new Error("تعذر الحصول على بيانات البث: "+tokenResponse.status);
-    }
-
-    const liveTokenData=await tokenResponse.json();
-
-    if(!liveTokenData.token||!liveTokenData.serverUrl){
-      throw new Error("بيانات البث غير مكتملة");
-    }
-
-    window.novaLiveServerUrl=liveTokenData.serverUrl;
-    window.novaLiveToken=liveTokenData.token;
-
-    await roomRef.collection("participants")
-      .doc(currentUser.uid).set({
-        uid:currentUser.uid,
-        name:displayName,
-        role:isHost?"host":"viewer",
-        joinedAt:firebase.firestore.FieldValue.serverTimestamp()
-      });
-
+    const guest=await ensureLiveGuest();if(!guest)throw new Error("تعذر إنشاء جلسة مشاهدة.");
+    const roomRef=cloud.collection("liveRooms").doc(roomId),roomSnap=await roomRef.get();
+    if(!roomSnap.exists||roomSnap.data().active!==true)return alert("الغرفة غير موجودة أو مغلقة.");
+    const isHost = guest.uid === roomSnap.data().ownerUid;
     liveRoomId=roomId;
-
-    if(liveRoomUnsub){
-      liveRoomUnsub();
-      liveRoomUnsub=null;
-    }
-
-    const el=document.getElementById("app");
-
-    el.innerHTML=`
-      <div class="form">
-        <h2>🔴 ${esc(room.name||"غرفة البث")}</h2>
-
-        <p class="muted">
-          ${isHost?"أنت صاحب الغرفة":"أنت تشاهد البث المباشر"}
-        </p>
-
-        ${isHost?`
-          <button class="btn primary" onclick="startNativeScreenBroadcast()">
-            بدء مشاركة الشاشة 📺
-          </button>
-        `:`
-          <div id="liveVideo"
-            style="width:100%;min-height:220px;background:#000;border-radius:12px;overflow:hidden">
-          </div>
-        `}
-
-        <h3>المشاركون</h3>
-
-        <div id="liveParticipants">
-          جاري تحميل المشاركين...
-        </div>
-
-<h3>💬 المحادثة</h3>
-
-<div id="liveChatMessages" class="card"
-     style="max-height:260px;overflow-y:auto;min-height:90px">
-  <p class="muted">جاري تحميل الرسائل...</p>
+    const nick=guest.isAnonymous?"مشاهد "+guest.uid.slice(0,5):(guest.email||"لاعب");
+    await roomRef.collection("participants").doc(guest.uid).set({uid:guest.uid,name:nick,joinedAt:firebase.firestore.FieldValue.serverTimestamp(),role:"viewer"});
+    if(liveRoomUnsub)liveRoomUnsub();
+    document.getElementById("app").innerHTML=`
+      <div class="form"><h2>🔴 ${esc(roomSnap.data().name||"غرفة NOVA")}</h2>
+      <div class="stats"><div class="stat"><b id="liveViewerCount">1</b>مشاهدون الآن</div><div class="stat"><b>PUBLIC</b>دخول عام</div><div class="stat"><b>LIVE</b>غرفة مفتوحة</div></div>
+      <div class="card"><h3>📺 شاشة المباراة</h3><div id="liveVideoNotice" class="muted">جاري تجهيز البث المباشر...</div>
+<div id="liveVideoContainer" style="width:100%;background:#000;border-radius:12px;overflow:hidden;min-height:220px;display:flex;align-items:center;justify-content:center">
+  <video id="liveVideo" autoplay playsinline controls style="width:100%;max-height:65vh;object-fit:contain"></video>
 </div>
+      <h3>المشاهدون</h3><button id="nativeBroadcastBtn"
+      style="display:${isHost ? "block" : "none"}"
+      class="btn primary"
+      onclick="window.NovaAndroid.startScreenBroadcast(window.novaLiveServerUrl, window.novaLiveToken)">
+📡 ابدأ بث شاشة الهاتف
+</button><div id="liveParticipants" class="card">جاري التحميل...</div>
+      <h3>💬 دردشة مباشرة</h3><div id="liveChatMessages" class="card" style="height:220px;overflow:auto"><p class="muted">جاري تحميل الرسائل...</p></div>
+      <div class="row"><input id="liveChatInput" maxlength="400" placeholder="اكتب رسالة..." style="margin:0"><button class="btn primary" onclick="sendLiveMessage()">إرسال</button></div>
+      <button class="btn" onclick="leaveLiveRoom()" style="margin-top:12px">مغادرة الغرفة</button></div>`;
+    const liveTokenResponse = await fetch("https://nova-champions-live.hamza-houssni0.workers.dev/token", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + await guest.getIdToken()
+  },
+  body: JSON.stringify({ roomId })
+});
 
-<div style="display:flex;gap:8px;margin-top:8px">
-  <input id="liveChatInput" type="text"
-         placeholder="كتب رسالة..." style="flex:1">
-  <button class="btn primary" onclick="sendLiveMessage()">
-    إرسال
-  </button>
-</div>
+const liveTokenData = await liveTokenResponse.json();
 
-        <button class="btn" onclick="leaveLiveRoom()">
-          مغادرة الغرفة
-        </button>
-      </div>
-    `;
-
-    // اتصال المشاهد بالبث
-    if(!isHost){
-
-      if(typeof LivekitClient==="undefined"){
-        throw new Error("مكتبة LiveKit ما تحملاتش");
-      }
-
-      if(liveKitViewerRoom){
-        liveKitViewerRoom.disconnect();
-        liveKitViewerRoom=null;
-      }
-
-      liveKitViewerRoom=new LivekitClient.Room();
-
-      liveKitViewerRoom.on(
-        LivekitClient.RoomEvent.TrackSubscribed,
-        (track)=>{
-          if(track.kind==="video"){
-            const video=track.attach();
-            video.autoplay=true;
-            video.playsInline=true;
-
-            const videoBox=document.getElementById("liveVideo");
-
-            if(videoBox){
-              videoBox.appendChild(video);
-            }
-          }
-        }
-      );
-
-      await liveKitViewerRoom.connect(
-        liveTokenData.serverUrl,
-        liveTokenData.token
-      );
-    }
-
-    // تحديث المشاركين
-    liveRoomUnsub=roomRef.collection("participants")
-      .onSnapshot(snap=>{
-        const box=document.getElementById("liveParticipants");
-        if(!box)return;
-
-        box.innerHTML=snap.empty
-          ?'<p class="muted">لا يوجد مشاركون</p>'
-          :snap.docs.map(doc=>
-            `<div class="card">${esc(doc.data().name||"لاعب")}</div>`
-          ).join("");
-      });
-if(liveChatUnsub){
-  liveChatUnsub();
-  liveChatUnsub=null;
+if (!liveTokenResponse.ok) {
+  throw new Error(liveTokenData.error || "تعذر الاتصال بالبث المباشر");
 }
+    window.novaLiveServerUrl = liveTokenData.serverUrl;
+window.novaLiveToken = liveTokenData.token;
+    if (!isHost) {
+    const liveRoom = new LivekitClient.Room();
 
-liveChatUnsub=roomRef.collection("messages")
-  .orderBy("createdAt","asc")
-  .limitToLast(80)
-  .onSnapshot(snap=>{
-    const chat=document.getElementById("liveChatMessages");
-    if(!chat)return;
-
-    chat.innerHTML=snap.docs.map(doc=>{
-      const m=doc.data();
-      return `<div style="padding:8px;border-bottom:1px solid #333">
-        <b style="color:var(--gold)">${esc(m.name||"لاعب")}</b>
-        <div>${esc(m.text||"")}</div>
-      </div>`;
-    }).join("")||'<p class="muted">كن أول واحد يكتب رسالة.</p>';
-
-    chat.scrollTop=chat.scrollHeight;
-  });
-    
-  }catch(e){
-    alert("تعذر دخول الغرفة: "+(e.message||e));
+liveRoom.on(LivekitClient.RoomEvent.TrackSubscribed, (track) => {
+  if (track.kind === "video") {
+    const videoElement = document.getElementById("liveVideo");
+    if (videoElement) track.attach(videoElement);
   }
-}
-async function sendLiveMessage(){
-  if(!liveRoomId)return;
+});
 
-  const input=document.getElementById("liveChatInput");
-  const textValue=input?.value.trim();
+liveRoom.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track) => {
+  const videoElement = document.getElementById("liveVideo");
+  if (videoElement) track.detach(videoElement);
+});
 
-  if(!textValue || !currentUser)return;
-
-  try{
-  const displayName=await getLiveDisplayName(currentUser.uid);
-
-  await cloud.collection("liveRooms")
-    .doc(liveRoomId)
-    .collection("messages")
-    .add({
-      uid:currentUser.uid,
-      name:displayName,
-      text:textValue,
-      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+await liveRoom.connect(liveTokenData.serverUrl, liveTokenData.token);
+    }
+    liveRoomUnsub=roomRef.collection("participants").onSnapshot(snap=>{
+      const list=document.getElementById("liveParticipants"),count=document.getElementById("liveViewerCount");
+      if(count)count.textContent=snap.size;
+      if(list)list.innerHTML=snap.docs.map(d=>`<div class="row"><span>${esc(d.data().name||"مشاهد")}</span><span class="pill">${d.id===roomSnap.data().ownerUid?"HOST":"VIEWER"}</span></div>`).join("")||'<p class="muted">لا يوجد مشاهدون.</p>';
     });
-
-  input.value="";
-}catch(e){
-  alert("تعذر إرسال الرسالة: "+(e.message||e));
+    if(liveChatUnsub)liveChatUnsub();
+    liveChatUnsub=roomRef.collection("messages").orderBy("createdAt","asc").limitToLast(80).onSnapshot(snap=>{
+      const chat=document.getElementById("liveChatMessages");if(!chat)return;
+      chat.innerHTML=snap.docs.map(d=>{const m=d.data();return `<div style="padding:6px 2px;border-bottom:1px solid #333"><b style="color:var(--gold)">${esc(m.name||"مشاهد")}</b><div>${esc(m.text||"")}</div></div>`}).join("")||'<p class="muted">كن أول واحد يكتب رسالة.</p>';
+      chat.scrollTop=chat.scrollHeight;
+    });
+  }catch(e){alert("تعذر دخول الغرفة: "+(e.message||e)+"\nتأكد من تفعيل Anonymous sign-in في Firebase Authentication.");}
+}
+let liveChatUnsub=null;
+async function sendLiveMessage(){
+  if(!liveRoomId)return;const input=document.getElementById("liveChatInput"),textValue=input?.value.trim();if(!textValue)return;
+  const user=auth.currentUser;if(!user)return;
+  try{await cloud.collection("liveRooms").doc(liveRoomId).collection("messages").add({uid:user.uid,name:user.isAnonymous?"مشاهد "+user.uid.slice(0,5):(user.email||"لاعب"),text:textValue,createdAt:firebase.firestore.FieldValue.serverTimestamp()});input.value="";}
+  catch(e){alert("تعذر إرسال الرسالة: "+(e.message||e));}
 }
 async function leaveLiveRoom(){
-
-    if(window.NovaAndroid &&
-     typeof window.NovaAndroid.stopScreenBroadcast==="function"){
-    try{
-      window.NovaAndroid.stopScreenBroadcast();
-    }catch(e){
-      console.log(e);
-    }
-    }
-
-  if(liveKitViewerRoom){
-    try{
-      liveKitViewerRoom.disconnect();
-    }catch(e){
-      console.log(e);
-    }
-    liveKitViewerRoom=null;
-  }
-
-  if(liveRoomUnsub){
-    liveRoomUnsub();
-    liveRoomUnsub=null;
-  }
-  if(liveChatUnsub){
-  liveChatUnsub();
-  liveChatUnsub=null;
-  }
-
-  if(liveRoomId && currentUser){
-    try{
-      await cloud.collection("liveRooms")
-        .doc(liveRoomId)
-        .collection("participants")
-        .doc(currentUser.uid).delete();
-    }catch(e){
-      console.log(e);
-    }
-  }
-
-  liveRoomId=null;
-
-  window.novaLiveServerUrl=null;
-  window.novaLiveToken=null;
-
-  go("live");
+  if(liveRoomUnsub){liveRoomUnsub();liveRoomUnsub=null;}if(liveChatUnsub){liveChatUnsub();liveChatUnsub=null;}
+  const uid=auth.currentUser?.uid;
+  if(liveRoomId&&uid){try{await cloud.collection("liveRooms").doc(liveRoomId).collection("participants").doc(uid).delete();}catch(e){console.warn(e);}}
+  liveRoomId=null;go("live");
 }
-async function testScreenShare(){
-  if(!navigator.mediaDevices?.getDisplayMedia){
-    alert("المتصفح لا يدعم مشاركة الشاشة 📵");
-    return;
-  }
 
-  alert("المتصفح يدعم مشاركة الشاشة ✅");
-}
-function startNativeScreenBroadcast(){
-
-  if(!window.NovaAndroid ||
-     typeof window.NovaAndroid.startScreenBroadcast!=="function"){
-
-    alert("خاصية مشاركة الشاشة مازال ما مربوطةش بتطبيق Android");
-    return;
-  }
-
-  if(!window.novaLiveServerUrl || !window.novaLiveToken){
-    alert("بيانات البث مازال ماوجداتش. عاود الدخول للغرفة");
-    return;
-  }
-
-  try{
-    window.NovaAndroid.startScreenBroadcast(
-      window.novaLiveServerUrl,
-      window.novaLiveToken
-    );
-  }catch(e){
-    alert("تعذر تشغيل البث: "+(e.message||e));
-  }
-}
 async function playerSave(){
   const uid=currentUser?.uid;
   if(!uid)return;
@@ -1115,6 +846,7 @@ const logoUrl=logoFile?await uploadTeamImage(logoFile):(oldTeam.logoUrl||"");
 startCloudSync();
 render();
 
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target?.id==='liveChatInput')sendLiveMessage();});
 window.addEventListener('load',()=>{const splash=document.getElementById('nova-splash-screen');if(splash)setTimeout(()=>splash.classList.add('is-hidden'),2600);});
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err)));}
-</script></body></html>
+  </script></body></html>
