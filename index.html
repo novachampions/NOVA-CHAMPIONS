@@ -376,6 +376,11 @@ const formation=playerTeam.formation||team.formation||"4-3-3";
 const defenders=Number(formationParts[0])||4;
 const midfielders=Number(formationParts[1])||3;
 const forwards=Number(formationParts[2])||3;
+const lineupRows=[
+  {count:forwards,label:"الهجوم"},
+  {count:midfielders,label:"الوسط"},
+  {count:defenders,label:"الدفاع"}
+];
   const el=document.getElementById("app");
   if(!el)return;
 
