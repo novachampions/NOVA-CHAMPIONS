@@ -380,6 +380,13 @@ const formation=playerTeam.formation||team.formation||"4-3-3";
     ${image?`<img src="${esc(image)}" alt="صورة الفريق" style="width:112px;height:112px;object-fit:cover;border-radius:50%;border:2px solid var(--gold)">`:`<div class="team-mark" style="width:90px;height:90px;border-radius:50%;margin:12px auto;font-size:25px">${esc(name.slice(0,2).toUpperCase())}</div>`}
     <h2>${esc(name)}</h2>
     <p style="color:var(--gold);font-weight:bold">الخطة: ${esc(formation)}</p>
+    <div class="football-pitch" style="background:linear-gradient(180deg,#176b35,#0b4825);border:2px solid white;border-radius:12px;height:320px;margin:15px auto;max-width:500px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:8px;border:2px solid #ffffff99;border-radius:5px"></div>
+  <div style="position:absolute;top:50%;left:0;right:0;border-top:2px solid #ffffff99"></div>
+  <div style="position:absolute;width:90px;height:90px;border:2px solid #ffffff99;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div style="position:absolute;top:0;left:30%;width:40%;height:45px;border:2px solid #ffffff99;border-top:0"></div>
+  <div style="position:absolute;bottom:0;left:30%;width:40%;height:45px;border:2px solid #ffffff99;border-bottom:0"></div>
+</div>
     ${owner.name?`<p>صاحب الفريق: ${esc(owner.name)}</p>`:""}
     <div class="stats">
       <div class="stat"><b>${st.p}</b>المباريات</div>
