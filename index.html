@@ -371,7 +371,7 @@ async function teamProfileView(){
   const image=team.imageUrl||playerTeam.logoUrl||"";
   const phone=(team.whatsapp||owner.phone||"").replace(/\D/g,"");
   const players=team.players||[];
-
+const formation=playerTeam.formation||team.formation||"4-3-3";
   const el=document.getElementById("app");
   if(!el)return;
 
