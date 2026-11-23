@@ -951,6 +951,17 @@ if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.se
 const novaMusic = document.getElementById("novaMusic");
 const musicToggle = document.getElementById("musicToggle");
 
+const novaPlaylist = [
+    "assets/Hayya Hayya.mp3",
+    "assets/Felous Baba.mp3",
+    "assets/Arhbo.mp3",
+    "assets/Zombie.mp3",
+    "assets/Mahboul Ana.mp3",
+    "assets/Candyshop.mp3",
+    "assets/Routine.mp3"
+];
+
+let currentTrack = 0;
 let musicEnabled = localStorage.getItem("novaMusicEnabled") !== "false";
 
 function updateMusicButton() {
@@ -969,7 +980,14 @@ async function playNovaMusic() {
     }
 }
 
+novaMusic.addEventListener("ended", () => {
+    currentTrack = (currentTrack + 1) % novaPlaylist.length;
+    novaMusic.src = novaPlaylist[currentTrack];
+    if (musicEnabled) playNovaMusic();
+});
+
 updateMusicButton();
+novaMusic.src = novaPlaylist[currentTrack];
 
 if (musicEnabled) {
     playNovaMusic();
@@ -977,7 +995,6 @@ if (musicEnabled) {
 
 musicToggle.addEventListener("click", async () => {
     musicEnabled = !musicEnabled;
-
     localStorage.setItem("novaMusicEnabled", musicEnabled);
 
     if (musicEnabled) {
