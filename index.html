@@ -242,7 +242,9 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 .admin-sidebar-footer{margin-top:auto;padding-top:14px;border-top:1px solid #29405f;display:grid;gap:9px}
 .admin-sidebar-footer small{color:#9fb5d2;overflow-wrap:anywhere;font-size:10px}
 .admin-main{min-width:0}
-.admin-main>section,.admin-main>#admin-teams,.admin-main>#admin-news,.admin-main>#admin-matches{scroll-margin-top:18px}
+.admin-main>.admin-panel{display:none}
+.admin-main>.admin-panel.active{display:block}
+.admin-main>.admin-mobile-bar{display:none}
 .admin-mobile-bar{display:none}
 @media(max-width:760px){
  .admin-layout{display:block}
@@ -365,11 +367,13 @@ function nav(){document.documentElement.lang=lang;document.documentElement.dir=d
 function go(p){page=p;render()}function setLang(v){lang=v;localStorage.novaLang=v;render()}
 function adminToggleSidebar(){const layout=document.getElementById("novaAdminLayout");if(layout)layout.classList.toggle("sidebar-open");}
 function adminNavigate(id){
+  const layout=document.getElementById("novaAdminLayout");
   const target=document.getElementById(id);
-  if(!target)return;
-  document.querySelectorAll(".admin-side-link").forEach(btn=>btn.classList.toggle("active",btn.getAttribute("onclick")?.includes(id)));
-  target.scrollIntoView({behavior:"smooth",block:"start"});
-  document.getElementById("novaAdminLayout")?.classList.remove("sidebar-open");
+  if(!layout||!target)return;
+  layout.querySelectorAll(".admin-panel").forEach(panel=>panel.classList.toggle("active",panel.id===id));
+  layout.querySelectorAll(".admin-side-link[data-panel]").forEach(btn=>btn.classList.toggle("active",btn.dataset.panel===id));
+  layout.classList.remove("sidebar-open");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 function teamStats(name){const out={fans:0,p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0};const master=(db.teams||[]).find(x=>x.name===name);out.fans=Number(master?.fans||0);const counted=db.matches.filter(m=>(m.h===name||m.a===name)&&m.hs!==null&&m.as!==null&&Number.isFinite(Number(m.hs))&&Number.isFinite(Number(m.as)));const cupGroups=new Map();counted.filter(m=>m.cup||String(m.id).startsWith("CUP_")).forEach(m=>{const l=db.leagues.find(x=>String(x.id)===String(m.league));const key=[String(m.league),Number(m.round)||1,...[String(m.h||""),String(m.a||"")].sort(),l?.cupFormat==="homeAway"?(m.leg||"home"):"single"].join("|");if(!cupGroups.has(key))cupGroups.set(key,m);});const nonCup=counted.filter(m=>!(m.cup||String(m.id).startsWith("CUP_")));[...nonCup,...cupGroups.values()].forEach(m=>{const home=m.h===name,forUs=Number(home?m.hs:m.as),against=Number(home?m.as:m.hs);out.p++;out.gf+=forUs;out.ga+=against;if(forUs>against){out.w++;out.pts+=3}else if(forUs<against){out.l++}else{out.d++;out.pts++;}});out.gd=out.gf-out.ga;return out;}
 function registryTeamId(name){return "TEAM_"+encodeURIComponent(name).slice(0,700);}
@@ -742,28 +746,28 @@ if(page==="table"){const list=db.leagues.filter(x=>(x.mode||"league")===tableMod
 if(page==="admin"){el.innerHTML=isAdmin?`<div class="admin-layout" id="novaAdminLayout">
   <aside class="admin-sidebar" id="novaAdminSidebar">
     <div class="admin-sidebar-brand"><span class="admin-sidebar-mark">N</span><div><b>NOVA ADMIN</b><small>CONTROL CENTER</small></div></div>
-    <button class="admin-side-link active" onclick="adminNavigate('admin-overview')">▦ <span>لوحة التحكم</span></button>
-    <button class="admin-side-link" onclick="adminNavigate('admin-leagues')">🏆 <span>البطولات</span></button>
+    <button class="admin-side-link active" data-panel="admin-overview" onclick="adminNavigate('admin-overview')">▦ <span>لوحة التحكم</span></button>
+    <button class="admin-side-link" data-panel="admin-leagues" onclick="adminNavigate('admin-leagues')">🏆 <span>البطولات</span></button>
     <button class="admin-side-link" onclick="selected=null;go('table')">📊 <span>الترتيب</span></button>
-    <button class="admin-side-link" onclick="adminNavigate('admin-teams')">🛡️ <span>الفرق</span></button>
-    <button class="admin-side-link" onclick="adminNavigate('admin-player-teams')">👥 <span>فرق اللاعبين</span></button>
-    <button class="admin-side-link" onclick="adminNavigate('admin-matches')">⚽ <span>المباريات</span></button>
-    <button class="admin-side-link" onclick="adminNavigate('admin-news')">📰 <span>الجريدة والأخبار</span></button>
+    <button class="admin-side-link" data-panel="admin-teams" onclick="adminNavigate('admin-teams')">🛡️ <span>الفرق</span></button>
+    <button class="admin-side-link" data-panel="admin-player-teams" onclick="adminNavigate('admin-player-teams')">👥 <span>فرق اللاعبين</span></button>
+    <button class="admin-side-link" data-panel="admin-matches" onclick="adminNavigate('admin-matches')">⚽ <span>المباريات</span></button>
+    <button class="admin-side-link" data-panel="admin-news" onclick="adminNavigate('admin-news')">📰 <span>الجريدة والأخبار</span></button>
     <div class="admin-sidebar-footer"><small>${esc(currentUser?.email||"Admin")}</small><button class="btn danger sm" onclick="auth.signOut()">تسجيل الخروج</button></div>
   </aside>
   <div class="admin-main">
     <div class="admin-mobile-bar"><button class="btn" onclick="adminToggleSidebar()">☰ القائمة</button><b>NOVA ADMIN PANEL</b></div>
-    <section id="admin-overview">
+    <section class="admin-panel active" id="admin-overview">
       <div class="admin-head"><div><h2>${t("dashboard")}</h2><span class="pill">ADMIN_NOVA • ${esc(currentUser?.email||"Admin")}</span></div><button class="btn danger" onclick="auth.signOut()">${t("logout")}</button></div>
       <div class="admin-grid"><div class="admin-tile">${t("totalLeagues")}<b>${db.leagues.length}</b></div><div class="admin-tile">${t("totalTeams")}<b>${(db.teams||[]).length}</b></div><div class="admin-tile">${t("totalMatches")}<b>${db.matches.length}</b></div><div class="admin-tile">Firebase<b style="font-size:15px">${cloudReady?"ONLINE":"CONNECTING"}</b></div></div>
       <div class="admin-note">${t("demo")} ${syncError?" • "+esc(syncError):""}</div>
       <div class="grid admin-section"><button class="btn primary" onclick="adminNavigate('admin-leagues')">${t("openLeagues")}</button><button class="btn primary" onclick="adminNavigate('admin-matches')">${t("openMatches")}</button></div>
     </section>
-    <section class="admin-section" id="admin-leagues"><h2>${t("manageLeagues")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${(x.teams||[]).length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${(x.teams||[]).length}</span></div><div class="admin-actions"><button class="btn sm" onclick="editLeague('${String(x.id)}')">${t("edit")}</button><button class="btn danger sm" onclick="deleteLeague('${String(x.id)}')">${t("delete")}</button><button class="btn sm" onclick="selected='${String(x.id)}';go('table')">${t("table")}</button></div></div>`).join(""):`<p class="muted">${t("noAdminLeagues")}</p>`}</section>
-    <div id="admin-teams">${adminTeamsManager()}</div>
-    <section class="admin-section" id="admin-player-teams"><h2>فرق اللاعبين المسجلين</h2><div id="playerTeamsAdminList"><p class="muted">جاري تحميل الفرق...</p></div></section>
-    <div id="admin-news">${adminNewsManager()}</div>
-    <div id="admin-matches">${adminMatchesManager()}</div>
+    <section class="admin-panel" id="admin-leagues"><h2>${t("manageLeagues")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${(x.teams||[]).length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${(x.teams||[]).length}</span></div><div class="admin-actions"><button class="btn sm" onclick="editLeague('${String(x.id)}')">${t("edit")}</button><button class="btn danger sm" onclick="deleteLeague('${String(x.id)}')">${t("delete")}</button><button class="btn sm" onclick="selected='${String(x.id)}';go('table')">${t("table")}</button></div></div>`).join(""):`<p class="muted">${t("noAdminLeagues")}</p>`}</section>
+    <div class="admin-panel" id="admin-teams">${adminTeamsManager()}</div>
+    <section class="admin-panel" id="admin-player-teams"><h2>فرق اللاعبين المسجلين</h2><div id="playerTeamsAdminList"><p class="muted">جاري تحميل الفرق...</p></div></section>
+    <div class="admin-panel" id="admin-news">${adminNewsManager()}</div>
+    <div class="admin-panel" id="admin-matches">${adminMatchesManager()}</div>
   </div>
 </div>`:`<h2>${t("login")}</h2><div class="form"><p class="muted">${t("adminHint")}</p>${currentUser?`<div class="card"><b>Firebase admin check</b><p>Project ID: <code>${esc(firebase.app().options.projectId)}</code></p><p>Signed-in UID: <code>${esc(adminCheck.uid||currentUser.uid)}</code></p><p>Document path: <code>${esc(adminCheck.path)}</code></p><p>Document exists: <b>${adminCheck.exists===null?"not confirmed":String(adminCheck.exists)}</b></p><p>Role field: <b>${esc(adminCheck.role)}</b></p><p>Status: <b>${esc(adminCheck.state)}</b></p>${adminCheck.error?`<p style="color:#f88">${esc(adminCheck.error)}</p>`:""}<button class="btn" onclick="auth.signOut()">${t("logout")}</button></div>`:`<label>${t("username")}</label><input id="user" type="email" placeholder="admin@example.com" autocomplete="username"><label>${t("password")}</label><input id="pass" type="password" autocomplete="current-password"><button class="btn primary" onclick="login()">${t("login")}</button><p id="err" class="muted"></p>`}</div>`}
 if(page==="admin" && isAdmin) loadAdminPlayerTeams();
