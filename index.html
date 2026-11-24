@@ -876,6 +876,8 @@ function subscribeNovaChatConversations(){
   novaChatConversationsUnsub=cloud.collection("conversations").where("members","array-contains",currentUser.uid).onSnapshot(snap=>{
     novaChatConversations=snap.docs.map(doc=>{const data=doc.data()||{};const peerUid=(data.members||[]).find(uid=>uid!==currentUser.uid)||"";return {id:doc.id,...data,peerUid,peerName:novaChatPeerName(peerUid)};})
       .sort((a,b)=>(b.updatedAt?.toMillis?.()||0)-(a.updatedAt?.toMillis?.()||0));
+    const opened=novaChatConversations.find(c=>c.id===novaChatOpenId);
+    if(opened&&Number(opened.unreadCounts?.[currentUser.uid]||0)>0)markNovaChatRead(opened.id);
     renderNovaChatIntoApp();
   },err=>{novaChatMessageError="تعذر تحميل المحادثات: "+(err.message||err);renderNovaChatIntoApp();});
 }
@@ -911,10 +913,19 @@ async function startNovaChatConversation(peerUid){
   const id=novaChatConversationId(currentUser.uid,peerUid),ref=cloud.collection("conversations").doc(id);
   try{
     const snap=await ref.get();
-    if(!snap.exists){const members=[currentUser.uid,peerUid].sort();const stamp=firebase.firestore.FieldValue.serverTimestamp();await ref.set({members,createdAt:stamp,updatedAt:stamp,lastMessage:"",lastMessageAt:stamp});}
+    if(!snap.exists){const members=[currentUser.uid,peerUid].sort();const stamp=firebase.firestore.FieldValue.serverTimestamp();await ref.set({members,createdAt:stamp,updatedAt:stamp,lastMessage:"",lastMessageAt:stamp,lastMessageId:"",unreadCounts:{[members[0]]:0,[members[1]]:0}});}
     else {const members=snap.data()?.members||[];if(!members.includes(currentUser.uid)||!members.includes(peerUid))throw new Error("بيانات المحادثة غير متطابقة.");}
     novaChatCurrentPeer=peer;openNovaChat(id,peerUid);
   }catch(e){alert("تعذر فتح المحادثة: "+(e.message||e));}
+}
+async function markNovaChatRead(id){
+  if(!currentUser||!id||id!==novaChatOpenId)return;
+  try{
+    const ref=cloud.collection("conversations").doc(id),snap=await ref.get();
+    if(!snap.exists)return;
+    const data=snap.data()||{},count=Number(data.unreadCounts?.[currentUser.uid]||0);
+    if(count>0)await ref.update({["unreadCounts."+currentUser.uid]:0});
+  }catch(e){console.warn("NOVA CHAT read receipt:",e.message||e);}
 }
 function openNovaChat(id,peerUid){
   novaChatOpenId=id;
@@ -923,7 +934,9 @@ function openNovaChat(id,peerUid){
   novaChatCurrentPeer={id:peerUid||peer.id||"",name:peer.name||novaChatPeerName(peerUid),initials:peer.initials||novaChatInitials(peer.name)};
   novaChatMessages=[];novaChatMessageError="";
   novaChatMessagesUnsub=cloud.collection("conversations").doc(id).collection("messages").orderBy("createdAt","asc").limitToLast(100).onSnapshot(snap=>{
-    novaChatMessages=snap.docs.map(doc=>({id:doc.id,...doc.data()}));renderNovaChatIntoApp();
+    novaChatMessages=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
+    markNovaChatRead(id);
+    renderNovaChatIntoApp();
     const box=document.getElementById("novaChatMessages");if(box)box.scrollTop=box.scrollHeight;
   },err=>{novaChatMessageError="تعذر تحميل الرسائل: "+(err.message||err);renderNovaChatIntoApp();});
   renderNovaChatIntoApp();
@@ -936,8 +949,10 @@ async function sendNovaChatMessage(){
   novaChatSending=true;renderNovaChatIntoApp();
   try{
     const conversationRef=cloud.collection("conversations").doc(novaChatOpenId),messageRef=conversationRef.collection("messages").doc(),now=firebase.firestore.FieldValue.serverTimestamp(),batch=cloud.batch();
+    const peerUid=novaChatCurrentPeer?.id;
+    if(!peerUid||peerUid===currentUser.uid)throw new Error("تعذر تحديد اللاعب الآخر في المحادثة.");
     batch.set(messageRef,{senderUid:currentUser.uid,text:value,createdAt:now});
-    batch.update(conversationRef,{lastMessage:value.slice(0,160),lastMessageAt:now,updatedAt:now});
+    batch.update(conversationRef,{lastMessage:value.slice(0,160),lastMessageAt:now,lastMessageId:messageRef.id,updatedAt:now,["unreadCounts."+peerUid]:firebase.firestore.FieldValue.increment(1)});
     await batch.commit();
   }catch(e){alert("تعذر إرسال الرسالة: "+(e.message||e));}
   finally{novaChatSending=false;renderNovaChatIntoApp();}
@@ -950,7 +965,7 @@ function renderNovaChat(){
   if(novaChatOpenId)return renderNovaChatConversation(novaChatOpenId);
   const tabs=[["messages","Messages"],["search","Search Players"],["groups","Groups"],["privacy","Profile & Privacy"]];let body="";
   if(novaChatTab==="messages"){
-    const rows=novaChatConversations.map(c=>{const p=novaChatPlayers.find(x=>x.id===c.peerUid),name=p?.name||c.peerName||"لاعب NOVA",initials=p?.initials||novaChatInitials(name);return `<button class="nova-chat-person" onclick="openNovaChat('${esc(c.id)}','${esc(c.peerUid)}')">${novaChatAvatar(name,c.peerUid,initials)}<span class="nova-chat-person-main"><b>${esc(name)}</b><span class="nova-chat-preview">${esc(c.lastMessage||"ابدأ المحادثة")}</span>${novaChatPresenceLine(c.peerUid)}</span><span class="nova-chat-meta">${novaChatTime(c.lastMessageAt)}</span></button>`;}).join("");
+    const rows=novaChatConversations.map(c=>{const p=novaChatPlayers.find(x=>x.id===c.peerUid),name=p?.name||c.peerName||"لاعب NOVA",initials=p?.initials||novaChatInitials(name),unread=Number(c.unreadCounts?.[currentUser.uid]||0);return `<button class="nova-chat-person" onclick="openNovaChat('${esc(c.id)}','${esc(c.peerUid)}')">${novaChatAvatar(name,c.peerUid,initials)}<span class="nova-chat-person-main"><b>${esc(name)}</b><span class="nova-chat-preview">${esc(c.lastMessage||"ابدأ المحادثة")}</span>${novaChatPresenceLine(c.peerUid)}</span><span class="nova-chat-meta">${novaChatTime(c.lastMessageAt)}${unread>0?`<span class="nova-chat-unread">${unread>99?"99+":unread}</span>`:""}</span></button>`;}).join("");
     body=`<div class="nova-chat-list">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:""}${rows||'<div class="nova-chat-empty">ما عندك حتى محادثة دابا. مشي لـ Search Players وبدا محادثة جديدة.</div>'}</div>`;
   }else if(novaChatTab==="search")body=`<div class="nova-chat-profile"><h3>البحث عن اللاعبين</h3><p class="muted">قلب بالاسم أو باسم الفريق، وبدا محادثة مباشرة داخل NOVA.</p></div>${novaChatPlayerResults()}`;
   else if(novaChatTab==="groups")body='<div class="nova-chat-empty"><b>المجموعات</b><p>غادي نربطو المجموعات من بعد ما نكملو المحادثات الخاصة.</p></div>';
