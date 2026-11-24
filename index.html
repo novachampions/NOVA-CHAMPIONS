@@ -182,12 +182,41 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 }
 
 
-/* NOVA ADMIN PANEL — responsive professional workspace */
-.nova-admin{display:grid;grid-template-columns:260px minmax(0,1fr);gap:0;min-height:680px;margin:4px auto 22px;max-width:1400px;border:1px solid #203653;border-radius:20px;overflow:hidden;background:rgba(7,13,26,.72);box-shadow:0 20px 55px #0005;direction:rtl;position:relative}
-.admin-sidebar{background:linear-gradient(180deg,#0d1930,#0a1223);border-inline-start:1px solid #223957;padding:18px 13px;display:flex;flex-direction:column;min-width:0;z-index:20}
-.admin-brand{display:flex;align-items:center;gap:10px;padding:5px 5px 22px;border-bottom:1px solid #203653}.admin-brand-mark{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;font-size:22px;font-weight:900;color:white;background:linear-gradient(135deg,#238BFF,#8057F5);box-shadow:0 5px 18px #238bff44}.admin-brand-copy{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}.admin-brand-copy b{font-size:13px;letter-spacing:1px;color:#eaf4ff}.admin-brand-copy small{font-size:9px;letter-spacing:1.6px;color:#7893b5}.admin-collapse{border:1px solid #29486f;background:#12233c;color:#9bcfff;border-radius:8px;padding:6px 9px;cursor:pointer}.admin-side-label{font-size:9px;letter-spacing:2px;color:#617b9d;padding:22px 10px 10px}.admin-side-links{display:grid;gap:6px}.admin-side-link{width:100%;display:flex;align-items:center;gap:10px;text-align:right;border:1px solid transparent;border-radius:11px;background:transparent;color:#aebfd6;padding:11px 10px;cursor:pointer;position:relative;white-space:normal}.admin-side-link:hover{background:#13243d;border-color:#203b5c}.admin-side-link.active{background:linear-gradient(100deg,#17365c,#201c48);border-color:#3268a1;color:#fff;box-shadow:inset 0 0 20px #238bff12}.admin-side-icon{width:29px;height:29px;flex:0 0 29px;display:grid;place-items:center;border-radius:9px;background:#142641;color:#8bcaff;font-size:15px}.admin-side-link.active .admin-side-icon{background:linear-gradient(135deg,#238BFF,#8057F5);color:white}.admin-side-copy{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}.admin-side-copy b{font-size:12px}.admin-side-copy small{font-size:10px;color:#7189a9}.admin-side-active{width:3px;height:23px;border-radius:4px;background:transparent}.admin-side-link.active .admin-side-active{background:#55b3ff;box-shadow:0 0 10px #238bff}.admin-sidebar-bottom{margin-top:auto;padding-top:18px;border-top:1px solid #203653}.admin-user{display:flex;align-items:center;gap:9px;padding:8px 4px 13px;min-width:0}.admin-avatar{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#203c61;color:#a9d9ff;font-weight:900}.admin-user-copy{display:flex;flex-direction:column;gap:3px;min-width:0}.admin-user-copy b{font-size:11px;color:#e7f2ff}.admin-user-copy small{font-size:9px;color:#7891b1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:right}.admin-logout{width:100%;padding:10px;border:1px solid #61334c;background:#27182a;color:#ffabc5;border-radius:10px;text-align:center;cursor:pointer;font-size:12px}.admin-main{min-width:0;background:linear-gradient(145deg,#0b1426,#0b1020 65%)}.admin-topbar{display:flex;align-items:center;gap:13px;padding:21px 24px;border-bottom:1px solid #203653;background:linear-gradient(100deg,#101f37,#11152d)}.admin-topbar h2{margin:5px 0 3px;font-size:21px}.admin-topbar p{margin:0;color:#8098b8;font-size:11px}.admin-breadcrumb{font-size:9px;letter-spacing:1.7px;color:#6388b5}.admin-live{margin-inline-start:auto;white-space:nowrap;color:#8da8c8;font-size:10px;border:1px solid #29486f;border-radius:30px;padding:7px 10px}.admin-live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#36d69a;box-shadow:0 0 9px #36d69a;margin-inline-end:5px}.admin-content{padding:20px;min-width:0}.admin-content .admin-section{margin:0}.admin-content .admin-section>h2{margin-top:0}.admin-status{font-size:14px!important}.admin-status.online{color:#5be0b0}.admin-status.pending{color:#f3c875}.admin-quick-actions{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0}.admin-welcome{margin-top:16px;padding:22px;background:linear-gradient(130deg,#122b4a,#17183b)!important;border-color:#315b8a!important}.admin-welcome h3{color:#d9edff;margin:12px 0 5px}.admin-mobile-menu,.admin-mobile-backdrop{display:none}.sidebar-collapsed{grid-template-columns:76px minmax(0,1fr)}.sidebar-collapsed .admin-sidebar{padding-inline:9px}.sidebar-collapsed .admin-brand{justify-content:center;flex-wrap:wrap}.sidebar-collapsed .admin-brand-copy,.sidebar-collapsed .admin-side-label,.sidebar-collapsed .admin-side-copy,.sidebar-collapsed .admin-side-active,.sidebar-collapsed .admin-user-copy,.sidebar-collapsed .admin-logout span{display:none}.sidebar-collapsed .admin-side-link{justify-content:center;padding:10px 5px}.sidebar-collapsed .admin-side-icon{width:34px;height:34px;flex-basis:34px}.sidebar-collapsed .admin-user{justify-content:center}.sidebar-collapsed .admin-collapse{margin:auto}
-@media(max-width:800px){.nova-admin,.nova-admin.sidebar-collapsed{display:block;min-height:600px;border-radius:15px;overflow:visible;border:0;background:transparent;box-shadow:none}.admin-sidebar{position:fixed;top:0;bottom:0;right:0;width:min(290px,84vw);height:100dvh;overflow-y:auto;transform:translateX(110%);transition:transform .25s ease;border:1px solid #29486f;border-radius:0 0 0 15px;box-shadow:-12px 0 35px #0008}.nova-admin.sidebar-open .admin-sidebar{transform:translateX(0)}.admin-mobile-backdrop{display:block;position:fixed;inset:0;z-index:19;background:#020713aa;border:0;opacity:0;visibility:hidden;transition:.2s}.nova-admin.sidebar-open .admin-mobile-backdrop{opacity:1;visibility:visible}.admin-collapse{display:none}.admin-mobile-menu{display:inline-grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border:1px solid #31547d;border-radius:10px;background:#142641;color:#b9ddff;font-size:18px}.admin-topbar{padding:15px 13px;border:1px solid #203653;border-radius:14px 14px 0 0}.admin-topbar h2{font-size:18px}.admin-content{padding:13px;border:1px solid #203653;border-top:0;border-radius:0 0 14px 14px;background:#0b1426}.admin-live{font-size:9px;padding:6px 7px}.admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:390px){.admin-topbar{gap:8px}.admin-topbar p{max-width:165px}.admin-live{font-size:8px}.admin-content{padding:10px}.admin-grid{gap:7px}.admin-tile{padding:10px}}
+/* NOVA CHAT — interface preview only; no Firebase writes */
+.nova-chat-shell{max-width:900px;margin:0 auto}
+.nova-chat-hero{padding:18px;border:1px solid #31547d;border-radius:18px;background:linear-gradient(135deg,#102744,#17152f);box-shadow:0 12px 28px #0004}
+.nova-chat-brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nova-chat-brand h2{margin:0;color:#8fc9ff!important;font-size:22px}
+.nova-chat-status{font-size:11px;border:1px solid #356b9e;color:#a8d8ff;border-radius:30px;padding:6px 10px}
+.nova-chat-search{margin:14px 0 10px}
+.nova-chat-search input{margin:0;border-radius:13px;padding:13px 14px}
+.nova-chat-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:12px 0}
+.nova-chat-tab{padding:10px 5px;border:1px solid #29486f;border-radius:11px;background:#101a2d;color:#b9dfff;font-size:12px;font-weight:700}
+.nova-chat-tab.active{background:linear-gradient(120deg,#238bff,#8057f5);color:white;border-color:transparent}
+.nova-chat-list{display:grid;gap:9px}
+.nova-chat-person{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid #263753;border-radius:14px;background:#101a2d;color:#f4f7ff;text-align:start;width:100%;cursor:pointer}
+.nova-chat-avatar{width:46px;height:46px;flex:0 0 46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#238bff,#8057f5);font-weight:900;color:white}
+.nova-chat-person-main{min-width:0;flex:1}
+.nova-chat-person-main b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nova-chat-preview{display:block;color:#a8b7d0;font-size:12px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nova-chat-meta{font-size:10px;color:#8fa4c2;text-align:end;white-space:nowrap}
+.nova-chat-unread{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;margin-top:6px;border-radius:20px;background:#238bff;color:white;font-weight:800}
+.nova-chat-empty{text-align:center;padding:30px 16px;border:1px dashed #31547d;border-radius:15px;color:#a8b7d0}
+.nova-chat-note{font-size:11px;color:#8fa4c2;text-align:center;margin:12px 0}
+.nova-chat-full{position:fixed;inset:0;z-index:10000;background:#070b16;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);max-width:none!important}
+.nova-chat-full-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #263753;background:#0b1425}
+.nova-chat-back{border:1px solid #31547d;background:#101a2d;color:#c5e3ff;border-radius:10px;padding:9px 12px}
+.nova-chat-full-title{flex:1;min-width:0}
+.nova-chat-full-title b{display:block}
+.nova-chat-full-title small{color:#83c3ff}
+.nova-chat-messages{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.nova-chat-bubble{max-width:82%;padding:10px 12px;border-radius:14px;background:#14233b;border:1px solid #29486f;align-self:flex-start}
+.nova-chat-bubble.mine{align-self:flex-end;background:linear-gradient(135deg,#14569a,#46318c);border-color:#527ac0}
+.nova-chat-bubble small{display:block;color:#b5c7df;font-size:10px;margin-top:5px}
+.nova-chat-compose{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #263753;background:#0b1425}
+.nova-chat-compose input{margin:0;min-width:0}
+.nova-chat-compose button{flex:0 0 auto}
+@media(max-width:420px){.nova-chat-tabs{gap:4px}.nova-chat-tab{font-size:10px;padding:10px 2px}.nova-chat-meta{font-size:9px}}
 
 </style></head>
 <body>
@@ -232,6 +261,8 @@ fr:{news:"Journal",predictions:"Pronostics",home:"Accueil",live:"Direct",leagues
 en:{news:"News",predictions:"Predictions",home:"Home",live:"Live",leagues:"Leagues",matches:"Matches",table:"Standings",admin:"Admin",welcome:"Welcome to the home of champions",subtitle:"Follow competitions, results and standings",competitions:"Competitions",teams:"Teams",played:"Matches",latest:"Latest results",noMatches:"No matches yet",noLeagues:"No leagues yet",createLeague:"Create competition",competitionType:"Competition format",leagueMode:"League",cupMode:"Cup",championsMode:"Champions League",directQualifiers:"Direct qualifiers",playoffTeams:"Playoff teams",playoffFormat:"Playoff format",knockoutFormat:"Knockout format",leaguePhase:"League phase",playoffStage:"Playoffs",knockoutStage:"Knockout rounds",nextChampionsStage:"Create next stage",championsNeedTeams:"Champions League needs at least 9 teams so each team can play 8 different opponents.",cupFormat:"Cup format",singleMatch:"Single match",homeAway:"Home and away",nextCupRound:"Create next round",cupWinner:"Qualified",cupNoStandings:"This is a knockout cup, so there is no points table.",leagueName:"League name",season:"Season",add:"Add",teamName:"Team name",addTeam:"Add team",match:"New match",homeTeam:"Home team",awayTeam:"Away team",score1:"Home goals",score2:"Away goals",save:"Save result",login:"Admin login",username:"Email address",password:"Password",logout:"Logout",dashboard:"Admin dashboard",totalLeagues:"Leagues",totalTeams:"Teams",totalMatches:"Matches",manageLeagues:"Manage leagues",manageTeams:"Manage teams",manageMatches:"Manage matches",editTeam:"Edit team",deleteTeam:"Delete team",edit:"Edit",delete:"Delete",editLeague:"Edit league",deleteLeague:"Delete league",editMatch:"Edit score",comments:"Match comments",saveMatch:"Save match",deleteMatch:"Delete match",confirmDelete:"Are you sure you want to delete this?",noAdminLeagues:"No leagues yet",noAdminMatches:"No matches yet",openLeagues:"Open leagues",openMatches:"Open matches",adminHint:"Sign in with the administrator email and password registered in Firebase",chooseLeague:"Choose league",chooseRound:"Choose the round to manage",standings:"Standings",pts:"Pts",p:"P",w:"W",d:"D",l:"L",gf:"GF",ga:"GA",gd:"GD",language:"Language",empty:"No data yet",saved:"Saved",badLogin:"Incorrect login details",setPassword:"Firebase account password",change:"Change",demo:"Data is synchronized through Firebase.",draw:"Random draw and fixture generation",firstLeg:"First leg",secondLeg:"Second leg",round:"Round",noSchedule:"No fixture schedule has been created",generate:"Generate draw and fixtures",scheduleExists:"This league already has a fixture schedule.",needTeams:"Add at least two teams first.",scheduleConfirm:"Draw teams and generate the competition matches now?",scheduled:"League fixtures",noRoundMatches:"No matches in this round."}
 };
 let lang=localStorage.novaLang||"ar", page="home", db={leagues:[],matches:[],teams:[]}, isAdmin=false, currentUser=null;
+let novaChatTab="messages",novaChatOpenId="",novaChatSearch="",novaChatDemoMessages={};
+let novaChatPlayers=[],novaChatPlayersLoaded=false,novaChatPlayersLoading=false,novaChatPlayersError="";
 let selectedRound=1, selectedLeg="home";
 const t=k=>words[lang][k]||k, dir=()=>lang==="ar"?"rtl":"ltr";
 async function persist(){
@@ -289,10 +320,7 @@ let tableMode="league";
 let adminMatchLeague="";
 let adminMatchRound="";
 let adminMatchLeg="home";
-let adminSection="dashboard";
-let adminSidebarCollapsed=false;
-let adminSidebarOpen=false;
-function nav(){document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
+function nav(){document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","chat","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
 function go(p){page=p;render()}function setLang(v){lang=v;localStorage.novaLang=v;render()}
 function teamStats(name){const out={fans:0,p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0};const master=(db.teams||[]).find(x=>x.name===name);out.fans=Number(master?.fans||0);const counted=db.matches.filter(m=>(m.h===name||m.a===name)&&m.hs!==null&&m.as!==null&&Number.isFinite(Number(m.hs))&&Number.isFinite(Number(m.as)));const cupGroups=new Map();counted.filter(m=>m.cup||String(m.id).startsWith("CUP_")).forEach(m=>{const l=db.leagues.find(x=>String(x.id)===String(m.league));const key=[String(m.league),Number(m.round)||1,...[String(m.h||""),String(m.a||"")].sort(),l?.cupFormat==="homeAway"?(m.leg||"home"):"single"].join("|");if(!cupGroups.has(key))cupGroups.set(key,m);});const nonCup=counted.filter(m=>!(m.cup||String(m.id).startsWith("CUP_")));[...nonCup,...cupGroups.values()].forEach(m=>{const home=m.h===name,forUs=Number(home?m.hs:m.as),against=Number(home?m.as:m.hs);out.p++;out.gf+=forUs;out.ga+=against;if(forUs>against){out.w++;out.pts+=3}else if(forUs<against){out.l++}else{out.d++;out.pts++;}});out.gd=out.gf-out.ga;return out;}
 function registryTeamId(name){return "TEAM_"+encodeURIComponent(name).slice(0,700);}
@@ -598,10 +626,6 @@ async function uploadNewsImage(file){
 async function publishNewsArticle(){if(!isAdmin)return;const title=document.getElementById('newsTitle')?.value.trim(),category=document.getElementById('newsCategory')?.value||'general',excerpt=document.getElementById('newsExcerpt')?.value.trim()||'',body=document.getElementById('newsBody')?.value.trim(),file=document.getElementById('newsImage')?.files?.[0];if(!title||!body)return alert('كتب عنوان المقال ونصه أولاً.');const existingArticle=articles.find(x=>x.id===articleEditingId);if(!file&&!existingArticle?.imageUrl)return alert('اختار صورة للمقال قبل النشر.');if(file&&(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024))return alert('اختار صورة JPG أو PNG أو WEBP، ويكون الحجم أقل من 5MB.');const btn=document.getElementById('publishNewsBtn');if(btn){btn.disabled=true;btn.textContent='جاري النشر...';}try{let old=articles.find(x=>x.id===articleEditingId),imageUrl=old?.imageUrl||'',imagePublicId=old?.imagePublicId||'';if(file){const uploaded=await uploadNewsImage(file);imageUrl=uploaded.imageUrl;imagePublicId=uploaded.imagePublicId;}if(!imageUrl)throw new Error('الصورة غير موجودة.');const id=articleEditingId||('NEWS_'+Date.now()),article={id,title,category,excerpt,body,imageUrl,imagePublicId,published:true,publishedAt:old?.publishedAt||Date.now(),updatedAt:Date.now()};await cloud.collection('articles').doc(id).set(article);articles=[article,...articles.filter(x=>x.id!==id)].sort((a,b)=>b.publishedAt-a.publishedAt);articleEditingId='';alert('تم حفظ المقال بنجاح.');render();}catch(e){alert('تعذر نشر المقال: '+(e.message||e)+'\nتأكد من إعدادات Cloudinary وFirestore Rules.');if(btn){btn.disabled=false;btn.textContent='إعادة المحاولة';}}}
 async function deleteNewsArticle(id){if(!isAdmin||!confirm('واش متأكد بغيتي تحذف هاد المقال؟'))return;try{await cloud.collection('articles').doc(id).delete();articles=articles.filter(x=>x.id!==id);if(openedArticleId===id)openedArticleId='';render()}catch(e){alert('تعذر حذف المقال: '+(e.message||e))}}
 
-
-function setAdminSection(section){adminSection=section;adminSidebarOpen=false;render();}
-function toggleAdminSidebar(){if(window.matchMedia&&window.matchMedia("(max-width:800px)").matches){adminSidebarOpen=!adminSidebarOpen;}else{adminSidebarCollapsed=!adminSidebarCollapsed;}render();}
-function closeAdminSidebar(){adminSidebarOpen=false;render();}
 function render(){nav();let el=document.getElementById("app");let l=current();
 if(page==="player"){
   if(!currentUser){
@@ -666,59 +690,120 @@ if(page==="predictions"){el.innerHTML=predictionsPage()}
 if(page==="leagues"){el.innerHTML=`<h2>${t("competitions")}</h2>${db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${x.teams.length}</span></div>`).join("")||`<p class="muted">${t("noLeagues")}</p>`}${isAdmin?`<div class="form"><h3>${t("createLeague")}</h3><input id="lname" placeholder="${t("leagueName")}"><input id="season" placeholder="${t("season")}" value="Season 1"><label>${t("competitionType")}</label><select id="competitionType" onchange="document.getElementById('cupFormatWrap').classList.toggle('hidden',this.value!=='cup');document.getElementById('championsFormatWrap').classList.toggle('hidden',this.value!=='champions')"><option value="league">${t("leagueMode")}</option><option value="cup">${t("cupMode")}</option><option value="champions">${t("championsMode")}</option></select><div id="championsFormatWrap" class="hidden"><label>${t("directQualifiers")}</label><input id="champDirect" type="number" min="0" step="1" value="8"><label>${t("playoffTeams")}</label><input id="champPlayoff" type="number" min="0" step="1" value="16"><label>${t("playoffFormat")}</label><select id="champPlayoffFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><label>${t("knockoutFormat")}</label><select id="champKnockoutFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><p class="muted">8 مباريات لكل فريق • قرعة عشوائية بلا تكرار الخصوم</p></div><div id="cupFormatWrap" class="hidden"><label>${t("cupFormat")}</label><select id="cupFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select></div><label>اختار الفرق المشاركة / Select teams</label><div class="form" id="leagueTeamChoices">${(db.teams||[]).length?(db.teams||[]).map(team=>`<label style="display:block;padding:6px"><input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">${esc(team.name)} — ${Number(team.fans||0)} Fans</label>`).join(""):`<p class="muted">سجل الفرق أولاً من لوحة Admin ← Gestion des équipes</p>`}</div><button class="btn" onclick="loadPlayerTeams()">عرض فرق اللاعبين المسجلين</button><button class="btn primary" onclick="addLeague()">${t("add")}</button></div>`:""}`}
 if(page==="matches"){el.innerHTML=matchesView(l)}
 if(page==="table"){const list=db.leagues.filter(x=>(x.mode||"league")===tableMode);if(selected&&!list.some(x=>String(x.id)===String(selected)))selected=null;if(!selected&&list.length)selected=String(list[0].id);const tl=list.find(x=>String(x.id)===String(selected));el.innerHTML=`<h2>${t("standings")}</h2>${tableModeSelect()}${tableModeLeagueSelect()}${!list.length?`<div class="card"><p class="muted">${t("noLeagues")}</p>${isAdmin?`<button class="btn primary" onclick="go('leagues')">${t("createLeague")}</button>`:""}</div>`:!tl?`<p class="muted">${t("chooseLeague")}</p>`:tableMode==="cup"?cupClassementView(tl):tableMode==="champions"?championsClassementView(tl):(()=>{const rows=standings(tl);return `<div class="standings-head"><div><strong>${esc(tl.name)}</strong><div class="muted">${esc(tl.season||"")} • ${tl.teams.length} ${t("teams")}</div></div><span class="pill">LEAGUE TABLE</span></div><div class="standings-scroll"><table class="standings-table"><thead><tr><th class="rank-cell">#</th><th style="text-align:start">${t("teams")}</th><th>${t("p")}</th><th>${t("w")}</th><th>${t("d")}</th><th>${t("l")}</th><th>${t("gf")}</th><th>${t("ga")}</th><th>${t("gd")}</th><th>${t("pts")}</th></tr></thead><tbody>${rows.map((x,i)=>`<tr><td class="rank-cell"><span class="rank-badge ${i===0?"gold":i===1?"silver":i===2?"bronze":""}">${i+1}</span></td><td class="team-cell"><span class="team-mark">${esc((x.name||"?").trim().slice(0,2).toUpperCase())}</span>${esc(x.name)}</td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td class="${x.gd>0?"gd-positive":x.gd<0?"gd-negative":""}">${x.gd>0?"+":""}${x.gd}</td><td class="points-cell">${x.pts}</td></tr>`).join("")||`<tr><td colspan="10" class="muted">${t("empty")}</td></tr>`}</tbody></table></div><div class="standings-note"><span><i></i>${lang==="ar"?"الترتيب حسب النقاط ثم فارق الأهداف":"Points, then goal difference"}</span><span>${lang==="ar"?"اسحب الجدول أفقياً لرؤية جميع الإحصائيات":"Swipe horizontally to view all stats"}</span></div>${isAdmin?`<div class="form"><h3>${t("addTeam")}</h3><input id="teamName" placeholder="${t("teamName")}"><button class="btn primary" onclick="addTeam()">${t("add")}</button></div>`:""}`})()}`;}
-if(page==="admin"){
-  if(isAdmin){
-    const sections={
-      dashboard:{icon:"▦",label:"Dashboard",desc:"نظرة عامة على المنصة"},
-      tournaments:{icon:"🏆",label:"Tournaments",desc:"إدارة البطولات"},
-      teams:{icon:"🛡",label:"Teams",desc:"فرق المنصة الرسمية"},
-      playerTeams:{icon:"👥",label:"Player Teams",desc:"فرق اللاعبين المسجلين"},
-      matches:{icon:"⚽",label:"Matches",desc:"النتائج والمباريات"},
-      news:{icon:"📰",label:"News",desc:"الأخبار والمقالات"}
-    };
-    if(!sections[adminSection])adminSection="dashboard";
-    let sectionContent="";
-    if(adminSection==="dashboard"){
-      sectionContent=`<div class="admin-grid">
-        <div class="admin-tile">${t("totalLeagues")}<b>${db.leagues.length}</b></div>
-        <div class="admin-tile">${t("totalTeams")}<b>${(db.teams||[]).length}</b></div>
-        <div class="admin-tile">${t("totalMatches")}<b>${db.matches.length}</b></div>
-        <div class="admin-tile">Firebase<b class="admin-status ${cloudReady?"online":"pending"}">${cloudReady?"ONLINE":"CONNECTING"}</b></div>
-      </div>
-      <div class="admin-note">${t("demo")} ${syncError?" • "+esc(syncError):""}</div>
-      <div class="admin-quick-actions"><button class="btn primary" onclick="setAdminSection('tournaments')">🏆 إدارة البطولات</button><button class="btn primary" onclick="setAdminSection('matches')">⚽ إدارة المباريات</button></div>
-      <div class="card admin-welcome"><span class="pill">NOVA CHAMPIONS • ADMIN</span><h3>مرحباً بك في مركز الإدارة</h3><p class="muted">اختار القسم من القائمة الجانبية باش تبدا تدير المنصة.</p><div class="muted">الحساب: ${esc(currentUser?.email||"Admin")}</div><div class="muted">حالة المزامنة: ${cloudReady?"متصل بـ Firebase":"جاري الاتصال"}</div></div>`;
-    }else if(adminSection==="tournaments"){
-      sectionContent=`<section class="admin-section"><h2>${t("manageLeagues")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${(x.teams||[]).length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${(x.teams||[]).length}</span></div><div class="admin-actions"><button class="btn sm" onclick="editLeague('${String(x.id)}')">${t("edit")}</button><button class="btn danger sm" onclick="deleteLeague('${String(x.id)}')">${t("delete")}</button><button class="btn sm" onclick="selected='${String(x.id)}';go('table')">${t("table")}</button></div></div>`).join(""):`<p class="muted">${t("noAdminLeagues")}</p>`}</section>`;
-    }else if(adminSection==="teams"){
-      sectionContent=adminTeamsManager();
-    }else if(adminSection==="playerTeams"){
-      sectionContent=`<section class="admin-section"><h2>فرق اللاعبين المسجلين</h2><p class="muted">إدارة حسابات اللاعبين والفرق المنشأة عند التسجيل، مع إمكانية الحظر ورفع الحظر.</p><div id="playerTeamsAdminList"><p class="muted">جاري تحميل الفرق...</p></div></section>`;
-    }else if(adminSection==="matches"){
-      sectionContent=adminMatchesManager();
-    }else if(adminSection==="news"){
-      sectionContent=adminNewsManager();
-    }
-    el.innerHTML=`<div class="nova-admin ${adminSidebarCollapsed?"sidebar-collapsed":""} ${adminSidebarOpen?"sidebar-open":""}">
-      <aside class="admin-sidebar" id="adminSidebar">
-        <div class="admin-brand"><div class="admin-brand-mark">N</div><div class="admin-brand-copy"><b>NOVA ADMIN</b><small>CONTROL CENTER</small></div><button class="admin-collapse" onclick="toggleAdminSidebar()" aria-label="تصغير القائمة">${adminSidebarCollapsed?"☰":"⇥"}</button></div>
-        <div class="admin-side-label">WORKSPACE</div>
-        <div class="admin-side-links">${Object.entries(sections).map(([key,item])=>`<button class="admin-side-link ${adminSection===key?"active":""}" onclick="setAdminSection('${key}')" title="${item.label}"><span class="admin-side-icon">${item.icon}</span><span class="admin-side-copy"><b>${item.label}</b><small>${item.desc}</small></span><span class="admin-side-active"></span></button>`).join("")}</div>
-        <div class="admin-sidebar-bottom"><div class="admin-user"><span class="admin-avatar">${esc((currentUser?.email||"A").slice(0,1).toUpperCase())}</span><span class="admin-user-copy"><b>Administrator</b><small>${esc(currentUser?.email||"Admin")}</small></span></div><button class="admin-logout" onclick="auth.signOut()">↪ <span>تسجيل الخروج</span></button></div>
-      </aside>
-      <button class="admin-mobile-backdrop" onclick="closeAdminSidebar()" aria-label="إغلاق القائمة"></button>
-      <section class="admin-main"><div class="admin-topbar"><button class="admin-mobile-menu" onclick="toggleAdminSidebar()" aria-label="فتح القائمة">☰</button><div><div class="admin-breadcrumb">NOVA CHAMPIONS / ADMIN</div><h2>${sections[adminSection].label}</h2><p>${sections[adminSection].desc}</p></div><span class="admin-live"><i></i> ${cloudReady?"SYSTEM ONLINE":"CONNECTING"}</span></div><div class="admin-content">${sectionContent}</div></section>
-    </div>`;
-  }else{
-    el.innerHTML=`<div class="admin-login-wrap"><h2>${t("login")}</h2><div class="form"><p class="muted">${t("adminHint")}</p>${currentUser?`<div class="card"><b>Firebase admin check</b><p>Project ID: <code>${esc(firebase.app().options.projectId)}</code></p><p>Signed-in UID: <code>${esc(adminCheck.uid||currentUser.uid)}</code></p><p>Document path: <code>${esc(adminCheck.path)}</code></p><p>Document exists: <b>${adminCheck.exists===null?"not confirmed":String(adminCheck.exists)}</b></p><p>Role field: <b>${esc(adminCheck.role)}</b></p><p>Status: <b>${esc(adminCheck.state)}</b></p>${adminCheck.error?`<p style="color:#f88">${esc(adminCheck.error)}</p>`:""}<button class="btn" onclick="auth.signOut()">${t("logout")}</button></div>`:`<label>${t("username")}</label><input id="user" type="email" placeholder="admin@example.com" autocomplete="username"><label>${t("password")}</label><input id="pass" type="password" autocomplete="current-password"><button class="btn primary" onclick="login()">${t("login")}</button><p id="err" class="muted"></p>`}</div></div>`;
-  }
-}
-if(page==="admin" && isAdmin && adminSection==="playerTeams") loadAdminPlayerTeams();
+if(page==="admin"){el.innerHTML=isAdmin?`<div class="admin-head"><div><h2>${t("dashboard")}</h2><span class="pill">ADMIN_NOVA • ${esc(currentUser?.email||"Admin")}</span></div><button class="btn danger" onclick="auth.signOut()">${t("logout")}</button></div><div class="admin-grid"><div class="admin-tile">${t("totalLeagues")}<b>${db.leagues.length}</b></div><div class="admin-tile">${t("totalTeams")}<b>${(db.teams||[]).length}</b></div><div class="admin-tile">${t("totalMatches")}<b>${db.matches.length}</b></div><div class="admin-tile">Firebase<b style="font-size:15px">${cloudReady?"ONLINE":"CONNECTING"}</b></div></div><div class="admin-note">${t("demo")} ${syncError?" • "+esc(syncError):""}</div><div class="grid admin-section"><button class="btn primary" onclick="go('leagues')">${t("openLeagues")}</button><button class="btn primary" onclick="go('matches')">${t("openMatches")}</button></div><section class="admin-section"><h2>${t("manageLeagues")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${(x.teams||[]).length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${(x.teams||[]).length}</span></div><div class="admin-actions"><button class="btn sm" onclick="editLeague('${String(x.id)}')">${t("edit")}</button><button class="btn danger sm" onclick="deleteLeague('${String(x.id)}')">${t("delete")}</button><button class="btn sm" onclick="selected='${String(x.id)}';go('table')">${t("table")}</button></div></div>`).join(""):`<p class="muted">${t("noAdminLeagues")}</p>`}</section>${adminTeamsManager()}
+<section class="admin-section">
+  <h2>فرق اللاعبين المسجلين</h2>
+  <div id="playerTeamsAdminList">
+    <p class="muted">جاري تحميل الفرق...</p>
+  </div>
+</section>
+${adminNewsManager()}${adminMatchesManager()}`:`<h2>${t("login")}</h2><div class="form"><p class="muted">${t("adminHint")}</p>${currentUser?`<div class="card"><b>Firebase admin check</b><p>Project ID: <code>${esc(firebase.app().options.projectId)}</code></p><p>Signed-in UID: <code>${esc(adminCheck.uid||currentUser.uid)}</code></p><p>Document path: <code>${esc(adminCheck.path)}</code></p><p>Document exists: <b>${adminCheck.exists===null?"not confirmed":String(adminCheck.exists)}</b></p><p>Role field: <b>${esc(adminCheck.role)}</b></p><p>Status: <b>${esc(adminCheck.state)}</b></p>${adminCheck.error?`<p style="color:#f88">${esc(adminCheck.error)}</p>`:""}<button class="btn" onclick="auth.signOut()">${t("logout")}</button></div>`:`<label>${t("username")}</label><input id="user" type="email" placeholder="admin@example.com" autocomplete="username"><label>${t("password")}</label><input id="pass" type="password" autocomplete="current-password"><button class="btn primary" onclick="login()">${t("login")}</button><p id="err" class="muted"></p>`}</div>`}
+if(page==="admin" && isAdmin) loadAdminPlayerTeams();
 if(page==="teamProfile"){
   el.innerHTML='<p class="muted">جاري تحميل معلومات الفريق...</p>';
   teamProfileView();
 }
+if(page==="chat"){el.innerHTML=renderNovaChat();}
 }
+
+const novaChatDemoUsers=[
+  {id:"demo_1",name:"Youssef Pro",tag:"FC Mobile • Morocco",status:"متصل الآن",initials:"YP"},
+  {id:"demo_2",name:"Adam Gamer",tag:"FC Mobile • Casablanca",status:"آخر ظهور منذ 8 دقائق",initials:"AG"}
+];
+function novaChatInitials(name){return String(name||"NC").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"NC";}
+function novaChatWhatsAppNumber(raw){
+  let n=String(raw||"").trim().replace(/[\s()-]/g,"");
+  if(n.startsWith("00"))n="+"+n.slice(2);
+  if(n.startsWith("+"))return n.slice(1).replace(/\D/g,"");
+  n=n.replace(/\D/g,"");
+  // Local Moroccan mobile numbers: 06/07 + 8 digits.
+  if(/^0[67]\d{8}$/.test(n))return "212"+n.slice(1);
+  return "";
+}
+async function loadNovaChatPlayers(force=false){
+  if(novaChatPlayersLoading||(!force&&novaChatPlayersLoaded))return;
+  if(!currentUser||currentUser.isAnonymous){novaChatPlayersError="خاصك تدخل بحساب لاعب.";renderNovaChatIntoApp();return;}
+  novaChatPlayersLoading=true;novaChatPlayersError="";renderNovaChatIntoApp();
+  try{
+    const [profilesSnap,teamsSnap]=await Promise.all([
+      cloud.collection("playerProfiles").get(),
+      cloud.collection("playerTeams").get()
+    ]);
+    const teams={};teamsSnap.forEach(doc=>{teams[doc.id]=doc.data()||{};});
+    novaChatPlayers=[];
+    profilesSnap.forEach(doc=>{
+      const profile=doc.data()||{};
+      if(doc.id===currentUser.uid)return;
+      const team=teams[doc.id]||{};
+      const name=String(profile.name||"").trim();
+      if(!name)return;
+      novaChatPlayers.push({id:doc.id,name,teamName:String(team.name||"").trim(),phone:String(profile.phone||"").trim(),initials:novaChatInitials(name)});
+    });
+    novaChatPlayers.sort((a,b)=>a.name.localeCompare(b.name));
+    novaChatPlayersLoaded=true;
+  }catch(e){novaChatPlayersError="تعذر تحميل اللاعبين: "+(e.message||e);}
+  finally{novaChatPlayersLoading=false;renderNovaChatIntoApp();}
+}
+function novaChatPlayerResults(){
+  if(novaChatPlayersLoading)return '<div class="nova-chat-empty">جاري تحميل اللاعبين من NOVA CHAMPIONS…</div>';
+  if(novaChatPlayersError)return `<div class="nova-chat-empty">${esc(novaChatPlayersError)}<br><button class="btn sm" onclick="loadNovaChatPlayers(true)">إعادة المحاولة</button></div>`;
+  const q=novaChatSearch.trim().toLocaleLowerCase();
+  const found=novaChatPlayers.filter(u=>!q||u.name.toLocaleLowerCase().includes(q)||u.teamName.toLocaleLowerCase().includes(q));
+  if(!found.length)return '<div class="nova-chat-empty">ما لقينا حتى لاعب بهاد الاسم.</div>';
+  return `<div class="nova-chat-list">${found.map(u=>{const phone=novaChatWhatsAppNumber(u.phone);return `<div class="nova-chat-person"><span class="nova-chat-avatar">${esc(u.initials)}</span><span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span></span>${phone?`<a class="btn sm" style="text-decoration:none" href="https://wa.me/${phone}" target="_blank" rel="noopener noreferrer">WhatsApp</a>`:`<span class="nova-chat-preview" title="خاص اللاعب يسجل الرقم بمفتاح الدولة">غير متاح</span>`}</div>`;}).join("")}</div>`;
+}
+function renderNovaChat(){
+  if(!currentUser||currentUser.isAnonymous){
+    return `<section class="nova-chat-shell"><div class="nova-chat-hero"><div class="nova-chat-brand"><h2>✦ NOVA CHAT</h2><span class="nova-chat-status">MESSAGING</span></div><p class="muted">تواصل مع لاعبي NOVA CHAMPIONS، كوّن صداقات وأنشئ مجموعات.</p></div><div class="nova-chat-empty"><div style="font-size:34px">🔐</div><b>خاصك تدخل بحساب لاعب</b><p>سجّل الدخول باش تستعمل NOVA CHAT.</p><button class="btn primary" onclick="go('player')">الدخول إلى حساب اللاعب</button></div></section>`;
+  }
+  if(novaChatOpenId)return renderNovaChatConversation(novaChatOpenId);
+  const tabs=[["messages","Messages"],["search","Search Players"],["groups","Groups"],["privacy","Profile & Privacy"]];
+  let body="";
+  if(novaChatTab==="messages"){
+    body=`<div class="nova-chat-list">${novaChatDemoUsers.slice(0,2).map(u=>novaChatPerson(u,"مرحبا! واش واجد للماتش؟","12:40",1)).join("")}<div class="nova-chat-empty"><b>معاينة تجريبية</b><p>الأسماء والرسائل المعروضة غير أمثلة للتصميم، ماشي محادثات حقيقية.</p></div></div>`;
+  }else if(novaChatTab==="search"){
+    body=`<div class="nova-chat-profile"><h3>البحث عن اللاعبين</h3><p class="muted">قلب بالاسم أو باسم الفريق، وتواصل مع اللاعب عبر WhatsApp.</p></div>${novaChatPlayerResults()}`;
+  }else if(novaChatTab==="groups"){
+    body=`<div class="nova-chat-list"><div class="nova-chat-empty"><div style="font-size:30px">👥</div><b>المجموعات ديالك</b><p>أنشئ مجموعة وتواصل مع أعضاء فريقك.</p><button class="btn primary" onclick="createNovaDemoGroup()">＋ إنشاء مجموعة</button></div>${novaChatDemoUsers.filter(u=>u.group).map(u=>novaChatPerson(u,"مجموعة تجريبية","—",0)).join("")}</div>`;
+  }else{
+    body=`<div class="nova-chat-profile"><h3>Profile & Privacy</h3><p class="muted">إعدادات المعاينة — لم يتم ربطها بالحساب بعد.</p><label><input type="checkbox" checked> إظهار حالة الاتصال Online</label><label><input type="checkbox" checked> إظهار آخر ظهور للأصدقاء</label><label><input type="checkbox" checked> إشعارات الرسائل</label><p class="nova-chat-note">هذه الاختيارات شكلية في هذه المرحلة ولا يتم حفظها.</p></div>`;
+  }
+  return `<section class="nova-chat-shell"><div class="nova-chat-hero"><div class="nova-chat-brand"><h2>✦ NOVA CHAT</h2><span class="nova-chat-status">● READY</span></div><p class="muted">تواصل مباشرة مع لاعبي NOVA CHAMPIONS.</p><div class="nova-chat-search"><input type="search" placeholder="🔎 البحث عن لاعب أو محادثة..." value="${esc(novaChatSearch)}" oninput="novaChatSearch=this.value;if(novaChatTab==='search'){const pos=this.selectionStart;renderNovaChatIntoApp();const f=document.querySelector('.nova-chat-search input');if(f){f.focus();f.setSelectionRange(pos,pos)}}" "></div></div><div class="nova-chat-tabs">${tabs.map(([id,label])=>`<button class="nova-chat-tab ${novaChatTab===id?'active':''}" onclick="setNovaChatTab('${id}')">${label}</button>`).join("")}</div>${body}<div class="nova-chat-note">المحادثات والمجموعات ما زالت في وضع المعاينة؛ البحث وWhatsApp مرتبطان ببيانات اللاعبين.</div></section>`;
+}
+function novaChatPerson(u,last,time,unread){
+  return `<button class="nova-chat-person" onclick="openNovaChat('${u.id}')"><span class="nova-chat-avatar">${u.initials}</span><span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(last)}</span></span><span class="nova-chat-meta">${time}${unread?`<br><span class="nova-chat-unread">${unread}</span>`:""}</span></button>`;
+}
+function renderNovaChatIntoApp(){const el=document.getElementById("app");if(el&&page==="chat")el.innerHTML=renderNovaChat();}
+function setNovaChatTab(tab){novaChatTab=tab;if(tab==="search")loadNovaChatPlayers();renderNovaChatIntoApp();}
+function openNovaChat(id){novaChatOpenId=id;renderNovaChatIntoApp();}
+function backNovaChat(){novaChatOpenId="";renderNovaChatIntoApp();}
+function createNovaDemoGroup(){
+  const name=prompt("شنو الاسم ديال المجموعة؟");
+  if(!name||!name.trim())return;
+  novaChatDemoUsers.push({id:"group_"+Date.now(),name:name.trim(),tag:"مجموعة تجريبية • أنت المسؤول",status:"مجموعة",initials:name.trim().slice(0,2).toUpperCase(),group:true});
+  alert("تمت إضافة المجموعة للمعاينة فقط. مازال ما تسجلاتش في Firebase.");
+  renderNovaChatIntoApp();
+}
+function renderNovaChatConversation(id){
+  const u=novaChatDemoUsers.find(x=>x.id===id)||{name:"NOVA Chat",initials:"NC",status:"مجموعة"};
+  const messages=novaChatDemoMessages[id]||[
+    {text:"مرحبا بك في NOVA CHAT 👋",mine:false,time:"12:35"},
+    {text:"هنا غادي تكون المحادثة ديالك مع اللاعبين.",mine:false,time:"12:36"}
+  ];
+  return `<section class="nova-chat-full"><div class="nova-chat-full-head"><button class="nova-chat-back" onclick="backNovaChat()">← رجوع</button><span class="nova-chat-avatar">${u.initials}</span><span class="nova-chat-full-title"><b>${esc(u.name)}</b><small>${esc(u.status||"معاينة فقط")}</small></span><button class="nova-chat-back" onclick="alert('الحظر والتبليغ غادي يتفعّلو بعد ربط Firebase.')">⋮</button></div><div class="nova-chat-messages" id="novaChatMessages">${messages.map(m=>`<div class="nova-chat-bubble ${m.mine?'mine':''}">${esc(m.text)}<small>${m.time}</small></div>`).join("")}<div class="nova-chat-note">رسائل تجريبية محلية، لا يتم إرسالها للاعب آخر.</div></div><div class="nova-chat-compose"><button class="nova-chat-back" onclick="alert('رفع الصور غادي يتفعّل بعد إعداد تخزين مخصص وآمن.')">＋</button><input id="novaChatInput" placeholder="اكتب رسالة تجريبية..." maxlength="500" onkeydown="if(event.key==='Enter')sendNovaDemoMessage('${id}')"><button class="btn primary" onclick="sendNovaDemoMessage('${id}')">إرسال</button></div></section>`;
+}
+function sendNovaDemoMessage(id){
+  const input=document.getElementById("novaChatInput"),value=input?.value.trim();
+  if(!value)return;
+  const list=novaChatDemoMessages[id]||(novaChatDemoMessages[id]=[
+    {text:"مرحبا بك في NOVA CHAT 👋",mine:false,time:"12:35"},
+    {text:"هنا غادي تكون المحادثة ديالك مع اللاعبين.",mine:false,time:"12:36"}
+  ]);
+  list.push({text:value,mine:true,time:new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})});
+  renderNovaChatIntoApp();
+  const box=document.getElementById("novaChatMessages");if(box)box.scrollTop=box.scrollHeight;
+}
+
 async function login(){
   const email=document.getElementById("user").value.trim(), password=document.getElementById("pass").value;
   const err=document.getElementById("err");
