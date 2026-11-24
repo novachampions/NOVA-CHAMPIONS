@@ -218,6 +218,15 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 .nova-chat-compose button{flex:0 0 auto}
 @media(max-width:420px){.nova-chat-tabs{gap:4px}.nova-chat-tab{font-size:10px;padding:10px 2px}.nova-chat-meta{font-size:9px}}
 
+
+/* NOVA CHAT presence indicators */
+.nova-chat-avatar-wrap{position:relative;display:inline-flex;flex:0 0 46px;width:46px;height:46px}
+.nova-chat-avatar-wrap .nova-chat-avatar{width:46px;height:46px;flex:0 0 46px}
+.nova-chat-online-dot{position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#20d879;border:2px solid #101a2d;box-shadow:0 0 8px #20d87988}
+.nova-chat-offline-dot{position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#778399;border:2px solid #101a2d}
+.nova-chat-presence{display:block;font-size:11px;color:#a8b7d0;margin-top:4px}
+.nova-chat-presence.is-online{color:#45df91}
+.nova-chat-full-title small.nova-chat-presence{font-size:11px}
 </style></head>
 <body>
 <div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
@@ -265,6 +274,8 @@ let novaChatTab="messages",novaChatOpenId="",novaChatSearch="",novaChatDemoMessa
 let novaChatPlayers=[],novaChatPlayersLoaded=false,novaChatPlayersLoading=false,novaChatPlayersError="";
 let novaChatConversations=[],novaChatMessages=[],novaChatCurrentPeer=null,novaChatMessageError="",novaChatSending=false;
 let novaChatConversationsUnsub=null,novaChatMessagesUnsub=null;
+let novaChatPresenceUnsub=null,novaChatPresence={},novaChatPresenceError="";
+let novaPresenceTimer=null,novaPresenceLastUid="";
 let selectedRound=1, selectedLeg="home";
 const t=k=>words[lang][k]||k, dir=()=>lang==="ar"?"rtl":"ltr";
 async function persist(){
@@ -288,6 +299,7 @@ function startCloudSync(){
 }
 auth.onAuthStateChanged(async user=>{
   currentUser=user; isAdmin=false;
+  syncNovaPresence(user);
   if(user){
     adminCheck={state:"checking",uid:user.uid,path:"admins/"+user.uid,exists:null,role:"—",error:""};
     render();
@@ -712,6 +724,84 @@ const novaChatDemoUsers=[
   {id:"demo_1",name:"Youssef Pro",tag:"FC Mobile • Morocco",status:"متصل الآن",initials:"YP"},
   {id:"demo_2",name:"Adam Gamer",tag:"FC Mobile • Casablanca",status:"آخر ظهور منذ 8 دقائق",initials:"AG"}
 ];
+
+function novaPresenceDate(value){
+  if(!value)return null;
+  const date=value.toDate?value.toDate():(value instanceof Date?value:new Date(value));
+  return Number.isNaN(date.getTime())?null:date;
+}
+function novaChatPresenceInfo(uid){
+  const data=novaChatPresence[uid]||{};
+  const changed=novaPresenceDate(data.lastChanged);
+  const fresh=!!changed&&(Date.now()-changed.getTime()<90000);
+  const online=data.state==="online"&&fresh;
+  if(online)return {online:true,label:"متصل الآن"};
+  const last=novaPresenceDate(data.lastSeen)||changed;
+  if(!last)return {online:false,label:"غير متصل"};
+  const minutes=Math.max(0,Math.floor((Date.now()-last.getTime())/60000));
+  if(minutes<1)return {online:false,label:"آخر ظهور الآن"};
+  if(minutes<60)return {online:false,label:"آخر ظهور منذ "+minutes+" دقيقة"};
+  const hours=Math.floor(minutes/60);
+  if(hours<24)return {online:false,label:"آخر ظهور منذ "+hours+" ساعة"};
+  const days=Math.floor(hours/24);
+  return {online:false,label:"آخر ظهور منذ "+days+" يوم"};
+}
+function novaChatAvatar(name,uid,initials){
+  const status=novaChatPresenceInfo(uid);
+  return `<span class="nova-chat-avatar-wrap"><span class="nova-chat-avatar">${esc(initials||novaChatInitials(name))}</span><i class="${status.online?'nova-chat-online-dot':'nova-chat-offline-dot'}"></i></span>`;
+}
+function novaChatPresenceLine(uid){
+  const status=novaChatPresenceInfo(uid);
+  return `<span class="nova-chat-presence ${status.online?'is-online':''}">${status.online?'● ':''}${esc(status.label)}</span>`;
+}
+async function writeNovaPresence(uid,state){
+  if(!uid)return;
+  const data={uid,state,lastChanged:firebase.firestore.FieldValue.serverTimestamp()};
+  if(state==="offline")data.lastSeen=firebase.firestore.FieldValue.serverTimestamp();
+  try{
+    await cloud.collection("presence").doc(uid).set(data,{merge:true});
+  }catch(e){
+    novaChatPresenceError=e.message||String(e);
+    console.warn("NOVA presence:",e);
+  }
+}
+function subscribeNovaChatPresence(){
+  if(!currentUser||currentUser.isAnonymous||novaChatPresenceUnsub)return;
+  novaChatPresenceUnsub=cloud.collection("presence").onSnapshot(snap=>{
+    const next={};
+    snap.forEach(doc=>next[doc.id]=doc.data()||{});
+    novaChatPresence=next;
+    if(page==="chat")renderNovaChatIntoApp();
+  },err=>{
+    novaChatPresenceError=err.message||String(err);
+    console.warn("NOVA presence listener:",err);
+  });
+}
+function syncNovaPresence(user){
+  const nextUid=user&&!user.isAnonymous?user.uid:"";
+  if(novaPresenceLastUid&&novaPresenceLastUid!==nextUid){
+    writeNovaPresence(novaPresenceLastUid,"offline");
+  }
+  if(novaPresenceTimer){clearInterval(novaPresenceTimer);novaPresenceTimer=null;}
+  if(!nextUid){
+    novaPresenceLastUid="";
+    if(novaChatPresenceUnsub){novaChatPresenceUnsub();novaChatPresenceUnsub=null;}
+    novaChatPresence={};
+    return;
+  }
+  novaPresenceLastUid=nextUid;
+  subscribeNovaChatPresence();
+  const publish=()=>writeNovaPresence(nextUid,document.visibilityState==="hidden"?"offline":"online");
+  publish();
+  novaPresenceTimer=setInterval(publish,30000);
+}
+document.addEventListener("visibilitychange",()=>{
+  if(novaPresenceLastUid)writeNovaPresence(novaPresenceLastUid,document.visibilityState==="hidden"?"offline":"online");
+});
+window.addEventListener("pagehide",()=>{
+  if(novaPresenceLastUid)writeNovaPresence(novaPresenceLastUid,"offline");
+});
+
 function novaChatInitials(name){return String(name||"NC").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase()||"NC";}
 function novaChatTime(value){
   if(!value)return "";
@@ -754,7 +844,7 @@ function novaChatPlayerResults(){
   if(novaChatPlayersError)return `<div class="nova-chat-empty">${esc(novaChatPlayersError)}<br><button class="btn sm" onclick="loadNovaChatPlayers(true)">إعادة المحاولة</button></div>`;
   const q=novaChatSearch.trim().toLocaleLowerCase(),found=novaChatPlayers.filter(u=>!q||u.name.toLocaleLowerCase().includes(q)||u.teamName.toLocaleLowerCase().includes(q));
   if(!found.length)return '<div class="nova-chat-empty">ما لقينا حتى لاعب بهاد الاسم.</div>';
-  return `<div class="nova-chat-list">${found.map(u=>`<div class="nova-chat-person"><span class="nova-chat-avatar">${esc(u.initials)}</span><span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span></span><button class="btn sm" onclick="startNovaChatConversation('${esc(u.id)}')">مراسلة</button></div>`).join("")}</div>`;
+  return `<div class="nova-chat-list">${found.map(u=>`<div class="nova-chat-person">${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span>${novaChatPresenceLine(u.id)}</span><button class="btn sm" onclick="startNovaChatConversation('${esc(u.id)}')">مراسلة</button></div>`).join("")}</div>`;
 }
 async function startNovaChatConversation(peerUid){
   if(!currentUser||currentUser.isAnonymous)return alert("دخل بحساب اللاعب أولاً.");
@@ -799,22 +889,29 @@ function renderNovaChat(){
   if(!currentUser||currentUser.isAnonymous)return `<section class="nova-chat-shell"><div class="nova-chat-hero"><div class="nova-chat-brand"><h2>✦ NOVA CHAT</h2><span class="nova-chat-status">MESSAGING</span></div><p class="muted">تواصل مباشرة مع لاعبي NOVA CHAMPIONS.</p></div><div class="nova-chat-empty"><div style="font-size:34px">🔐</div><b>خاصك تدخل بحساب لاعب</b><p>سجّل الدخول باش تستعمل NOVA CHAT.</p><button class="btn primary" onclick="go('player')">الدخول إلى حساب اللاعب</button></div></section>`;
   if(!novaChatPlayersLoaded&&!novaChatPlayersLoading)loadNovaChatPlayers();
   subscribeNovaChatConversations();
+  subscribeNovaChatPresence();
   if(novaChatOpenId)return renderNovaChatConversation(novaChatOpenId);
   const tabs=[["messages","Messages"],["search","Search Players"],["groups","Groups"],["privacy","Profile & Privacy"]];let body="";
   if(novaChatTab==="messages"){
-    const rows=novaChatConversations.map(c=>{const p=novaChatPlayers.find(x=>x.id===c.peerUid),name=p?.name||c.peerName||"لاعب NOVA",initials=p?.initials||novaChatInitials(name);return `<button class="nova-chat-person" onclick="openNovaChat('${esc(c.id)}','${esc(c.peerUid)}')"><span class="nova-chat-avatar">${esc(initials)}</span><span class="nova-chat-person-main"><b>${esc(name)}</b><span class="nova-chat-preview">${esc(c.lastMessage||"ابدأ المحادثة")}</span></span><span class="nova-chat-meta">${novaChatTime(c.lastMessageAt)}</span></button>`;}).join("");
+    const rows=novaChatConversations.map(c=>{const p=novaChatPlayers.find(x=>x.id===c.peerUid),name=p?.name||c.peerName||"لاعب NOVA",initials=p?.initials||novaChatInitials(name);return `<button class="nova-chat-person" onclick="openNovaChat('${esc(c.id)}','${esc(c.peerUid)}')">${novaChatAvatar(name,c.peerUid,initials)}<span class="nova-chat-person-main"><b>${esc(name)}</b><span class="nova-chat-preview">${esc(c.lastMessage||"ابدأ المحادثة")}</span>${novaChatPresenceLine(c.peerUid)}</span><span class="nova-chat-meta">${novaChatTime(c.lastMessageAt)}</span></button>`;}).join("");
     body=`<div class="nova-chat-list">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:""}${rows||'<div class="nova-chat-empty">ما عندك حتى محادثة دابا. مشي لـ Search Players وبدا محادثة جديدة.</div>'}</div>`;
   }else if(novaChatTab==="search")body=`<div class="nova-chat-profile"><h3>البحث عن اللاعبين</h3><p class="muted">قلب بالاسم أو باسم الفريق، وبدا محادثة مباشرة داخل NOVA.</p></div>${novaChatPlayerResults()}`;
   else if(novaChatTab==="groups")body='<div class="nova-chat-empty"><b>المجموعات</b><p>غادي نربطو المجموعات من بعد ما نكملو المحادثات الخاصة.</p></div>';
   else body='<div class="nova-chat-profile"><h3>Profile & Privacy</h3><p class="muted">إعدادات الخصوصية غادي نربطوها فمرحلة مستقلة.</p></div>';
   return `<section class="nova-chat-shell"><div class="nova-chat-hero"><div class="nova-chat-brand"><h2>✦ NOVA CHAT</h2><span class="nova-chat-status">● READY</span></div><p class="muted">تواصل مباشرة مع لاعبي NOVA CHAMPIONS.</p><div class="nova-chat-search"><input type="search" placeholder="🔎 البحث عن لاعب أو محادثة..." value="${esc(novaChatSearch)}" oninput="novaChatSearch=this.value;if(novaChatTab==='search'){const pos=this.selectionStart;renderNovaChatIntoApp();const f=document.querySelector('.nova-chat-search input');if(f){f.focus();f.setSelectionRange(pos,pos)}}"></div></div><div class="nova-chat-tabs">${tabs.map(([id,label])=>`<button class="nova-chat-tab ${novaChatTab===id?'active':''}" onclick="setNovaChatTab('${id}')">${label}</button>`).join("")}</div>${body}</section>`;
 }
-function renderNovaChatIntoApp(){const el=document.getElementById("app");if(el&&page==="chat")el.innerHTML=renderNovaChat();}
+function renderNovaChatIntoApp(){
+  const el=document.getElementById("app");if(!el||page!=="chat")return;
+  const active=document.activeElement,id=active&&el.contains(active)?active.id:"",value=id?active.value:undefined;
+  const start=id&&typeof active.selectionStart==="number"?active.selectionStart:null,end=id&&typeof active.selectionEnd==="number"?active.selectionEnd:null;
+  el.innerHTML=renderNovaChat();
+  if(id){const next=document.getElementById(id);if(next){if(value!==undefined)next.value=value;next.focus();if(start!==null&&end!==null&&next.setSelectionRange)try{next.setSelectionRange(start,end)}catch(e){}}}
+}
 function setNovaChatTab(tab){novaChatTab=tab;if(tab==="search")loadNovaChatPlayers();renderNovaChatIntoApp();}
 function renderNovaChatConversation(id){
   const u=novaChatCurrentPeer||{name:"لاعب NOVA",initials:"NC"};
   const messages=novaChatMessages.map(m=>`<div class="nova-chat-bubble ${m.senderUid===currentUser?.uid?'mine':''}">${esc(m.text||"")}<small>${novaChatTime(m.createdAt)}</small></div>`).join("");
-  return `<section class="nova-chat-full"><div class="nova-chat-full-head"><button class="nova-chat-back" onclick="backNovaChat()">← رجوع</button><span class="nova-chat-avatar">${esc(u.initials||novaChatInitials(u.name))}</span><span class="nova-chat-full-title"><b>${esc(u.name||"لاعب NOVA")}</b><small>محادثة خاصة</small></span></div><div class="nova-chat-messages" id="novaChatMessages">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:messages||'<div class="nova-chat-empty">بداو المحادثة برسالة ترحيبية 👋</div>'}</div><div class="nova-chat-compose"><input id="novaChatInput" placeholder="اكتب رسالة..." maxlength="1000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendNovaChatMessage()}"><button class="btn primary" onclick="sendNovaChatMessage()" ${novaChatSending?'disabled':''}>${novaChatSending?'إرسال...':'إرسال'}</button></div></section>`;
+  return `<section class="nova-chat-full"><div class="nova-chat-full-head"><button class="nova-chat-back" onclick="backNovaChat()">← رجوع</button>${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-full-title"><b>${esc(u.name||"لاعب NOVA")}</b>${novaChatPresenceLine(u.id)}</span></div><div class="nova-chat-messages" id="novaChatMessages">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:messages||'<div class="nova-chat-empty">بداو المحادثة برسالة ترحيبية 👋</div>'}</div><div class="nova-chat-compose"><input id="novaChatInput" placeholder="اكتب رسالة..." maxlength="1000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendNovaChatMessage()}"><button class="btn primary" onclick="sendNovaChatMessage()" ${novaChatSending?'disabled':''}>${novaChatSending?'إرسال...':'إرسال'}</button></div></section>`;
 }
 
 async function login(){
