@@ -263,106 +263,32 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
  .admin-main{width:100%}
 }
 
-/* NOVA PLAYER CARD */
-.nova-player-card{--card-a:#cbd5e1;--card-b:#3182ce;position:relative;overflow:hidden;max-width:620px;margin:14px auto;padding:20px;border:1px solid var(--card-a);border-radius:22px;background:radial-gradient(circle at 90% 5%,color-mix(in srgb,var(--card-b) 28%,transparent),transparent 38%),linear-gradient(145deg,#111827,#080d18 72%);box-shadow:0 18px 45px #0008,inset 0 1px #ffffff20}
-.nova-player-card:before{content:"";position:absolute;width:230px;height:230px;border:1px solid color-mix(in srgb,var(--card-a) 28%,transparent);border-radius:50%;right:-120px;top:-130px;box-shadow:0 0 0 18px #ffffff08,0 0 0 38px #ffffff05;pointer-events:none}
-.nova-player-card.elite{--card-a:#e879f9;--card-b:#8b5cf6;background:radial-gradient(circle at 90% 5%,#8b5cf644,transparent 40%),linear-gradient(145deg,#251438,#100c20 72%)}
-.nova-player-card.legend{--card-a:#f4d47b;--card-b:#b8892d;background:radial-gradient(circle at 90% 5%,#b8892d55,transparent 40%),linear-gradient(145deg,#28200e,#090909 72%)}
-.nova-player-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
-.nova-player-card-brand{font-size:11px;letter-spacing:3px;color:var(--card-a);font-weight:900}
-.nova-player-card-tier{font-size:10px;letter-spacing:1.5px;border:1px solid var(--card-a);border-radius:30px;padding:6px 10px;color:var(--card-a);font-weight:900}
-.nova-player-card-main{display:flex;align-items:center;gap:15px;margin:25px 0 18px;position:relative;z-index:1}
-.nova-player-card-photo{width:104px;height:104px;flex:0 0 104px;object-fit:cover;border-radius:18px;border:2px solid var(--card-a);background:#101a2d;box-shadow:0 0 24px color-mix(in srgb,var(--card-b) 35%,transparent)}
-.nova-player-card-name{font-size:21px;font-weight:900;color:#fff;margin:0 0 6px;overflow-wrap:anywhere}
-.nova-player-card-id{font-size:11px;color:var(--card-a);letter-spacing:1.2px;font-weight:800}
-.nova-player-card-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;position:relative;z-index:1}
-.nova-player-card-info>div{min-width:0;border:1px solid #ffffff20;background:#ffffff08;border-radius:12px;padding:10px}
-.nova-player-card-info small{display:block;color:#aab9d0;font-size:10px;margin-bottom:5px}
-.nova-player-card-info b{display:block;color:#f5f7ff;font-size:13px;overflow-wrap:anywhere}
-.nova-player-card-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:13px;position:relative;z-index:1}
-.nova-player-card-stats>div{text-align:center;padding:11px 5px;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff1c}
-.nova-player-card-stats b{display:block;color:var(--card-a);font-size:21px}
-.nova-player-card-stats small{display:block;color:#b9c4d5;font-size:10px;margin-top:3px}
-.nova-player-card-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid #ffffff25;color:#aab9d0;font-size:10px;position:relative;z-index:1}
-.nova-player-card-qr{width:76px;height:76px;padding:5px;border-radius:9px;background:#fff;object-fit:contain}
+/* NOVA PLAYER CARD — GTA VI inspired landscape esports identity */
+.nova-player-card{--card-a:#ffd18a;--card-b:#ff4f91;position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:148px minmax(0,1fr);grid-template-rows:auto auto auto auto;column-gap:18px;row-gap:10px;max-width:820px;min-height:285px;margin:16px auto;padding:18px;border:1px solid #ffb16c;border-radius:18px;background:radial-gradient(ellipse at 78% 0%,#ff8c5a55,transparent 36%),radial-gradient(ellipse at 100% 100%,#00c8c955,transparent 42%),linear-gradient(118deg,#17142d 0%,#311b42 42%,#141d36 100%);box-shadow:0 20px 55px #0009,inset 0 1px #ffffff30}
+.nova-player-card:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(115deg,transparent 0 46%,#ff5e8b16 46.2% 46.8%,transparent 47%),radial-gradient(circle at 82% 28%,#ffcc7950 0 2px,transparent 3px),radial-gradient(circle at 88% 34%,#ffcc7938 0 1px,transparent 2px);pointer-events:none}
+.nova-player-card:after{content:"VICE CITY • NOVA CHAMPIONS";position:absolute;right:14px;bottom:7px;color:#ffffff16;font-size:9px;font-weight:900;letter-spacing:4px;pointer-events:none}
+.nova-player-card.elite,.nova-player-card.legend{background:radial-gradient(ellipse at 78% 0%,#ff8c5a55,transparent 36%),radial-gradient(ellipse at 100% 100%,#00c8c955,transparent 42%),linear-gradient(118deg,#17142d 0%,#311b42 42%,#141d36 100%)}
+.nova-player-card-head{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1;padding-bottom:9px;border-bottom:1px solid #ffffff30}
+.nova-player-card-brand{font-size:13px;letter-spacing:3px;color:#ffd18a;font-weight:1000;text-shadow:0 0 16px #ff7b83}
+.nova-player-card-tier{font-size:10px;letter-spacing:1.5px;border:1px solid #ffb16c;border-radius:4px;padding:6px 10px;color:#ffe2bc;font-weight:900;background:#ff8b4b20}
+.nova-player-card-main{grid-column:1;grid-row:2/4;display:flex;flex-direction:column;align-items:flex-start;gap:9px;margin:0;position:relative;z-index:1;min-width:0}
+.nova-player-card-photo{width:100%;height:165px;flex:0 0 165px;object-fit:cover;object-position:center 25%;border-radius:9px;border:2px solid #ffb16c;background:#101a2d;box-shadow:0 0 25px #ff4f9155}
+.nova-player-card-name{font-size:21px;font-weight:1000;color:#fff;margin:0 0 5px;overflow-wrap:anywhere;line-height:1.2;text-shadow:0 2px 12px #ff4f9166}
+.nova-player-card-id{font-size:10px;color:#ffd18a;letter-spacing:1.1px;font-weight:900;overflow-wrap:anywhere}
+.nova-player-card-main .muted{color:#b9c9d9!important;font-size:9px;letter-spacing:1px}
+.nova-player-card-info{grid-column:2;grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;position:relative;z-index:1;align-content:start}
+.nova-player-card-info>div{min-width:0;border:1px solid #ffffff28;background:#ffffff0b;border-radius:7px;padding:9px 10px}
+.nova-player-card-info small{display:block;color:#ffc7a1;font-size:9px;margin-bottom:5px;letter-spacing:.5px}
+.nova-player-card-info b{display:block;color:#fff;font-size:12px;overflow-wrap:anywhere}
+.nova-player-card-stats{grid-column:2;grid-row:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0;position:relative;z-index:1;align-content:start}
+.nova-player-card-stats>div{text-align:center;padding:9px 5px;border-radius:7px;background:#ffffff0c;border:1px solid #ffffff25}
+.nova-player-card-stats b{display:block;color:#ffd18a;font-size:20px}
+.nova-player-card-stats small{display:block;color:#d6d8e8;font-size:9px;margin-top:3px}
+.nova-player-card-footer{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:0;padding-top:9px;border-top:1px solid #ffffff30;color:#c4cede;font-size:10px;position:relative;z-index:1}
+.nova-player-card-qr{width:62px;height:62px;padding:4px;border-radius:6px;background:#fff;object-fit:contain}
 .nova-player-card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
-@media(max-width:390px){.nova-player-card{padding:15px}.nova-player-card-photo{width:86px;height:86px;flex-basis:86px}.nova-player-card-name{font-size:18px}}
+@media(max-width:430px){.nova-player-card{grid-template-columns:92px minmax(0,1fr);column-gap:10px;row-gap:8px;min-height:0;padding:12px;border-radius:13px}.nova-player-card-photo{height:125px;flex-basis:125px}.nova-player-card-name{font-size:16px}.nova-player-card-info{gap:6px}.nova-player-card-info>div{padding:7px}.nova-player-card-info small{font-size:8px}.nova-player-card-info b{font-size:10px}.nova-player-card-stats{gap:5px}.nova-player-card-stats>div{padding:7px 2px}.nova-player-card-stats b{font-size:17px}.nova-player-card-stats small{font-size:8px}.nova-player-card-brand{font-size:10px;letter-spacing:2px}.nova-player-card-qr{width:50px;height:50px}}
 
-
-
-/* GTA VI INSPIRED THEME — PLAYER CARD ONLY */
-.nova-player-card,
-.nova-player-card.elite,
-.nova-player-card.legend{
-  --card-a:#ffb5d8;
-  --card-b:#ff6b9e;
-  isolation:isolate;
-  border:2px solid #ff9bc7;
-  border-radius:8px 24px 8px 24px;
-  background:
-    radial-gradient(ellipse at 14% 4%,#ffb0cb66 0,transparent 38%),
-    radial-gradient(ellipse at 88% 92%,#ff8b5c55 0,transparent 42%),
-    linear-gradient(135deg,#170d35 0%,#321044 38%,#75204f 68%,#f05b69 100%);
-  box-shadow:0 18px 45px #080014aa,0 0 24px #ff5b9c55,inset 0 0 0 5px #180b2b99;
-}
-.nova-player-card:before{
-  content:"";
-  position:absolute;inset:0;width:auto;height:auto;right:0;top:0;
-  border:0;border-radius:inherit;pointer-events:none;z-index:-1;
-  background:
-    repeating-linear-gradient(135deg,transparent 0 26px,#ffffff09 27px 29px),
-    linear-gradient(110deg,transparent 48%,#ffcfb51c 49%,transparent 72%);
-  box-shadow:none;
-}
-.nova-player-card:after{
-  content:"VICE CITY  •  NOVA CHAMPIONS";
-  position:absolute;left:14px;bottom:78px;z-index:0;
-  color:#ffd5e2;font-size:9px;font-weight:1000;letter-spacing:3px;
-  opacity:.20;transform:rotate(-8deg);pointer-events:none;
-}
-.nova-player-card-head{padding:4px 0 12px;border-bottom:1px solid #ffb4d655}
-.nova-player-card-brand{
-  display:inline-flex;align-items:center;gap:7px;
-  color:#fff1f7;font-family:Impact,"Arial Black",sans-serif;
-  font-size:17px;line-height:1;letter-spacing:1.8px;font-weight:1000;
-  text-transform:uppercase;
-  background:linear-gradient(180deg,#fff 0%,#ffc3df 45%,#ff6c9f 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(2px 3px 0 #351039) drop-shadow(0 0 8px #ff6ca8aa);
-  text-shadow:none;
-}
-.nova-player-card-brand:before{content:"✦";font-size:19px;-webkit-text-fill-color:#ffd5e8;filter:drop-shadow(1px 2px 0 #351039)}
-.nova-player-card-tier{
-  color:#fff;border:1px solid #ffb7d8;border-radius:3px;
-  background:linear-gradient(110deg,#e84d88,#7b2a78 60%,#39205c);
-  box-shadow:0 0 12px #ff72ad55;font-weight:1000;
-}
-.nova-player-card-main{margin:22px 0 18px}
-.nova-player-card-photo{
-  border:3px solid #ffc0dc;border-radius:7px 18px 7px 18px;
-  box-shadow:5px 5px 0 #5a245d,0 0 24px #ff75aa88;
-}
-.nova-player-card-name{
-  color:#fff5fa;text-shadow:2px 3px 0 #4d1d56,0 0 12px #ff78a8aa;
-  font-family:Impact,"Arial Black",sans-serif;letter-spacing:.5px;
-}
-.nova-player-card-id{color:#ffc1dc;text-shadow:1px 1px 0 #351039}
-.nova-player-card-info>div{
-  border:1px solid #ffadd066;border-radius:5px 12px 5px 12px;
-  background:linear-gradient(135deg,#ffffff16,#2a123c88);
-  box-shadow:inset 0 1px #ffffff20;
-}
-.nova-player-card-info small,.nova-player-card-stats small{color:#ffd1e4}
-.nova-player-card-info b{color:#fff8fb}
-.nova-player-card-stats>div{
-  border:1px solid #ffadd066;border-radius:5px 12px 5px 12px;
-  background:linear-gradient(145deg,#ff77a52b,#28113eaa);
-}
-.nova-player-card-stats b{color:#ffb6d5;text-shadow:0 0 10px #ff6da5aa}
-.nova-player-card-footer{border-top:1px solid #ffb4d666;color:#ffd1e4}
-.nova-player-card-footer b{color:#fff!important;text-shadow:0 0 8px #ff78a8}
-.nova-player-card-qr{border:3px solid #ffc0dc;border-radius:4px}
-@media(max-width:390px){.nova-player-card-brand{font-size:14px;letter-spacing:1px}.nova-player-card-tier{font-size:9px}}
 
 </style></head>
 <body>
