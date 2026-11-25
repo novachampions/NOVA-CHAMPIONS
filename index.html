@@ -1408,20 +1408,24 @@ async function playerCardView(){
   if(!el||!uid){if(el)el.innerHTML='<div class="card">بطاقة اللاعب غير متاحة.</div>';return;}
   el.innerHTML='<p class="muted">جاري تحميل NOVA PLAYER CARD...</p>';
   try{
-    let card={};
-    const publicSnap=await cloud.collection("publicPlayerCards").doc(uid).get();
-    if(publicSnap.exists)card=publicSnap.data()||{};
-    else if(currentUser?.uid===uid){
+    let card={},publicSnap=null,publicReadError=null;
+    try{publicSnap=await cloud.collection("publicPlayerCards").doc(uid).get();}
+    catch(readError){publicReadError=readError;}
+    if(publicSnap?.exists){
+      card=publicSnap.data()||{};
+    }else if(currentUser?.uid===uid){
+      // مالك الحساب يقدر يشوف بطاقته من ملفه حتى إلا كانت قراءة publicPlayerCards ممنوعة.
       const [profileSnap,teamSnap]=await Promise.all([
         cloud.collection("playerProfiles").doc(uid).get(),
         cloud.collection("playerTeams").doc(uid).get()
       ]);
       const profile=profileSnap.exists?profileSnap.data()||{}:{};
       const team=teamSnap.exists?teamSnap.data()||{}:{};
-      if(!profile.name)throw new Error("ملف اللاعب غير موجود.");
-      card={uid,playerId:novaPlayerId(uid),name:profile.name,country:profile.country||"",gameIds:novaGameIds(profile.gameIds?.length?profile:team),photoUrl:profile.photoUrl||profile.photoURL||profile.avatarUrl||"",teamName:team.name||"",teamOverall:Number(team.overall)||100,cardTier:"classic",novaXP:Number(profile.novaXP)||0,achievements:Array.isArray(profile.achievements)?profile.achievements:[]};
+      if(!profile.name)throw new Error("ملف اللاعب غير موجود أو ما عندكش صلاحية قراءته.");
+      card={uid,playerId:novaPlayerId(uid),name:profile.name,country:profile.country||"",gameIds:novaGameIds(profile.gameIds?.length?profile:team),photoUrl:profile.photoUrl||profile.photoURL||profile.avatarUrl||"",teamName:team.name||"",teamOverall:Number(team.overall)||100,cardTier:profile.cardTier||"classic",novaXP:Number(profile.novaXP)||0,achievements:Array.isArray(profile.achievements)?profile.achievements:[]};
       try{await publishPublicPlayerCard(uid,profile,team);}catch(e){console.warn("Public card publish pending rules:",e);}
     }else{
+      if(publicReadError)throw new Error("ما قدرناش نقراو البطاقة العامة. خاص صلاحيات قراءة publicPlayerCards فـ Firestore Rules.");
       throw new Error("بطاقة اللاعب مازال ما تنشراتش. خاص اللاعب يفتح بطاقته من حسابه أولاً.");
     }
     const tier=["classic","elite","legend"].includes(card.cardTier)?card.cardTier:"classic";
