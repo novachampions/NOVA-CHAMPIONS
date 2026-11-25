@@ -382,66 +382,83 @@ function adminNavigate(id){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 function teamStats(name){const out={fans:0,p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0};const master=(db.teams||[]).find(x=>x.name===name);out.fans=Number(master?.fans||0);const counted=db.matches.filter(m=>(m.h===name||m.a===name)&&m.hs!==null&&m.as!==null&&Number.isFinite(Number(m.hs))&&Number.isFinite(Number(m.as)));const cupGroups=new Map();counted.filter(m=>m.cup||String(m.id).startsWith("CUP_")).forEach(m=>{const l=db.leagues.find(x=>String(x.id)===String(m.league));const key=[String(m.league),Number(m.round)||1,...[String(m.h||""),String(m.a||"")].sort(),l?.cupFormat==="homeAway"?(m.leg||"home"):"single"].join("|");if(!cupGroups.has(key))cupGroups.set(key,m);});const nonCup=counted.filter(m=>!(m.cup||String(m.id).startsWith("CUP_")));[...nonCup,...cupGroups.values()].forEach(m=>{const home=m.h===name,forUs=Number(home?m.hs:m.as),against=Number(home?m.as:m.hs);out.p++;out.gf+=forUs;out.ga+=against;if(forUs>against){out.w++;out.pts+=3}else if(forUs<against){out.l++}else{out.d++;out.pts++;}});out.gd=out.gf-out.ga;return out;}
+const NOVA_GAMES={fc_mobile:"EA SPORTS FC Mobile",efootball:"eFootball",fc27:"EA SPORTS FC 27"};
+const NOVA_COUNTRIES={MA:"🇲🇦 المغرب",EG:"🇪🇬 مصر",DZ:"🇩🇿 الجزائر",TN:"🇹🇳 تونس",FR:"🇫🇷 فرنسا",SA:"🇸🇦 السعودية",AE:"🇦🇪 الإمارات",GB:"🇬🇧 المملكة المتحدة",US:"🇺🇸 الولايات المتحدة",OTHER:"بلد آخر"};
+function novaGameIds(data){
+  const ids=Array.isArray(data?.gameIds)?data.gameIds.filter(id=>Object.prototype.hasOwnProperty.call(NOVA_GAMES,id)):[];
+  if(!ids.length&&data?.gameId&&NOVA_GAMES[data.gameId])ids.push(data.gameId);
+  return [...new Set(ids)];
+}
+function novaGameChecks(selected=[],idPrefix="gameChoice"){
+  const ids=new Set(selected);
+  return Object.entries(NOVA_GAMES).map(([id,name])=>`<label style="display:flex;align-items:center;gap:8px;margin:7px 0"><input type="checkbox" class="${idPrefix}" value="${id}" ${ids.has(id)?"checked":""} style="width:auto">${name}</label>`).join("");
+}
+function novaCountryOptions(selected=""){
+  return Object.entries(NOVA_COUNTRIES).map(([code,name])=>`<option value="${code}" ${selected===code?"selected":""}>${name}</option>`).join("");
+}
+function novaReadGameChecks(className){return [...document.querySelectorAll("."+className+":checked")].map(x=>x.value).filter(id=>NOVA_GAMES[id]);}
 function registryTeamId(name){return "TEAM_"+encodeURIComponent(name).slice(0,700);}
 function migrateLegacyTeams(){if(!isAdmin||legacyMigrationRunning||!db.leagues.length)return;legacyMigrationRunning=true;(async()=>{try{const names=[...new Set(db.leagues.flatMap(l=>l.teams||[]).filter(Boolean))];for(const name of names){const id=registryTeamId(name);if((db.teams||[]).some(x=>x.name===name))continue;const ref=cloud.collection("teams").doc(id),snap=await ref.get();if(!snap.exists){const team={id,name,fans:0};await ref.set(team);db.teams.push(team);}}localStorage.novaDB=JSON.stringify(db);}catch(e){syncError=e.message||String(e);}finally{legacyMigrationRunning=false;render();}})()}
 
 async function loadAdminPlayerTeams(){
   if(!isAdmin)return;
-
   const box=document.getElementById("playerTeamsAdminList");
   if(!box)return;
-
-  box.innerHTML='<p class="muted">جاري تحميل فرق اللاعبين...</p>';
-
+  box.innerHTML='<p class="muted">جاري تحميل حسابات اللاعبين...</p>';
   try{
     const [teamsSnap,profilesSnap,bannedSnap]=await Promise.all([
       cloud.collection("playerTeams").get(),
       cloud.collection("playerProfiles").get(),
       cloud.collection("bannedUsers").get()
     ]);
-
-    const profiles={};
-    profilesSnap.docs.forEach(d=>profiles[d.id]=d.data());
-
-    const banned={};
-    bannedSnap.docs.forEach(d=>banned[d.id]=true);
-
-    if(!teamsSnap.size){
-      box.innerHTML='<p class="muted">لا توجد فرق لاعبين حالياً</p>';
-      return;
-    }
-
-    box.innerHTML=teamsSnap.docs.map(doc=>{
-      const team=doc.data();
-      const uid=doc.id;
-      const owner=profiles[team.ownerUid]||{};
-      const st=teamStats(team.name);
+    const profiles={};profilesSnap.docs.forEach(d=>profiles[d.id]=d.data()||{});
+    const teams={};teamsSnap.docs.forEach(d=>teams[d.id]=d.data()||{});
+    const banned={};bannedSnap.docs.forEach(d=>banned[d.id]=true);
+    const ids=[...new Set([...Object.keys(profiles),...Object.keys(teams)])];
+    if(!ids.length){box.innerHTML='<p class="muted">لا توجد حسابات لاعبين حالياً</p>';return;}
+    box.innerHTML=ids.map(uid=>{
+      const owner=profiles[uid]||{},team=teams[uid]||{};
+      const games=novaGameIds(owner.gameIds?.length?owner:team).map(id=>NOVA_GAMES[id]).join("، ")||"غير محددة";
+      const st=team.name?teamStats(team.name):{p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0};
       const isBlocked=!!banned[uid];
-
       return `<div class="card">
-        <h3>${esc(team.name||"")}</h3>
-        <p>صاحب الفريق: ${esc(owner.name||"غير معروف")}</p>
-        <p>الهاتف: ${esc(owner.phone||"—")}</p>
+        <h3>${esc(team.name||"لا يوجد فريق مسجل")}</h3>
+        <p>صاحب الحساب: ${esc(owner.name||"غير معروف")}</p>
+        <p>الهاتف: ${esc(owner.phone||"—")} • البلد: ${esc(NOVA_COUNTRIES[owner.country]||owner.country||"غير محدد")}</p>
+        <p>الألعاب: ${esc(games)}</p>
         <p>التقييم: ${Number(team.overall)||0} | التشكيلة: ${esc(team.formation||"—")}</p>
         <p>${isBlocked?"🔴 الحساب محظور":"🟢 الحساب نشيط"}</p>
-        <div class="stats">
-          <div class="stat"><b>${st.p}</b>مباريات</div>
-          <div class="stat"><b>${st.w}</b>انتصارات</div>
-          <div class="stat"><b>${st.d}</b>تعادلات</div>
-          <div class="stat"><b>${st.l}</b>هزائم</div>
-          <div class="stat"><b>${st.gf}:${st.ga}</b>الأهداف</div>
-          <div class="stat"><b>${st.pts}</b>النقاط</div>
+        <div class="stats"><div class="stat"><b>${st.p}</b>مباريات</div><div class="stat"><b>${st.w}</b>انتصارات</div><div class="stat"><b>${st.d}</b>تعادلات</div><div class="stat"><b>${st.l}</b>هزائم</div><div class="stat"><b>${st.gf}:${st.ga}</b>الأهداف</div><div class="stat"><b>${st.pts}</b>النقاط</div></div>
+        <div class="admin-actions">
+          <button class="btn primary" onclick="adminEditPlayer('${uid}')">تعديل الحساب والألعاب</button>
+          <button class="btn ${isBlocked?"primary":"danger"}" onclick="togglePlayerBan('${uid}',${isBlocked})">${isBlocked?"رفع الحظر":"حظر اللاعب"}</button>
         </div>
-        <button class="btn ${isBlocked?"primary":"danger"}"
-          onclick="togglePlayerBan('${uid}',${isBlocked})">
-          ${isBlocked?"رفع الحظر":"حظر اللاعب"}
-        </button>
       </div>`;
     }).join("");
-
-  }catch(e){
-    box.innerHTML='<p class="muted">خطأ: '+esc(e.message||e)+'</p>';
-  }
+  }catch(e){box.innerHTML='<p class="muted">خطأ: '+esc(e.message||e)+'</p>';}
+}
+async function adminEditPlayer(uid){
+  if(!isAdmin||!uid)return;
+  try{
+    const [profileSnap,teamSnap]=await Promise.all([
+      cloud.collection("playerProfiles").doc(uid).get(),
+      cloud.collection("playerTeams").doc(uid).get()
+    ]);
+    const profile=profileSnap.exists?profileSnap.data():{};
+    const team=teamSnap.exists?teamSnap.data():{};
+    const name=prompt("اسم اللاعب:",profile.name||"");if(name===null)return;
+    const phone=prompt("رقم الهاتف:",profile.phone||"");if(phone===null)return;
+    const country=prompt("رمز البلد (MA, EG, DZ, TN, FR, SA, AE, GB, US, OTHER):",profile.country||"MA");if(country===null)return;
+    const currentGames=novaGameIds(profile.gameIds?.length?profile:team).join(",");
+    const rawGames=prompt("الألعاب مفصولة بفاصلة: fc_mobile,efootball,fc27",currentGames);if(rawGames===null)return;
+    const gameIds=[...new Set(rawGames.split(",").map(x=>x.trim()).filter(x=>NOVA_GAMES[x]))];
+    if(!name.trim()||!phone.trim()||!Object.prototype.hasOwnProperty.call(NOVA_COUNTRIES,country.trim())||!gameIds.length){alert("تأكد من الاسم والهاتف ورمز البلد واختيار لعبة واحدة على الأقل.");return;}
+    const now=Date.now(),gameId=gameIds[0];
+    await cloud.collection("playerProfiles").doc(uid).set({uid,name:name.trim(),phone:phone.trim(),country:country.trim(),gameId,gameIds,gameName:NOVA_GAMES[gameId],updatedAt:now},{merge:true});
+    if(teamSnap.exists)await cloud.collection("playerTeams").doc(uid).set({gameId,gameIds,gameName:NOVA_GAMES[gameId],updatedAt:now},{merge:true});
+    alert("تم تحديث حساب اللاعب.");
+    loadAdminPlayerTeams();
+  }catch(e){alert("تعذر تعديل الحساب: "+(e.message||e));}
 }
 
 async function togglePlayerBan(uid,isBlocked){
@@ -702,13 +719,8 @@ if(page==="player"){
         <div class="nova-stage hidden" data-reg-stage="2"><div class="nova-stage-label">CONTACT · 02/04</div><h3>كيفاش نتواصلو معاك؟</h3><p class="muted">رقم الهاتف غادي نستعملوه للتواصل معاك عند الحاجة.</p><label>رقم الهاتف</label><input id="regPhone" type="tel" autocomplete="tel" placeholder="مثال: 0612345678"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(2)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(2)">التالي ←</button></div></div>
         <div class="nova-stage hidden" data-reg-stage="3"><div class="nova-stage-label">SECURITY · 03/04</div><h3>أمّن حسابك</h3><p class="muted">اختار كلمة مرور قوية لحماية حساب NOVA ديالك.</p><label>كلمة المرور</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="6 أحرف على الأقل"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(3)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(3)">التالي ←</button></div></div>
         <div class="nova-stage hidden" data-reg-stage="4"><div class="nova-stage-label">CREATE YOUR TEAM · 04/04</div><h3>أسّس فريقك الأول</h3><p class="muted">كل بطل كيحتاج فريق ينافس معاه.</p>
-<label>اللعبة الرئيسية ديالك</label>
-<select id="regGame" required>
-  <option value="">اختار اللعبة ديالك</option>
-  <option value="fc_mobile">EA SPORTS FC Mobile</option>
-  <option value="efootball">eFootball</option>
-  <option value="fc27">EA SPORTS FC 27</option>
-</select>
+<label>الألعاب اللي كتشارك فيها (اختار لعبة أو أكثر)</label>
+<div id="regGamesChoices" class="card" style="padding:12px">${novaGameChecks([],"regGameChoice")}</div>
     <label>اسم الفريق</label><input id="regTeam" placeholder="اسم فريقك"><label>تقييم الفريق (100 حتى 160)</label><input id="regOverall" type="number" min="100" max="160" value="100"><label>التشكيلة</label><select id="regFormation">
   <option value="4-3-3">4-3-3</option><option value="4-3-3 Attack">4-3-3 Attack</option><option value="4-3-3 Holding">4-3-3 Holding</option><option value="4-4-2">4-4-2</option><option value="4-2-3-1">4-2-3-1</option><option value="3-5-2">3-5-2</option><option value="3-4-3">3-4-3</option><option value="4-2-4">4-2-4</option><option value="4-1-2-1-2">4-1-2-1-2</option><option value="4-1-4-1">4-1-4-1</option><option value="4-5-1">4-5-1</option><option value="5-3-2">5-3-2</option><option value="5-2-1-2">5-2-1-2</option><option value="4-3-2-1">4-3-2-1</option><option value="3-4-1-2">3-4-1-2</option><option value="5-4-1">5-4-1</option><option value="4-2-2-2">4-2-2-2</option>
 </select><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(4)">رجوع</button><button type="button" class="btn primary" onclick="playerRegister()">إنشاء الحساب والفريق</button></div></div>
@@ -1138,24 +1150,24 @@ async function playerRegister(){
   const teamName=document.getElementById("regTeam")?.value.trim();
   const overall=Number(document.getElementById("regOverall")?.value);
   const formation=document.getElementById("regFormation")?.value;
-  const gameId=document.getElementById("regGame")?.value;
+  const gameIds=novaReadGameChecks("regGameChoice");
+  const gameId=gameIds[0]||"";
+  const gameName=NOVA_GAMES[gameId];
+  const country=document.getElementById("regCountry")?.value||"";
+  const birthDate=document.getElementById("regBirthDate")?.value||"";
   const err=document.getElementById("playerError");
-
-  const games={
-    fc_mobile:"EA SPORTS FC Mobile",
-    efootball:"eFootball",
-    fc27:"EA SPORTS FC 27"
-  };
-
-  const gameName=games[gameId];
 
   if(!name||!email||!phone||!password||!teamName){
     if(err)err.textContent="عمر جميع الخانات";
     return;
   }
 
-  if(!gameName){
-    if(err)err.textContent="اختار اللعبة الرئيسية ديالك";
+  if(!gameIds.length){
+    if(err)err.textContent="اختار لعبة واحدة على الأقل";
+    return;
+  }
+  if(!country||!birthDate){
+    if(err)err.textContent="اختار البلد وتاريخ الازدياد";
     return;
   }
 
@@ -1180,7 +1192,10 @@ async function playerRegister(){
       uid,
       name,
       phone,
+      country,
+      birthDate,
       gameId,
+      gameIds,
       gameName,
       createdAt:now,
       updatedAt:now
@@ -1190,6 +1205,7 @@ async function playerRegister(){
       ownerUid:uid,
       name:teamName,
       gameId,
+      gameIds,
       gameName,
       overall,
       formation,
@@ -1248,6 +1264,10 @@ async function playerDashboard(){
 
       <label>رقم الهاتف</label>
       <input id="editPlayerPhone" value="${esc(p.phone||"")}">
+      <label>البلد</label>
+      <select id="editPlayerCountry"><option value="">اختار البلد</option>${novaCountryOptions(p.country||"")}</select>
+      <label>الألعاب ديالك (اختار لعبة أو أكثر)</label>
+      <div class="card" style="padding:12px">${novaGameChecks(novaGameIds(p.gameIds?.length?p:team),"editPlayerGameChoice")}</div>
 
       <h3>الفريق ديالك</h3>
       <label>اسم الفريق</label>
@@ -1294,7 +1314,7 @@ async function loadPlayerTeams(){
 
     const teams=teamsSnap.docs
       .map(doc=>({docId:doc.id,data:doc.data()||{}}))
-      .filter(item=>item.data.gameId===gameId);
+      .filter(item=>novaGameIds(item.data).includes(gameId));
 
     if(!teams.length){
       box.innerHTML='<p class="muted">ما كاين حتى لاعب مسجل فهاد اللعبة حالياً</p>';
@@ -1435,12 +1455,16 @@ async function playerSave(){
   const name=document.getElementById("editPlayerName").value.trim();
   const phone=document.getElementById("editPlayerPhone").value.trim();
   const teamName=document.getElementById("editPlayerTeam").value.trim();
+  const country=document.getElementById("editPlayerCountry")?.value||"";
+  const gameIds=novaReadGameChecks("editPlayerGameChoice");
+  const gameId=gameIds[0]||"";
+  const gameName=NOVA_GAMES[gameId];
   const overall=Number(document.getElementById("editPlayerOverall").value);
   const formation=document.getElementById("editPlayerFormation").value;
   const err=document.getElementById("playerEditError");
 
-  if(!name||!phone||!teamName){
-    err.textContent="عمر جميع الخانات";
+  if(!name||!phone||!teamName||!country||!gameIds.length){
+    err.textContent="عمر المعلومات واختار البلد ولعبة واحدة على الأقل";
     return;
   }
 
@@ -1456,13 +1480,13 @@ async function playerSave(){
 const oldTeam=(await cloud.collection("playerTeams").doc(uid).get()).data()||{};
 const logoUrl=logoFile?await uploadTeamImage(logoFile):(oldTeam.logoUrl||"");
 
-    await cloud.collection("playerProfiles").doc(uid).update({
-      name,phone,updatedAt:now
-    });
+    await cloud.collection("playerProfiles").doc(uid).set({
+      name,phone,country,gameId,gameIds,gameName,updatedAt:now
+    },{merge:true});
 
-    await cloud.collection("playerTeams").doc(uid).update({
-  name:teamName,overall,formation,logoUrl,updatedAt:now
-});
+    await cloud.collection("playerTeams").doc(uid).set({
+      name:teamName,overall,formation,logoUrl,gameId,gameIds,gameName,updatedAt:now
+    },{merge:true});
 
     err.textContent="تم حفظ التعديلات بنجاح ❤️";
   }catch(e){
