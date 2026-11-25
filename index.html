@@ -490,6 +490,18 @@ async function togglePlayerBan(uid,isBlocked){
 }
   
 function adminTeamsManager(){const teams=db.teams||[];return `<section class="admin-section"><h2>${t("manageTeams")}</h2><div class="form"><label>${t("teamName")}</label><input id="registryTeamName" placeholder="${t("teamName")}"><label>عدد الأنصار / Fans</label><input id="registryTeamFans" type="number" min="0" step="1" value="0"><label>رقم WhatsApp (مع مفتاح الدولة)</label><input id="registryTeamWhatsapp" type="tel" placeholder="+2126XXXXXXXX"><label>لائحة اللاعبين (كل لاعب فسطر)</label><textarea id="registryTeamPlayers" placeholder="اسم اللاعب الأول&#10;اسم اللاعب الثاني"></textarea><label>صورة حساب الفريق</label><input id="registryTeamImage" type="file" accept="image/*"><button class="btn primary" onclick="createRegistryTeam()">${t("addTeam")}</button></div>${teams.length?teams.map(team=>{const st=teamStats(team.name);return `<div class="card"><div class="row"><div style="display:flex;align-items:center;gap:10px">${team.imageUrl?`<img src="${esc(team.imageUrl)}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:50%">`:`<span class="team-mark">${esc(team.name.slice(0,2).toUpperCase())}</span>`}<b>${esc(team.name)}</b></div><span class="pill">${st.fans} Fans</span></div><div class="stats"><div class="stat"><b>${st.p}</b>${t("played")}</div><div class="stat"><b>${st.w}-${st.d}-${st.l}</b>W-D-L</div><div class="stat"><b>${st.gf}:${st.ga}</b>GF / GA</div><div class="stat"><b>${st.gd}</b>GD</div><div class="stat"><b>${st.pts}</b>${t("pts")}</div><div class="stat"><b>${st.fans}</b>Fans</div></div><div class="admin-actions"><button class="btn sm" onclick="editRegistryTeam('${encodeURIComponent(team.id)}')">${t("edit")}</button><label class="btn sm" style="display:inline-block">تغيير الصورة<input type="file" accept="image/*" style="display:none" onchange="updateTeamLogo('${encodeURIComponent(team.id)}',this)"></label><button class="btn danger sm" onclick="deleteRegistryTeam('${encodeURIComponent(team.id)}')">${t("delete")}</button></div></div>`}).join(""):`<p class="muted">${t("empty")}</p>`}</section>`}async function uploadTeamImage(file){if(!file)return "";if(!file.type.startsWith("image/"))throw new Error("اختار صورة صالحة");if(file.size>5*1024*1024)throw new Error("حجم الصورة خاصو يكون أقل من 5MB");const data=new FormData();data.append("file",file);data.append("upload_preset","nova_teams");data.append("folder","nova-teams");const res=await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,{method:"POST",body:data});const json=await res.json();if(!res.ok||!json.secure_url)throw new Error(json.error?.message||"فشل رفع الصورة");return json.secure_url}
+async function uploadPlayerPhoto(file){
+  if(!file)throw new Error("اختار الصورة الشخصية ديالك");
+  if(!file.type.startsWith("image/"))throw new Error("اختار ملف صورة صالح");
+  if(file.size>5*1024*1024)throw new Error("حجم الصورة خاصو يكون أقل من 5MB");
+  const form=new FormData();
+  form.append("file",file);
+  form.append("upload_preset",cloudinaryConfig.uploadPreset);
+  const response=await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,{method:"POST",body:form});
+  const result=await response.json();
+  if(!response.ok||!result.secure_url)throw new Error(result?.error?.message||"فشل رفع الصورة الشخصية");
+  return result.secure_url;
+}
 async function createRegistryTeam(){if(!isAdmin)return;const name=document.getElementById("registryTeamName")?.value.trim(),fans=Number(document.getElementById("registryTeamFans")?.value||0),whatsapp=(document.getElementById("registryTeamWhatsapp")?.value||"").trim(),players=(document.getElementById("registryTeamPlayers")?.value||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean),file=document.getElementById("registryTeamImage")?.files?.[0];if(!name)return;if((db.teams||[]).some(x=>x.name.toLowerCase()===name.toLowerCase()))return alert("الفريق مسجل من قبل");if(whatsapp&&!/^\+?[0-9]{8,15}$/.test(whatsapp.replace(/[\s()-]/g,"")))return alert("رقم WhatsApp غير صحيح، استعمل مفتاح الدولة");try{const imageUrl=await uploadTeamImage(file);const team={id:registryTeamId(name),name,fans:Number.isFinite(fans)&&fans>=0?fans:0,whatsapp,players,imageUrl};await cloud.collection("teams").doc(team.id).set(team);db.teams.push(team);localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("تعذر تسجيل الفريق: "+(e.message||e))}}
 async function editRegistryTeam(encodedId){if(!isAdmin)return;const id=decodeURIComponent(encodedId),team=(db.teams||[]).find(x=>x.id===id);if(!team)return;const name=prompt(t("editTeam"),team.name);if(name===null)return;const clean=name.trim();if(!clean)return;if(clean!==team.name&&(db.teams||[]).some(x=>x.name.toLowerCase()===clean.toLowerCase()))return alert("الفريق موجود مسبقاً");const fansText=prompt("عدد الأنصار / Fans",String(team.fans||0));if(fansText===null)return;const fans=Number(fansText);if(!Number.isInteger(fans)||fans<0)return alert("عدد الأنصار غير صحيح");const phone=prompt("رقم WhatsApp مع مفتاح الدولة",team.whatsapp||"");if(phone===null)return;const whatsapp=phone.trim();if(whatsapp&&!/^\+?[0-9]{8,15}$/.test(whatsapp.replace(/[\s()-]/g,"")))return alert("رقم WhatsApp غير صحيح");const playersText=prompt("لائحة اللاعبين، كل لاعب فسطر",(team.players||[]).join("\n"));if(playersText===null)return;const old=team.name;team.name=clean;team.fans=fans;team.whatsapp=whatsapp;team.players=playersText.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(old!==clean){db.leagues.forEach(l=>{l.teams=(l.teams||[]).map(n=>n===old?clean:n)});db.matches.forEach(m=>{if(m.h===old)m.h=clean;if(m.a===old)m.a=clean});}try{const batch=cloud.batch();batch.set(cloud.collection("teams").doc(id),team);if(old!==clean){db.leagues.forEach(l=>batch.set(cloud.collection("leagues").doc(String(l.id)),{...l}));db.matches.forEach(m=>batch.set(cloud.collection("matches").doc(String(m.id)),m));}await batch.commit();localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("Firebase: "+(e.message||e))}}
 async function updateTeamLogo(encodedId,input){if(!isAdmin)return;const id=decodeURIComponent(encodedId),team=(db.teams||[]).find(x=>x.id===id),file=input?.files?.[0];if(!team||!file)return;try{team.imageUrl=await uploadTeamImage(file);await cloud.collection("teams").doc(id).set(team);localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("تعذر تحديث الصورة: "+(e.message||e))}}
@@ -722,6 +734,7 @@ if(page==="player"){
         <div class="nova-stage hidden" data-reg-stage="4"><div class="nova-stage-label">CREATE YOUR TEAM · 04/04</div><h3>أسّس فريقك الأول</h3><p class="muted">كل بطل كيحتاج فريق ينافس معاه.</p>
 <label>الألعاب اللي كتشارك فيها (اختار لعبة أو أكثر)</label>
 <div id="regGamesChoices" class="card" style="padding:12px">${novaGameChecks([],"regGameChoice")}</div>
+    <label>الصورة الشخصية ديالك (ضرورية لبطاقة اللاعب)</label><input id="regPlayerPhoto" type="file" accept="image/*"><p class="small">JPG / PNG / WEBP — الحجم الأقصى 5MB</p>
     <label>اسم الفريق</label><input id="regTeam" placeholder="اسم فريقك"><label>تقييم الفريق (100 حتى 160)</label><input id="regOverall" type="number" min="100" max="160" value="100"><label>التشكيلة</label><select id="regFormation">
   <option value="4-3-3">4-3-3</option><option value="4-3-3 Attack">4-3-3 Attack</option><option value="4-3-3 Holding">4-3-3 Holding</option><option value="4-4-2">4-4-2</option><option value="4-2-3-1">4-2-3-1</option><option value="3-5-2">3-5-2</option><option value="3-4-3">3-4-3</option><option value="4-2-4">4-2-4</option><option value="4-1-2-1-2">4-1-2-1-2</option><option value="4-1-4-1">4-1-4-1</option><option value="4-5-1">4-5-1</option><option value="5-3-2">5-3-2</option><option value="5-2-1-2">5-2-1-2</option><option value="4-3-2-1">4-3-2-1</option><option value="3-4-1-2">3-4-1-2</option><option value="5-4-1">5-4-1</option><option value="4-2-2-2">4-2-2-2</option>
 </select><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(4)">رجوع</button><button type="button" class="btn primary" onclick="playerRegister()">إنشاء الحساب والفريق</button></div></div>
@@ -1156,10 +1169,20 @@ async function playerRegister(){
   const gameName=NOVA_GAMES[gameId];
   const country=document.getElementById("regCountry")?.value||"";
   const birthDate=document.getElementById("regBirthDate")?.value||"";
+  const photoFile=document.getElementById("regPlayerPhoto")?.files?.[0];
   const err=document.getElementById("playerError");
 
   if(!name||!email||!phone||!password||!teamName){
     if(err)err.textContent="عمر جميع الخانات";
+    return;
+  }
+
+  if(!photoFile){
+    if(err)err.textContent="اختار الصورة الشخصية ديالك باش نكملو التسجيل";
+    return;
+  }
+  if(!photoFile.type.startsWith("image/")||photoFile.size>5*1024*1024){
+    if(err)err.textContent="الصورة خاصها تكون صالحة وما تفوتش 5MB";
     return;
   }
 
@@ -1183,7 +1206,8 @@ async function playerRegister(){
   }
 
   try{
-    if(err)err.textContent="جاري إنشاء الحساب...";
+    if(err)err.textContent="جاري رفع الصورة وإنشاء الحساب...";
+    const photoUrl=await uploadPlayerPhoto(photoFile);
 
     const credential=await auth.createUserWithEmailAndPassword(email,password);
     const uid=credential.user.uid;
@@ -1198,6 +1222,7 @@ async function playerRegister(){
       gameId,
       gameIds,
       gameName,
+      photoUrl,
       createdAt:now,
       updatedAt:now
     });
@@ -1257,6 +1282,13 @@ async function playerDashboard(){
 
     el.innerHTML=`<div class="form">
       <h2>حساب اللاعب</h2>
+      <div style="display:flex;align-items:center;gap:14px;margin:10px 0 16px">
+        <img src="${esc(p.photoUrl||'assets/nova-champions-logo.png')}" alt="الصورة الشخصية" style="width:88px;height:88px;object-fit:cover;border-radius:50%;border:2px solid #39A0FF;background:#101A2D">
+        <div><b>الصورة الشخصية</b><div class="muted">تقدر تبدّلها فأي وقت من حسابك.</div></div>
+      </div>
+      <label>تغيير الصورة الشخصية</label>
+      <input id="editPlayerPhoto" type="file" accept="image/*">
+      <p class="small">خلي الاختيار فارغ إلا ما بغيتيش تبدّل الصورة. الحد الأقصى 5MB.</p>
       <label>الاسم الكامل</label>
       <input id="editPlayerName" value="${esc(p.name||"")}">
 
@@ -1478,11 +1510,14 @@ async function playerSave(){
     err.textContent="جاري الحفظ...";
     const now=Date.now();
     const logoFile=document.getElementById("editPlayerLogo")?.files?.[0];
-const oldTeam=(await cloud.collection("playerTeams").doc(uid).get()).data()||{};
-const logoUrl=logoFile?await uploadTeamImage(logoFile):(oldTeam.logoUrl||"");
+    const photoFile=document.getElementById("editPlayerPhoto")?.files?.[0];
+    const oldTeam=(await cloud.collection("playerTeams").doc(uid).get()).data()||{};
+    const oldProfile=(await cloud.collection("playerProfiles").doc(uid).get()).data()||{};
+    const logoUrl=logoFile?await uploadTeamImage(logoFile):(oldTeam.logoUrl||"");
+    const photoUrl=photoFile?await uploadPlayerPhoto(photoFile):(oldProfile.photoUrl||"");
 
     await cloud.collection("playerProfiles").doc(uid).set({
-      name,phone,country,gameId,gameIds,gameName,updatedAt:now
+      name,phone,country,gameId,gameIds,gameName,photoUrl,updatedAt:now
     },{merge:true});
 
     await cloud.collection("playerTeams").doc(uid).set({
