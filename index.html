@@ -1092,6 +1092,7 @@ async function playerLogin(){
   }
 }
 
+
 async function playerRegister(){
   const name=document.getElementById("regName")?.value.trim();
   const email=document.getElementById("regEmail")?.value.trim();
@@ -1100,16 +1101,32 @@ async function playerRegister(){
   const teamName=document.getElementById("regTeam")?.value.trim();
   const overall=Number(document.getElementById("regOverall")?.value);
   const formation=document.getElementById("regFormation")?.value;
+  const gameId=document.getElementById("regGame")?.value;
   const err=document.getElementById("playerError");
+
+  const games={
+    fc_mobile:"EA SPORTS FC Mobile",
+    efootball:"eFootball",
+    fc27:"EA SPORTS FC 27"
+  };
+
+  const gameName=games[gameId];
 
   if(!name||!email||!phone||!password||!teamName){
     if(err)err.textContent="عمر جميع الخانات";
     return;
   }
+
+  if(!gameName){
+    if(err)err.textContent="اختار اللعبة الرئيسية ديالك";
+    return;
+  }
+
   if(password.length<6){
     if(err)err.textContent="كلمة المرور خاصها تكون 6 أحرف على الأقل";
     return;
   }
+
   if(!Number.isInteger(overall)||overall<100||overall>160){
     if(err)err.textContent="التقييم خاصو يكون بين 100 و160";
     return;
@@ -1117,17 +1134,26 @@ async function playerRegister(){
 
   try{
     if(err)err.textContent="جاري إنشاء الحساب...";
+
     const credential=await auth.createUserWithEmailAndPassword(email,password);
     const uid=credential.user.uid;
     const now=Date.now();
 
     await cloud.collection("playerProfiles").doc(uid).set({
-      uid,name,phone,createdAt:now,updatedAt:now
+      uid,
+      name,
+      phone,
+      gameId,
+      gameName,
+      createdAt:now,
+      updatedAt:now
     });
 
     await cloud.collection("playerTeams").doc(uid).set({
       ownerUid:uid,
       name:teamName,
+      gameId,
+      gameName,
       overall,
       formation,
       logoUrl:"",
@@ -1140,6 +1166,7 @@ async function playerRegister(){
     if(err)err.textContent=e.message||"تعذر إنشاء الحساب";
   }
 }
+    
 
 async function playerResetPassword(){
   const email=document.getElementById("playerEmail")?.value.trim();
