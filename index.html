@@ -262,6 +262,32 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
  .admin-layout.sidebar-open .admin-sidebar{z-index:10020}
  .admin-main{width:100%}
 }
+
+/* NOVA PLAYER CARD */
+.nova-player-card{--card-a:#cbd5e1;--card-b:#3182ce;position:relative;overflow:hidden;max-width:620px;margin:14px auto;padding:20px;border:1px solid var(--card-a);border-radius:22px;background:radial-gradient(circle at 90% 5%,color-mix(in srgb,var(--card-b) 28%,transparent),transparent 38%),linear-gradient(145deg,#111827,#080d18 72%);box-shadow:0 18px 45px #0008,inset 0 1px #ffffff20}
+.nova-player-card:before{content:"";position:absolute;width:230px;height:230px;border:1px solid color-mix(in srgb,var(--card-a) 28%,transparent);border-radius:50%;right:-120px;top:-130px;box-shadow:0 0 0 18px #ffffff08,0 0 0 38px #ffffff05;pointer-events:none}
+.nova-player-card.elite{--card-a:#e879f9;--card-b:#8b5cf6;background:radial-gradient(circle at 90% 5%,#8b5cf644,transparent 40%),linear-gradient(145deg,#251438,#100c20 72%)}
+.nova-player-card.legend{--card-a:#f4d47b;--card-b:#b8892d;background:radial-gradient(circle at 90% 5%,#b8892d55,transparent 40%),linear-gradient(145deg,#28200e,#090909 72%)}
+.nova-player-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.nova-player-card-brand{font-size:11px;letter-spacing:3px;color:var(--card-a);font-weight:900}
+.nova-player-card-tier{font-size:10px;letter-spacing:1.5px;border:1px solid var(--card-a);border-radius:30px;padding:6px 10px;color:var(--card-a);font-weight:900}
+.nova-player-card-main{display:flex;align-items:center;gap:15px;margin:25px 0 18px;position:relative;z-index:1}
+.nova-player-card-photo{width:104px;height:104px;flex:0 0 104px;object-fit:cover;border-radius:18px;border:2px solid var(--card-a);background:#101a2d;box-shadow:0 0 24px color-mix(in srgb,var(--card-b) 35%,transparent)}
+.nova-player-card-name{font-size:21px;font-weight:900;color:#fff;margin:0 0 6px;overflow-wrap:anywhere}
+.nova-player-card-id{font-size:11px;color:var(--card-a);letter-spacing:1.2px;font-weight:800}
+.nova-player-card-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;position:relative;z-index:1}
+.nova-player-card-info>div{min-width:0;border:1px solid #ffffff20;background:#ffffff08;border-radius:12px;padding:10px}
+.nova-player-card-info small{display:block;color:#aab9d0;font-size:10px;margin-bottom:5px}
+.nova-player-card-info b{display:block;color:#f5f7ff;font-size:13px;overflow-wrap:anywhere}
+.nova-player-card-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:13px;position:relative;z-index:1}
+.nova-player-card-stats>div{text-align:center;padding:11px 5px;border-radius:12px;background:#ffffff0c;border:1px solid #ffffff1c}
+.nova-player-card-stats b{display:block;color:var(--card-a);font-size:21px}
+.nova-player-card-stats small{display:block;color:#b9c4d5;font-size:10px;margin-top:3px}
+.nova-player-card-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid #ffffff25;color:#aab9d0;font-size:10px;position:relative;z-index:1}
+.nova-player-card-qr{width:76px;height:76px;padding:5px;border-radius:9px;background:#fff;object-fit:contain}
+.nova-player-card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
+@media(max-width:390px){.nova-player-card{padding:15px}.nova-player-card-photo{width:86px;height:86px;flex-basis:86px}.nova-player-card-name{font-size:18px}}
+
 </style></head>
 <body>
 <div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
@@ -304,7 +330,8 @@ ar:{news:"الجريدة",predictions:"Pronostics",home:"الرئيسية",live:
 fr:{news:"Journal",predictions:"Pronostics",home:"Accueil",live:"Direct",leagues:"Championnats",matches:"Matchs",table:"Classement",admin:"Admin",welcome:"Bienvenue chez les champions",subtitle:"Suivez les compétitions, résultats et classements",competitions:"Compétitions",teams:"Équipes",played:"Matchs",latest:"Derniers résultats",noMatches:"Aucun match",noLeagues:"Aucun championnat",createLeague:"Créer un championnat",competitionType:"Format",leagueMode:"Ligue",cupMode:"Coupe",championsMode:"Champions League",directQualifiers:"Qualifiés directs",playoffTeams:"Équipes en barrage",playoffFormat:"Format du barrage",knockoutFormat:"Format des éliminatoires",leaguePhase:"Phase de ligue",playoffStage:"Barrages",knockoutStage:"Élimination directe",nextChampionsStage:"Créer la phase suivante",championsNeedTeams:"La Champions League nécessite au moins 9 équipes pour jouer 8 matchs contre 8 adversaires différents.",cupFormat:"Format de la coupe",singleMatch:"Match unique",homeAway:"Aller-retour",nextCupRound:"Créer le tour suivant",cupWinner:"Qualifié",cupNoStandings:"Cette compétition est une coupe à élimination directe, sans classement par points.",leagueName:"Nom du championnat",season:"Saison",add:"Ajouter",teamName:"Nom de l'équipe",addTeam:"Ajouter équipe",match:"Nouveau match",homeTeam:"Équipe 1",awayTeam:"Équipe 2",score1:"Buts équipe 1",score2:"Buts équipe 2",save:"Enregistrer",login:"Connexion admin",username:"E-mail",password:"Mot de passe",logout:"Déconnexion",dashboard:"Tableau de bord",totalLeagues:"Championnats",totalTeams:"Équipes",totalMatches:"Matchs",manageLeagues:"Gestion des championnats",manageTeams:"Gestion des équipes",manageMatches:"Gestion des matchs",editTeam:"Modifier équipe",deleteTeam:"Supprimer équipe",edit:"Modifier",delete:"Supprimer",editLeague:"Modifier le championnat",deleteLeague:"Supprimer le championnat",editMatch:"Modifier le score",comments:"Commentaires du match",saveMatch:"Enregistrer le match",deleteMatch:"Supprimer le match",confirmDelete:"Confirmer la suppression ?",noAdminLeagues:"Aucun championnat",noAdminMatches:"Aucun match",openLeagues:"Voir les championnats",openMatches:"Voir les matchs",adminHint:"Connectez-vous avec votre compte Firebase administrateur",chooseLeague:"Choisir championnat",chooseRound:"Choisir la journée à gérer",standings:"Classement",pts:"Pts",p:"J",w:"G",d:"N",l:"P",gf:"BP",ga:"BC",gd:"Diff",language:"Langue",empty:"Aucune donnée",saved:"Enregistré",badLogin:"Identifiants incorrects",setPassword:"Mot de passe Firebase",change:"Changer",demo:"Données synchronisées via Firebase.",draw:"Tirage aléatoire et création des journées",firstLeg:"Aller",secondLeg:"Retour",round:"Journée",noSchedule:"Aucun calendrier créé",generate:"Créer le tirage et le calendrier",scheduleExists:"Le calendrier de ce championnat existe déjà.",needTeams:"Ajoutez au moins deux équipes.",scheduleConfirm:"Effectuer le tirage et créer les matchs maintenant ?",scheduled:"Calendrier",noRoundMatches:"Aucun match pour cette journée."},
 en:{news:"News",predictions:"Predictions",home:"Home",live:"Live",leagues:"Leagues",matches:"Matches",table:"Standings",admin:"Admin",welcome:"Welcome to the home of champions",subtitle:"Follow competitions, results and standings",competitions:"Competitions",teams:"Teams",played:"Matches",latest:"Latest results",noMatches:"No matches yet",noLeagues:"No leagues yet",createLeague:"Create competition",competitionType:"Competition format",leagueMode:"League",cupMode:"Cup",championsMode:"Champions League",directQualifiers:"Direct qualifiers",playoffTeams:"Playoff teams",playoffFormat:"Playoff format",knockoutFormat:"Knockout format",leaguePhase:"League phase",playoffStage:"Playoffs",knockoutStage:"Knockout rounds",nextChampionsStage:"Create next stage",championsNeedTeams:"Champions League needs at least 9 teams so each team can play 8 different opponents.",cupFormat:"Cup format",singleMatch:"Single match",homeAway:"Home and away",nextCupRound:"Create next round",cupWinner:"Qualified",cupNoStandings:"This is a knockout cup, so there is no points table.",leagueName:"League name",season:"Season",add:"Add",teamName:"Team name",addTeam:"Add team",match:"New match",homeTeam:"Home team",awayTeam:"Away team",score1:"Home goals",score2:"Away goals",save:"Save result",login:"Admin login",username:"Email address",password:"Password",logout:"Logout",dashboard:"Admin dashboard",totalLeagues:"Leagues",totalTeams:"Teams",totalMatches:"Matches",manageLeagues:"Manage leagues",manageTeams:"Manage teams",manageMatches:"Manage matches",editTeam:"Edit team",deleteTeam:"Delete team",edit:"Edit",delete:"Delete",editLeague:"Edit league",deleteLeague:"Delete league",editMatch:"Edit score",comments:"Match comments",saveMatch:"Save match",deleteMatch:"Delete match",confirmDelete:"Are you sure you want to delete this?",noAdminLeagues:"No leagues yet",noAdminMatches:"No matches yet",openLeagues:"Open leagues",openMatches:"Open matches",adminHint:"Sign in with the administrator email and password registered in Firebase",chooseLeague:"Choose league",chooseRound:"Choose the round to manage",standings:"Standings",pts:"Pts",p:"P",w:"W",d:"D",l:"L",gf:"GF",ga:"GA",gd:"GD",language:"Language",empty:"No data yet",saved:"Saved",badLogin:"Incorrect login details",setPassword:"Firebase account password",change:"Change",demo:"Data is synchronized through Firebase.",draw:"Random draw and fixture generation",firstLeg:"First leg",secondLeg:"Second leg",round:"Round",noSchedule:"No fixture schedule has been created",generate:"Generate draw and fixtures",scheduleExists:"This league already has a fixture schedule.",needTeams:"Add at least two teams first.",scheduleConfirm:"Draw teams and generate the competition matches now?",scheduled:"League fixtures",noRoundMatches:"No matches in this round."}
 };
-let lang=localStorage.novaLang||"ar", page="home", db={leagues:[],matches:[],teams:[]}, isAdmin=false, currentUser=null, playerEntryMode="login";
+let selectedPlayerCardUid=new URLSearchParams(location.search).get("player")||"";
+let lang=localStorage.novaLang||"ar", page=selectedPlayerCardUid?"playerCard":"home", db={leagues:[],matches:[],teams:[]}, isAdmin=false, currentUser=null, playerEntryMode="login";
 let novaChatTab="messages",novaChatOpenId="",novaChatSearch="",novaChatDemoMessages={};
 let novaChatPlayers=[],novaChatPlayersLoaded=false,novaChatPlayersLoading=false,novaChatPlayersError="";
 let novaChatConversations=[],novaChatMessages=[],novaChatCurrentPeer=null,novaChatMessageError="",novaChatSending=false;
@@ -370,7 +397,42 @@ let adminMatchLeague="";
 let adminMatchRound="";
 let adminMatchLeg="home";
 function nav(){document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","chat","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
-function go(p){page=p;render()}function openPlayerRegister(){playerEntryMode="register";go("player")}function openPlayerLogin(){playerEntryMode="login";go("player")}function setLang(v){lang=v;localStorage.novaLang=v;render()}
+function go(p){page=p;render()}
+function openPlayerCard(uid){
+  const target=uid||currentUser?.uid||"";
+  if(!target)return;
+  selectedPlayerCardUid=target;
+  page="playerCard";
+  render();
+}
+function novaPlayerId(uid){return "NC-"+String(uid||"").slice(-8).toUpperCase();}
+async function publishPublicPlayerCard(uid,profile,team){
+  if(!uid||!profile)return;
+  const games=novaGameIds(profile.gameIds?.length?profile:team);
+  const safeCard={
+    uid,
+    playerId:novaPlayerId(uid),
+    name:String(profile.name||""),
+    country:String(profile.country||""),
+    gameIds:games,
+    gameName:games.map(id=>NOVA_GAMES[id]).join("، "),
+    photoUrl:String(profile.photoUrl||profile.photoURL||profile.avatarUrl||""),
+    teamName:String(team?.name||""),
+    teamOverall:Number(team?.overall)||100,
+    createdAt:Number(profile.createdAt)||Date.now(),
+    updatedAt:Date.now(),
+    cardTier:["classic","elite","legend"].includes(profile.cardTier)?profile.cardTier:"classic",
+    novaXP:Number.isFinite(Number(profile.novaXP))?Number(profile.novaXP):0,
+    achievements:Array.isArray(profile.achievements)?profile.achievements:[]
+  };
+  await cloud.collection("publicPlayerCards").doc(uid).set(safeCard,{merge:true});
+}
+async function copyPlayerCardLink(uid){
+  const url=location.origin+location.pathname+"?player="+encodeURIComponent(uid);
+  try{await navigator.clipboard.writeText(url);alert("تم نسخ رابط بطاقة اللاعب.");}
+  catch(e){prompt("انسخ رابط بطاقة اللاعب:",url);}
+}
+function openPlayerRegister(){playerEntryMode="register";go("player")}function openPlayerLogin(){playerEntryMode="login";go("player")}function setLang(v){lang=v;localStorage.novaLang=v;render()}
 function adminToggleSidebar(){const layout=document.getElementById("novaAdminLayout");if(layout)layout.classList.toggle("sidebar-open");}
 function adminNavigate(id){
   const layout=document.getElementById("novaAdminLayout");
@@ -714,6 +776,9 @@ async function publishNewsArticle(){if(!isAdmin)return;const title=document.getE
 async function deleteNewsArticle(id){if(!isAdmin||!confirm('واش متأكد بغيتي تحذف هاد المقال؟'))return;try{await cloud.collection('articles').doc(id).delete();articles=articles.filter(x=>x.id!==id);if(openedArticleId===id)openedArticleId='';render()}catch(e){alert('تعذر حذف المقال: '+(e.message||e))}}
 
 function render(){nav();let el=document.getElementById("app");let l=current();
+if(page==="playerCard"){
+  playerCardView();
+}
 if(page==="player"){
   if(!currentUser){
     el.innerHTML=`<div class="form">
@@ -912,7 +977,7 @@ async function loadNovaChatPlayers(force=false){
     profilesSnap.forEach(doc=>{
       if(doc.id===currentUser.uid)return;
       const profile=doc.data()||{},team=teams[doc.id]||{},name=String(profile.name||"").trim();
-      if(name)novaChatPlayers.push({id:doc.id,name,teamName:String(team.name||"").trim(),initials:novaChatInitials(name)});
+      if(name)novaChatPlayers.push({id:doc.id,name,teamName:String(team.name||"").trim(),photoUrl:String(profile.photoUrl||profile.photoURL||profile.avatarUrl||""),initials:novaChatInitials(name)});
     });
     novaChatPlayers.sort((a,b)=>a.name.localeCompare(b.name));novaChatPlayersLoaded=true;
   }catch(e){novaChatPlayersError="تعذر تحميل اللاعبين: "+(e.message||e);}
@@ -923,7 +988,7 @@ function novaChatPlayerResults(){
   if(novaChatPlayersError)return `<div class="nova-chat-empty">${esc(novaChatPlayersError)}<br><button class="btn sm" onclick="loadNovaChatPlayers(true)">إعادة المحاولة</button></div>`;
   const q=novaChatSearch.trim().toLocaleLowerCase(),found=novaChatPlayers.filter(u=>!q||u.name.toLocaleLowerCase().includes(q)||u.teamName.toLocaleLowerCase().includes(q));
   if(!found.length)return '<div class="nova-chat-empty">ما لقينا حتى لاعب بهاد الاسم.</div>';
-  return `<div class="nova-chat-list">${found.map(u=>`<div class="nova-chat-person">${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span>${novaChatPresenceLine(u.id)}</span><button class="btn sm" onclick="startNovaChatConversation('${esc(u.id)}')">مراسلة</button></div>`).join("")}</div>`;
+  return `<div class="nova-chat-list">${found.map(u=>`<div class="nova-chat-person"><button type="button" class="nova-chat-avatar" style="border:0;padding:0;overflow:hidden;cursor:pointer" onclick="openPlayerCard('${esc(u.id)}')">${u.photoUrl?`<img src="${esc(u.photoUrl)}" alt="" style="width:100%;height:100%;object-fit:cover">`:esc(u.initials)}</button><span class="nova-chat-person-main"><b style="cursor:pointer" onclick="openPlayerCard('${esc(u.id)}')">${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span>${novaChatPresenceLine(u.id)}</span><button class="btn sm" onclick="openPlayerCard('${esc(u.id)}')">البطاقة</button><button class="btn sm" onclick="startNovaChatConversation('${esc(u.id)}')">مراسلة</button></div>`).join("")}</div>`;
 }
 async function messageTeamOwner(peerUid){
   if(!currentUser||currentUser.isAnonymous){alert("دخل بحساب اللاعب أولاً باش تراسل صاحب الفريق عبر NOVA CHAT.");return;}
@@ -1240,6 +1305,9 @@ async function playerRegister(){
       updatedAt:now
     });
 
+    try{await publishPublicPlayerCard(uid,{uid,name,phone,country,birthDate,gameId,gameIds,gameName,photoUrl,createdAt:now},{ownerUid:uid,name:teamName,overall,gameId,gameIds,gameName});}
+    catch(publicCardError){console.warn("Public player card will be published after Firestore rules are updated:",publicCardError);}
+
     go("player");
   }catch(e){
     if(err)err.textContent=e.message||"تعذر إنشاء الحساب";
@@ -1293,6 +1361,7 @@ async function playerDashboard(){
 
     el.innerHTML=`<div class="form">
       <h2>حساب اللاعب</h2>
+      <button class="btn primary" style="width:100%;margin:4px 0 14px" onclick="openPlayerCard(currentUser.uid)">🏆 عرض NOVA PLAYER CARD</button>
       <div style="display:flex;align-items:center;gap:14px;margin:10px 0 16px">
         <img id="playerPhotoPreview" src="${esc(p.photoUrl||p.photoURL||p.avatarUrl||'assets/nova-champions-logo.png')}" alt="الصورة الشخصية" onerror="this.onerror=null;this.src='assets/nova-champions-logo.png'" style="width:88px;height:88px;object-fit:cover;border-radius:50%;border:2px solid #39A0FF;background:#101A2D">
         <div><b>الصورة الشخصية</b><div class="muted">تقدر تبدّلها فأي وقت من حسابك.</div></div>
@@ -1334,6 +1403,62 @@ async function playerDashboard(){
     el.innerHTML="تعذر تحميل المعلومات: "+esc(e.message||e);
   }
 }
+async function playerCardView(){
+  const el=document.getElementById("app"),uid=selectedPlayerCardUid||currentUser?.uid;
+  if(!el||!uid){if(el)el.innerHTML='<div class="card">بطاقة اللاعب غير متاحة.</div>';return;}
+  el.innerHTML='<p class="muted">جاري تحميل NOVA PLAYER CARD...</p>';
+  try{
+    let card={};
+    const publicSnap=await cloud.collection("publicPlayerCards").doc(uid).get();
+    if(publicSnap.exists)card=publicSnap.data()||{};
+    else if(currentUser?.uid===uid){
+      const [profileSnap,teamSnap]=await Promise.all([
+        cloud.collection("playerProfiles").doc(uid).get(),
+        cloud.collection("playerTeams").doc(uid).get()
+      ]);
+      const profile=profileSnap.exists?profileSnap.data()||{}:{};
+      const team=teamSnap.exists?teamSnap.data()||{}:{};
+      if(!profile.name)throw new Error("ملف اللاعب غير موجود.");
+      card={uid,playerId:novaPlayerId(uid),name:profile.name,country:profile.country||"",gameIds:novaGameIds(profile.gameIds?.length?profile:team),photoUrl:profile.photoUrl||profile.photoURL||profile.avatarUrl||"",teamName:team.name||"",teamOverall:Number(team.overall)||100,cardTier:"classic",novaXP:Number(profile.novaXP)||0,achievements:Array.isArray(profile.achievements)?profile.achievements:[]};
+      try{await publishPublicPlayerCard(uid,profile,team);}catch(e){console.warn("Public card publish pending rules:",e);}
+    }else{
+      throw new Error("بطاقة اللاعب مازال ما تنشراتش. خاص اللاعب يفتح بطاقته من حسابه أولاً.");
+    }
+    const tier=["classic","elite","legend"].includes(card.cardTier)?card.cardTier:"classic";
+    const tierLabel=tier==="legend"?"NOVA LEGEND":tier==="elite"?"NOVA ELITE":"NOVA CLASSIC";
+    const games=(Array.isArray(card.gameIds)?card.gameIds:[]).map(id=>NOVA_GAMES[id]).filter(Boolean).join("، ")||String(card.gameName||"غير محددة");
+    const country=NOVA_COUNTRIES[card.country]||card.country||"غير محدد";
+    const teamName=String(card.teamName||"غير محدد");
+    const stats=card.teamName?teamStats(teamName):{p:0,w:0,d:0,l:0};
+    const winRate=stats.p?Math.round(stats.w/stats.p*100):0;
+    const achievements=Array.isArray(card.achievements)?card.achievements.filter(Boolean):[];
+    const shareUrl=location.origin+location.pathname+"?player="+encodeURIComponent(uid);
+    const qrUrl="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=5&data="+encodeURIComponent(shareUrl);
+    el.innerHTML=`<button class="btn" onclick="go(currentUser?'player':'home')">← رجوع</button>
+      <article class="nova-player-card ${tier}">
+        <div class="nova-player-card-head"><span class="nova-player-card-brand">NOVA CHAMPIONS</span><span class="nova-player-card-tier">${tierLabel}</span></div>
+        <div class="nova-player-card-main">
+          <img class="nova-player-card-photo" src="${esc(card.photoUrl||'assets/nova-champions-logo.png')}" alt="صورة اللاعب" onerror="this.onerror=null;this.src='assets/nova-champions-logo.png'">
+          <div style="min-width:0"><div class="nova-player-card-name">${esc(card.name||"NOVA PLAYER")}</div><div class="nova-player-card-id">${esc(card.playerId||novaPlayerId(uid))}</div><div class="muted" style="margin-top:7px">OFFICIAL PLAYER IDENTITY</div></div>
+        </div>
+        <div class="nova-player-card-info">
+          <div><small>COUNTRY / البلد</small><b>${esc(country)}</b></div>
+          <div><small>TEAM / الفريق</small><b>${esc(teamName)}</b></div>
+          <div><small>GAMES / الألعاب</small><b>${esc(games)}</b></div>
+          <div><small>TEAM OVERALL / تقييم الفريق</small><b>${Number(card.teamOverall)||100}</b></div>
+        </div>
+        <div class="nova-player-card-stats">
+          <div><b>${stats.p}</b><small>مباريات الفريق</small></div>
+          <div><b>${stats.w}</b><small>انتصارات الفريق</small></div>
+          <div><b>${winRate}%</b><small>نسبة فوز الفريق</small></div>
+        </div>
+        <div class="nova-player-card-footer"><div><b style="display:block;color:var(--card-a);font-size:12px">NOVA XP: ${Number(card.novaXP)||0}</b><span>PLAYER PROFILE • NOVA CHAMPIONS</span></div><img class="nova-player-card-qr" src="${qrUrl}" alt="QR code" loading="lazy"></div>
+      </article>
+      <div class="card" style="margin:12px 0"><b>الإنجازات والبطولات</b>${achievements.length?`<div class="actions" style="margin-top:9px">${achievements.map(a=>`<span class="pill">${esc(a)}</span>`).join("")}</div>`:'<p class="muted">مازال ما تسجلو حتى إنجاز رسمي.</p>'}</div>
+      <div class="nova-player-card-actions"><button class="btn primary" onclick="copyPlayerCardLink('${esc(uid)}')">🔗 نسخ رابط البطاقة</button>${currentUser?.uid===uid?'<button class="btn" onclick="go(&quot;player&quot;)">تعديل الحساب</button>':''}</div>`;
+  }catch(e){el.innerHTML=`<button class="btn" onclick="go(currentUser?'player':'home')">← رجوع</button><div class="card" style="margin-top:12px"><h2>تعذر عرض البطاقة</h2><p class="muted">${esc(e.message||e)}</p></div>`;}
+}
+
 async function loadPlayerTeams(){
   if(!isAdmin)return;
 
@@ -1534,6 +1659,9 @@ async function playerSave(){
     await cloud.collection("playerTeams").doc(uid).set({
       name:teamName,overall,formation,logoUrl,gameId,gameIds,gameName,updatedAt:now
     },{merge:true});
+
+    try{await publishPublicPlayerCard(uid,{...oldProfile,uid,name,phone,country,gameId,gameIds,gameName,photoUrl,updatedAt:now}, {...oldTeam,name:teamName,overall,formation,logoUrl,gameId,gameIds,gameName});}
+    catch(publicCardError){console.warn("Public player card sync:",publicCardError);}
 
     err.textContent="تم حفظ التعديلات بنجاح ❤️";
     const preview=document.getElementById("playerPhotoPreview");
