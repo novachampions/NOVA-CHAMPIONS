@@ -41,6 +41,13 @@ footer{text-align:center;color:#777;padding:25px;font-size:11px}
 .hidden{display:none!important}.round-tabs{display:flex;gap:7px;overflow-x:auto;padding:6px 0;margin:8px 0}.round-tabs button{min-width:76px}.match-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}.match-score{color:var(--gold);font-weight:bold;font-size:18px;white-space:nowrap}.leg-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.leg-tabs button.active{background:var(--gold);color:#111;font-weight:bold}
 .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.admin-tile{background:linear-gradient(145deg,#211d14,#151518);border:1px solid #70592c;border-radius:13px;padding:13px}.admin-tile b{display:block;color:var(--gold);font-size:23px;margin-top:5px}.admin-section{margin:14px 0}.admin-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.btn.sm{padding:7px 9px;font-size:12px}.admin-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.admin-note{border-inline-start:3px solid var(--gold);padding:8px 10px;background:#17150f;border-radius:7px;color:#ddd;font-size:12px;margin:10px 0}@media(min-width:600px){main{max-width:900px}.admin-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
+
+/* NOVA PLAYER ID — step-by-step registration */
+.nova-register{position:relative;overflow:hidden;margin-top:16px;padding:17px;border:1px solid #31598a;border-radius:20px;background:radial-gradient(ellipse at 95% 0%,rgba(83,88,220,.22),transparent 42%),linear-gradient(145deg,#101f39,#0c1427 70%,#171332);box-shadow:0 18px 45px #0006,inset 0 1px #ffffff12}
+.nova-register:before{content:"";position:absolute;width:180px;height:180px;border:1px solid #4d8ee522;border-radius:50%;top:-110px;left:-75px;box-shadow:0 0 0 18px #4d8ee50a,0 0 0 38px #4d8ee507;pointer-events:none}
+.nova-register-brand{display:flex;align-items:center;gap:13px;margin-bottom:23px}.nova-orbit{display:grid;place-items:center;flex:0 0 52px;height:52px;border-radius:16px;background:linear-gradient(145deg,#258fff,#8157f5);font-size:27px;font-weight:900;color:#fff;box-shadow:0 0 25px #398ff755}.nova-kicker{font-size:10px;letter-spacing:2.5px;color:#83c6ff;font-weight:900}.nova-register-brand h3{margin:5px 0;color:#fff;font-size:19px}.nova-register-brand p{margin:0;color:#9fb4d2;font-size:12px}.nova-progress{margin:0 2px 24px}.nova-progress-line{height:5px;background:#243652;border-radius:8px;overflow:hidden}.nova-progress-line span{display:block;width:25%;height:100%;border-radius:8px;background:linear-gradient(90deg,#278eff,#9562ff);transition:width .25s ease}.nova-steps{display:flex;justify-content:space-between;margin-top:9px}.nova-steps span{font-size:10px;color:#7185a4;border:1px solid #344b6d;background:#111e34;border-radius:20px;padding:4px 8px}.nova-steps span.active{color:#fff;background:#245c9a;border-color:#5bb0ff}.nova-stage{position:relative;animation:novaStageIn .22s ease}.nova-stage-label{font-size:10px;letter-spacing:1.5px;color:#69b8ff;font-weight:900}.nova-stage h3{font-size:20px;color:#f5f8ff;margin:9px 0 5px}.nova-stage>p{font-size:12px;margin:0 0 18px}.nova-stage label{display:block;margin-top:8px;color:#d3e2f6!important}.nova-stage input,.nova-stage select{padding:13px 12px;border-radius:11px;background:#081326!important;border-color:#2e4b70!important}.nova-stage-actions{display:flex;gap:9px;margin-top:17px}.nova-stage-actions .btn{flex:1}.nova-next{width:100%;margin-top:17px;padding:13px}.nova-register .btn{cursor:pointer}.nova-register #playerError{min-height:18px;margin:12px 2px 0}.nova-register .muted{color:#9fb4d2!important}@keyframes novaStageIn{from{opacity:.4;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:420px){.nova-register{padding:14px}.nova-register-brand h3{font-size:17px}.nova-stage h3{font-size:18px}}
+
 /* NOVA CHAMPIONS official newspaper */
 .news-masthead{background:#f4f0e6;color:#171717;border:1px solid #c7b98f;padding:15px 14px;margin:10px 0 16px;box-shadow:0 5px 18px #0005;text-align:center}
 .news-kicker{font-size:10px;letter-spacing:3px;color:#78602e;font-weight:900}.news-masthead h2{font-family:Georgia,serif;color:#151515;font-size:clamp(27px,7vw,42px);letter-spacing:1px;margin:7px 0 2px}.news-masthead p{color:#5e584b;margin:4px 0;font-size:11px}.news-rule{height:3px;background:#171717;margin:10px 0 3px;border-top:1px solid #171717;border-bottom:1px solid #171717}
@@ -521,6 +528,7 @@ async function teamProfileView(){
   
   let playerTeam={};
   let owner={};
+  let ownerUid="";
 
   try{
     const snap=await cloud.collection("playerTeams")
@@ -536,12 +544,11 @@ async function teamProfileView(){
       if(profile.exists){
         const data=profile.data();
 
-        if(!owner.name || data.phone){
+        if(!owner.name){
           playerTeam=candidate;
           owner=data;
+          ownerUid=uid;
         }
-
-        if(data.phone) break;
       }
     }
   }catch(e){
@@ -549,7 +556,6 @@ async function teamProfileView(){
   }
   
   const image=team.imageUrl||playerTeam.logoUrl||"";
-  const phone=(team.whatsapp||owner.phone||"").replace(/\D/g,"");
   const players=team.players||[];
 const formation=playerTeam.formation||team.formation||"4-3-3";
   const formationParts=formation.split("-");
@@ -596,7 +602,7 @@ ${lineupRows.map((row,rowIndex)=>Array.from({length:row.count},(_,i)=>`
       <div class="stat"><b>${st.p?Math.round(st.w/st.p*100):0}%</b>نسبة الفوز</div>
     </div>
     ${players.length?`<h3>لائحة اللاعبين</h3><div class="card">${players.map((p,i)=>`<div class="row"><span>${i+1}. ${esc(p)}</span></div>`).join("")}</div>`:""}
-    ${phone?`<a class="btn primary" style="display:block;text-decoration:none;margin-top:14px" href="https://api.whatsapp.com/send?phone=${phone}" target="_blank" rel="noopener noreferrer">تواصل عبر WhatsApp</a>`:`<p class="muted">رقم WhatsApp غير متوفر</p>`}
+    ${ownerUid?`<button class="btn primary" style="display:block;width:100%;margin-top:14px" onclick="messageTeamOwner('${esc(ownerUid)}')">✉️ مراسلة صاحب الفريق عبر NOVA CHAT</button>`:`<p class="muted">يمكنك التواصل مع صاحب الفريق عبر NOVA CHAT عند توفر ملفه.</p>`}
   </section>`;
 }
   
@@ -689,37 +695,17 @@ if(page==="player"){
       <button class="btn primary" onclick="playerLogin()">دخول</button>
       <button class="btn" onclick="playerResetPassword()">نسيت كلمة المرور؟</button>
       <hr>
-      <h3>إنشاء حساب جديد</h3>
-      <input id="regName" placeholder="الاسم الكامل">
-      <input id="regEmail" type="email" placeholder="البريد الإلكتروني">
-      <input id="regPhone" type="tel" placeholder="رقم الهاتف">
-      <input id="regPassword" type="password" placeholder="كلمة المرور">
-      <h3>إنشاء الفريق الخاص بك</h3>
-      <input id="regTeam" placeholder="اسم الفريق">
-      <label>تقييم الفريق (100 حتى 160)</label>
-      <input id="regOverall" type="number" min="100" max="160" value="100">
-      <label>التشكيلة</label>
-      <select id="regFormation">
-  <option value="4-3-3">4-3-3</option>
-  <option value="4-3-3 Attack">4-3-3 Attack</option>
-  <option value="4-3-3 Holding">4-3-3 Holding</option>
-  <option value="4-4-2">4-4-2</option>
-  <option value="4-2-3-1">4-2-3-1</option>
-  <option value="3-5-2">3-5-2</option>
-  <option value="3-4-3">3-4-3</option>
-  <option value="4-2-4">4-2-4</option>
-  <option value="4-1-2-1-2">4-1-2-1-2</option>
-  <option value="4-1-4-1">4-1-4-1</option>
-  <option value="4-5-1">4-5-1</option>
-  <option value="5-3-2">5-3-2</option>
-  <option value="5-2-1-2">5-2-1-2</option>
-  <option value="4-3-2-1">4-3-2-1</option>
-  <option value="3-4-1-2">3-4-1-2</option>
-  <option value="5-4-1">5-4-1</option>
-  <option value="4-2-2-2">4-2-2-2</option>
-</select>
-      <button class="btn primary" onclick="playerRegister()">إنشاء الحساب والفريق</button>
-      <p id="playerError" class="muted"></p>
+      <section class="nova-register">
+        <div class="nova-register-brand"><span class="nova-orbit">N</span><div><div class="nova-kicker">NOVA CHAMPIONS</div><h3>انضم إلى الجيل القادم</h3><p>أنشئ هويتك كلاعب وابدأ رحلتك التنافسية</p></div></div>
+        <div class="nova-progress"><div class="nova-progress-line"><span id="regProgressFill"></span></div><div class="nova-steps"><span class="active" data-step-dot="1">01</span><span data-step-dot="2">02</span><span data-step-dot="3">03</span><span data-step-dot="4">04</span></div></div>
+        <div class="nova-stage" data-reg-stage="1"><div class="nova-stage-label">PLAYER IDENTITY · 01/04</div><h3>أولاً، شكون نتا؟</h3><p class="muted">المعلومات الأساسية ديالك باش نبنيو هوية اللاعب.</p><label>الاسم الكامل</label><input id="regName" autocomplete="name" placeholder="كتب الاسم الكامل"><label>البريد الإلكتروني</label><input id="regEmail" type="email" autocomplete="email" placeholder="name@example.com"><button type="button" class="btn primary nova-next" onclick="novaRegNext(1)">التالي <span>←</span></button></div>
+        <div class="nova-stage hidden" data-reg-stage="2"><div class="nova-stage-label">CONTACT · 02/04</div><h3>كيفاش نتواصلو معاك؟</h3><p class="muted">رقم الهاتف غادي نستعملوه للتواصل معاك عند الحاجة.</p><label>رقم الهاتف</label><input id="regPhone" type="tel" autocomplete="tel" placeholder="مثال: 0612345678"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(2)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(2)">التالي ←</button></div></div>
+        <div class="nova-stage hidden" data-reg-stage="3"><div class="nova-stage-label">SECURITY · 03/04</div><h3>أمّن حسابك</h3><p class="muted">اختار كلمة مرور قوية لحماية حساب NOVA ديالك.</p><label>كلمة المرور</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="6 أحرف على الأقل"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(3)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(3)">التالي ←</button></div></div>
+        <div class="nova-stage hidden" data-reg-stage="4"><div class="nova-stage-label">CREATE YOUR TEAM · 04/04</div><h3>أسّس فريقك الأول</h3><p class="muted">كل بطل كيحتاج فريق ينافس معاه.</p><label>اسم الفريق</label><input id="regTeam" placeholder="اسم فريقك"><label>تقييم الفريق (100 حتى 160)</label><input id="regOverall" type="number" min="100" max="160" value="100"><label>التشكيلة</label><select id="regFormation">
+  <option value="4-3-3">4-3-3</option><option value="4-3-3 Attack">4-3-3 Attack</option><option value="4-3-3 Holding">4-3-3 Holding</option><option value="4-4-2">4-4-2</option><option value="4-2-3-1">4-2-3-1</option><option value="3-5-2">3-5-2</option><option value="3-4-3">3-4-3</option><option value="4-2-4">4-2-4</option><option value="4-1-2-1-2">4-1-2-1-2</option><option value="4-1-4-1">4-1-4-1</option><option value="4-5-1">4-5-1</option><option value="5-3-2">5-3-2</option><option value="5-2-1-2">5-2-1-2</option><option value="4-3-2-1">4-3-2-1</option><option value="3-4-1-2">3-4-1-2</option><option value="5-4-1">5-4-1</option><option value="4-2-2-2">4-2-2-2</option>
+</select><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(4)">رجوع</button><button type="button" class="btn primary" onclick="playerRegister()">إنشاء الحساب والفريق</button></div></div>
+        <p id="playerError" class="muted" role="status"></p>
+      </section>
     </div>`;
   }else{
   playerDashboard();
@@ -905,6 +891,24 @@ function novaChatPlayerResults(){
   if(!found.length)return '<div class="nova-chat-empty">ما لقينا حتى لاعب بهاد الاسم.</div>';
   return `<div class="nova-chat-list">${found.map(u=>`<div class="nova-chat-person">${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-person-main"><b>${esc(u.name)}</b><span class="nova-chat-preview">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</span>${novaChatPresenceLine(u.id)}</span><button class="btn sm" onclick="startNovaChatConversation('${esc(u.id)}')">مراسلة</button></div>`).join("")}</div>`;
 }
+async function messageTeamOwner(peerUid){
+  if(!currentUser||currentUser.isAnonymous){alert("دخل بحساب اللاعب أولاً باش تراسل صاحب الفريق عبر NOVA CHAT.");return;}
+  if(peerUid===currentUser.uid){alert("هاد الفريق ديالك أنت.");return;}
+  try{
+    let peer=novaChatPlayers.find(x=>x.id===peerUid);
+    if(!peer){
+      const snap=await cloud.collection("playerProfiles").doc(peerUid).get();
+      if(!snap.exists)throw new Error("ملف صاحب الفريق غير متوفر.");
+      const profile=snap.data()||{};
+      peer={id:peerUid,name:String(profile.name||"لاعب NOVA"),teamName:"",initials:novaChatInitials(profile.name)};
+      novaChatPlayers.push(peer);
+    }
+    novaChatPlayersLoaded=true;
+    page="chat";novaChatTab="messages";render();
+    await startNovaChatConversation(peerUid);
+  }catch(e){alert("تعذر فتح NOVA CHAT: "+(e.message||e));}
+}
+
 async function startNovaChatConversation(peerUid){
   if(!currentUser||currentUser.isAnonymous)return alert("دخل بحساب اللاعب أولاً.");
   if(!peerUid||peerUid===currentUser.uid)return;
@@ -1033,6 +1037,21 @@ async function saveMatchDetails(encodedId){
 }
 async function editMatch(id){return saveMatchDetails(encodeURIComponent(String(id)));}
 async function deleteMatch(id){if(!isAdmin||!confirm(t("confirmDelete")))return;try{await cloud.collection("matches").doc(String(id)).delete();db.matches=db.matches.filter(m=>String(m.id)!==String(id));localStorage.novaDB=JSON.stringify(db);render()}catch(e){alert("Firebase: "+(e.message||e))}}
+
+
+function novaRegShowStep(step){
+  document.querySelectorAll('[data-reg-stage]').forEach(el=>el.classList.toggle('hidden',Number(el.dataset.regStage)!==step));
+  document.querySelectorAll('[data-step-dot]').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepDot)<=step));
+  const fill=document.getElementById('regProgressFill');if(fill)fill.style.width=(step*25)+'%';
+}
+function novaRegNext(step){
+  const checks={1:[['regName','دخل الاسم الكامل'],['regEmail','دخل البريد الإلكتروني']] ,2:[['regPhone','دخل رقم الهاتف']],3:[['regPassword','دخل كلمة المرور']]};
+  for(const [id,message] of (checks[step]||[])){const input=document.getElementById(id);if(!input||!input.value.trim()){const err=document.getElementById('playerError');if(err)err.textContent=message;input?.focus();return;}}
+  if(step===1){const email=document.getElementById('regEmail');if(email&&!email.checkValidity()){document.getElementById('playerError').textContent='تأكد من البريد الإلكتروني';email.focus();return;}}
+  if(step===3){const password=document.getElementById('regPassword');if(password&&password.value.length<6){document.getElementById('playerError').textContent='كلمة المرور خاصها تكون 6 أحرف على الأقل';password.focus();return;}}
+  const err=document.getElementById('playerError');if(err)err.textContent='';novaRegShowStep(step+1);
+}
+function novaRegBack(step){const err=document.getElementById('playerError');if(err)err.textContent='';novaRegShowStep(step-1);}
 
 async function playerLogin(){
   const email=document.getElementById("playerEmail")?.value.trim();
