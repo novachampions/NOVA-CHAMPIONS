@@ -733,7 +733,7 @@ if(page==="live"){
 if(page==="home"){el.innerHTML=`<section class="hero"><strong>${t("welcome")}</strong><p>${t("subtitle")}</p><span class="pill">NOVA CHAMPIONS OFFICIAL</span></section><div class="stats"><div class="stat"><b>${db.leagues.length}</b>${t("competitions")}</div><div class="stat"><b>${db.leagues.reduce((n,x)=>n+x.teams.length,0)}</b>${t("teams")}</div><div class="stat"><b>${db.matches.length}</b>${t("played")}</div></div><h2>${t("competitions")}</h2>${db.leagues.length?db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><button class="btn" onclick="selected='${x.id}';go('table')">${t("table")}</button></div>`).join(""):`<p class="muted">${t("noLeagues")}</p>`}<h2>${t("latest")}</h2>${db.matches.slice(-5).reverse().map(m=>`<div class="row"><span>${esc(m.h)}</span><b style="color:var(--gold)">${m.hs} - ${m.as}</b><span>${esc(m.a)}</span></div>`).join("")||`<p class="muted">${t("noMatches")}</p>`}<p class="small">${t("demo")}</p>`}
 if(page==="news"){el.innerHTML=newsPage()}
 if(page==="predictions"){el.innerHTML=predictionsPage()}
-if(page==="leagues"){el.innerHTML=`<h2>${t("competitions")}</h2>${db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${x.teams.length}</span></div>`).join("")||`<p class="muted">${t("noLeagues")}</p>`}${isAdmin?`<div class="form"><h3>${t("createLeague")}</h3><input id="lname" placeholder="${t("leagueName")}"><input id="season" placeholder="${t("season")}" value="Season 1"><label>${t("competitionType")}</label><select id="competitionType" onchange="document.getElementById('cupFormatWrap').classList.toggle('hidden',this.value!=='cup');document.getElementById('championsFormatWrap').classList.toggle('hidden',this.value!=='champions')"><option value="league">${t("leagueMode")}</option><option value="cup">${t("cupMode")}</option><option value="champions">${t("championsMode")}</option></select><div id="championsFormatWrap" class="hidden"><label>${t("directQualifiers")}</label><input id="champDirect" type="number" min="0" step="1" value="8"><label>${t("playoffTeams")}</label><input id="champPlayoff" type="number" min="0" step="1" value="16"><label>${t("playoffFormat")}</label><select id="champPlayoffFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><label>${t("knockoutFormat")}</label><select id="champKnockoutFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><p class="muted">8 مباريات لكل فريق • قرعة عشوائية بلا تكرار الخصوم</p></div><div id="cupFormatWrap" class="hidden"><label>${t("cupFormat")}</label><select id="cupFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select></div><label>اختار الفرق المشاركة / Select teams</label><div class="form" id="leagueTeamChoices">${(db.teams||[]).length?(db.teams||[]).map(team=>`<label style="display:block;padding:6px"><input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">${esc(team.name)} — ${Number(team.fans||0)} Fans</label>`).join(""):`<p class="muted">سجل الفرق أولاً من لوحة Admin ← Gestion des équipes</p>`}</div><button class="btn" onclick="loadPlayerTeams()">عرض فرق اللاعبين المسجلين</button><button class="btn primary" onclick="addLeague()">${t("add")}</button></div>`:""}`}
+if(page==="leagues"){el.innerHTML=`<h2>${t("competitions")}</h2>${db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${x.teams.length}</span></div>`).join("")||`<p class="muted">${t("noLeagues")}</p>`}${isAdmin?`<div class="form"><h3>${t("createLeague")}</h3><input id="lname" placeholder="${t("leagueName")}"><input id="season" placeholder="${t("season")}" value="Season 1"><label>${t("competitionType")}</label><select id="competitionType" onchange="document.getElementById('cupFormatWrap').classList.toggle('hidden',this.value!=='cup');document.getElementById('championsFormatWrap').classList.toggle('hidden',this.value!=='champions')"><option value="league">${t("leagueMode")}</option><option value="cup">${t("cupMode")}</option><option value="champions">${t("championsMode")}</option></select><div id="championsFormatWrap" class="hidden"><label>${t("directQualifiers")}</label><input id="champDirect" type="number" min="0" step="1" value="8"><label>${t("playoffTeams")}</label><input id="champPlayoff" type="number" min="0" step="1" value="16"><label>${t("playoffFormat")}</label><select id="champPlayoffFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><label>${t("knockoutFormat")}</label><select id="champKnockoutFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><p class="muted">8 مباريات لكل فريق • قرعة عشوائية بلا تكرار الخصوم</p></div><div id="cupFormatWrap" class="hidden"><label>${t("cupFormat")}</label><select id="cupFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select></div><label>نوع اللعبة / Game</label><select id="leagueGame" onchange="loadPlayerTeams()"><option value="">اختار اللعبة أولاً</option><option value="fc_mobile">EA SPORTS FC Mobile</option><option value="efootball">eFootball</option><option value="fc27">EA SPORTS FC 27</option></select><label>الفرق المشاركة / Participating teams</label><div class="form" id="leagueTeamChoices"><p class="muted">اختار اللعبة باش تظهر فرق اللاعبين المسجلين فيها</p></div><button class="btn primary" onclick="addLeague()">${t("add")}</button></div>`:""}`}
 if(page==="matches"){el.innerHTML=matchesView(l)}
 if(page==="table"){const list=db.leagues.filter(x=>(x.mode||"league")===tableMode);if(selected&&!list.some(x=>String(x.id)===String(selected)))selected=null;if(!selected&&list.length)selected=String(list[0].id);const tl=list.find(x=>String(x.id)===String(selected));el.innerHTML=`<h2>${t("standings")}</h2>${tableModeSelect()}${tableModeLeagueSelect()}${!list.length?`<div class="card"><p class="muted">${t("noLeagues")}</p>${isAdmin?`<button class="btn primary" onclick="go('leagues')">${t("createLeague")}</button>`:""}</div>`:!tl?`<p class="muted">${t("chooseLeague")}</p>`:tableMode==="cup"?cupClassementView(tl):tableMode==="champions"?championsClassementView(tl):(()=>{const rows=standings(tl);return `<div class="standings-head"><div><strong>${esc(tl.name)}</strong><div class="muted">${esc(tl.season||"")} • ${tl.teams.length} ${t("teams")}</div></div><span class="pill">LEAGUE TABLE</span></div><div class="standings-scroll"><table class="standings-table"><thead><tr><th class="rank-cell">#</th><th style="text-align:start">${t("teams")}</th><th>${t("p")}</th><th>${t("w")}</th><th>${t("d")}</th><th>${t("l")}</th><th>${t("gf")}</th><th>${t("ga")}</th><th>${t("gd")}</th><th>${t("pts")}</th></tr></thead><tbody>${rows.map((x,i)=>`<tr><td class="rank-cell"><span class="rank-badge ${i===0?"gold":i===1?"silver":i===2?"bronze":""}">${i+1}</span></td><td class="team-cell"><span class="team-mark">${esc((x.name||"?").trim().slice(0,2).toUpperCase())}</span>${esc(x.name)}</td><td>${x.p}</td><td>${x.w}</td><td>${x.d}</td><td>${x.l}</td><td>${x.gf}</td><td>${x.ga}</td><td class="${x.gd>0?"gd-positive":x.gd<0?"gd-negative":""}">${x.gd>0?"+":""}${x.gd}</td><td class="points-cell">${x.pts}</td></tr>`).join("")||`<tr><td colspan="10" class="muted">${t("empty")}</td></tr>`}</tbody></table></div><div class="standings-note"><span><i></i>${lang==="ar"?"الترتيب حسب النقاط ثم فارق الأهداف":"Points, then goal difference"}</span><span>${lang==="ar"?"اسحب الجدول أفقياً لرؤية جميع الإحصائيات":"Swipe horizontally to view all stats"}</span></div>${isAdmin?`<div class="form"><h3>${t("addTeam")}</h3><input id="teamName" placeholder="${t("teamName")}"><button class="btn primary" onclick="addTeam()">${t("add")}</button></div>`:""}`})()}`;}
 if(page==="admin"){el.innerHTML=isAdmin?`<div class="admin-layout" id="novaAdminLayout">
@@ -1005,7 +1005,44 @@ async function login(){
   try {await auth.signInWithEmailAndPassword(email,password);}
   catch(e){err.textContent=e.code==="auth/invalid-credential"?t("badLogin"):(e.message||t("badLogin"));}
 }
-function addLeague(){if(!isAdmin)return;let n=document.getElementById("lname").value.trim(),s=document.getElementById("season").value.trim(),mode=document.getElementById("competitionType")?.value||"league",cupFormat=document.getElementById("cupFormat")?.value||"single";if(!n)return;const directQualifiers=Math.max(0,Number(document.getElementById("champDirect")?.value||8)),playoffTeams=Math.max(0,Number(document.getElementById("champPlayoff")?.value||16)),playoffFormat=document.getElementById("champPlayoffFormat")?.value||"single",knockoutFormat=document.getElementById("champKnockoutFormat")?.value||"single";const teams=[...document.querySelectorAll(".league-team-choice:checked")].map(x=>x.value);if(teams.length<2)return alert(t("needTeams"));if(mode==="champions"&&((teams.length<9||(teams.length%2!==0&&teams.length!==9))||directQualifiers+playoffTeams>teams.length||playoffTeams%2!==0||directQualifiers+playoffTeams<2))return alert(t("championsNeedTeams")+"\nتأكد أن عدد المتأهلين والملحق لا يتجاوز عدد الفرق، وعدد فرق الملحق زوجي.");let id="L"+Date.now();db.leagues.push({id,name:n,season:s,teams,mode,cupFormat,directQualifiers,playoffTeams,playoffFormat,knockoutFormat,cupByes:[]});selected=id;persist();render()}
+function addLeague(){
+  if(!isAdmin)return;
+
+  const n=document.getElementById("lname").value.trim();
+  const s=document.getElementById("season").value.trim();
+  const gameId=document.getElementById("leagueGame")?.value;
+  const games={
+    fc_mobile:"EA SPORTS FC Mobile",
+    efootball:"eFootball",
+    fc27:"EA SPORTS FC 27"
+  };
+  const gameName=games[gameId];
+  const mode=document.getElementById("competitionType")?.value||"league";
+  const cupFormat=document.getElementById("cupFormat")?.value||"single";
+
+  if(!n)return alert("دخل اسم البطولة");
+  if(!gameName)return alert("اختار اللعبة أولاً");
+
+  const directQualifiers=Math.max(0,Number(document.getElementById("champDirect")?.value||8));
+  const playoffTeams=Math.max(0,Number(document.getElementById("champPlayoff")?.value||16));
+  const playoffFormat=document.getElementById("champPlayoffFormat")?.value||"single";
+  const knockoutFormat=document.getElementById("champKnockoutFormat")?.value||"single";
+  const teams=[...document.querySelectorAll(".league-team-choice:checked")].map(x=>x.value);
+
+  if(teams.length<2)return alert(t("needTeams"));
+  if(mode==="champions"&&((teams.length<9||(teams.length%2!==0&&teams.length!==9))||directQualifiers+playoffTeams>teams.length||playoffTeams%2!==0||directQualifiers+playoffTeams<2)){
+    return alert(t("championsNeedTeams")+"\\nتأكد أن عدد المتأهلين والملحق لا يتجاوز عدد الفرق، وعدد فرق الملحق زوجي.");
+  }
+
+  const id="L"+Date.now();
+  db.leagues.push({
+    id,name:n,season:s,gameId,gameName,teams,mode,cupFormat,
+    directQualifiers,playoffTeams,playoffFormat,knockoutFormat,cupByes:[]
+  });
+  selected=id;
+  persist();
+  render();
+}
 function addTeam(){let n=document.getElementById("teamName").value.trim(),l=current();if(!n||!l)return;if(!l.teams.includes(n))l.teams.push(n);persist();render()}
 async function adminAddTeam(encodedLeagueId){if(!isAdmin)return;const id=decodeURIComponent(encodedLeagueId),l=db.leagues.find(x=>String(x.id)===id),input=document.getElementById("adminTeam-"+id);if(!l||!input)return;const name=input.value.trim();if(!name)return;if((l.teams||[]).includes(name))return alert("الفريق موجود مسبقاً");l.teams=l.teams||[];l.teams.push(name);await persist();render()}
 async function editTeam(encodedLeagueId,encodedTeam){if(!isAdmin)return;const id=decodeURIComponent(encodedLeagueId),oldName=decodeURIComponent(encodedTeam),l=db.leagues.find(x=>String(x.id)===id);if(!l)return;const next=prompt(t("editTeam"),oldName);if(next===null)return;const name=next.trim();if(!name)return alert(t("teamName"));if(name!==oldName&&(l.teams||[]).includes(name))return alert("الفريق موجود مسبقاً");l.teams=(l.teams||[]).map(x=>x===oldName?name:x);db.matches.forEach(m=>{if(String(m.league)===id){if(m.h===oldName)m.h=name;if(m.a===oldName)m.a=name}});await persist();render()}
@@ -1237,34 +1274,44 @@ async function loadPlayerTeams(){
   if(!isAdmin)return;
 
   const box=document.getElementById("leagueTeamChoices");
+  const gameId=document.getElementById("leagueGame")?.value;
   if(!box)return;
+  if(!gameId){
+    box.innerHTML='<p class="muted">اختار اللعبة أولاً باش تظهر الفرق</p>';
+    return;
+  }
 
   box.innerHTML='<p class="muted">جاري تحميل فرق اللاعبين...</p>';
 
   try{
-    const snap=await cloud.collection("playerTeams").get();
+    const [teamsSnap,profilesSnap]=await Promise.all([
+      cloud.collection("playerTeams").get(),
+      cloud.collection("playerProfiles").get()
+    ]);
 
-    const teams=snap.docs.map(doc=>doc.data());
+    const profiles={};
+    profilesSnap.docs.forEach(doc=>{profiles[doc.id]=doc.data()||{};});
 
-    box.innerHTML=
-      (db.teams||[]).map(team=>`
-        <label style="display:block;padding:6px">
-          <input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">
-          ${esc(team.name)}
-        </label>
-      `).join("")+
-      teams.map(team=>`
-        <label style="display:block;padding:6px">
-          <input class="league-team-choice" type="checkbox" value="${esc(team.name)}" style="width:auto;margin-inline-end:8px">
-          ${esc(team.name)} — فريق لاعب
-        </label>
-      `).join("");
+    const teams=teamsSnap.docs
+      .map(doc=>({docId:doc.id,data:doc.data()||{}}))
+      .filter(item=>item.data.gameId===gameId);
 
-    if(!teams.length && !(db.teams||[]).length){
-      box.innerHTML='<p class="muted">لا توجد فرق مسجلة حالياً</p>';
+    if(!teams.length){
+      box.innerHTML='<p class="muted">ما كاين حتى لاعب مسجل فهاد اللعبة حالياً</p>';
+      return;
     }
+
+    box.innerHTML=teams.map(item=>{
+      const team=item.data;
+      const owner=profiles[team.ownerUid||item.docId]||{};
+      return `<label style="display:block;padding:10px;border-bottom:1px solid #263753">
+        <input class="league-team-choice" type="checkbox" value="${esc(team.name||"")}" style="width:auto;margin-inline-end:8px">
+        <b>${esc(team.name||"فريق بدون اسم")}</b>
+        <div class="muted">اللاعب: ${esc(owner.name||"غير معروف")} • التقييم: ${Number(team.overall)||0}</div>
+      </label>`;
+    }).join("");
   }catch(e){
-    box.innerHTML='<p class="muted">تعذر تحميل الفرق: '+esc(e.message||e)+'</p>';
+    box.innerHTML='<p class="muted">تعذر تحميل اللاعبين: '+esc(e.message||e)+'</p>';
   }
 }
 async function ensureLiveGuest(){
