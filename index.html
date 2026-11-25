@@ -698,7 +698,7 @@ if(page==="player"){
       <section class="nova-register">
         <div class="nova-register-brand"><span class="nova-orbit">N</span><div><div class="nova-kicker">NOVA CHAMPIONS</div><h3>انضم إلى الجيل القادم</h3><p>أنشئ هويتك كلاعب وابدأ رحلتك التنافسية</p></div></div>
         <div class="nova-progress"><div class="nova-progress-line"><span id="regProgressFill"></span></div><div class="nova-steps"><span class="active" data-step-dot="1">01</span><span data-step-dot="2">02</span><span data-step-dot="3">03</span><span data-step-dot="4">04</span></div></div>
-        <div class="nova-stage" data-reg-stage="1"><div class="nova-stage-label">PLAYER IDENTITY · 01/04</div><h3>أولاً، شكون نتا؟</h3><p class="muted">المعلومات الأساسية ديالك باش نبنيو هوية اللاعب.</p><label>الاسم الكامل</label><input id="regName" autocomplete="name" placeholder="كتب الاسم الكامل"><label>البريد الإلكتروني</label><input id="regEmail" type="email" autocomplete="email" placeholder="name@example.com"><button type="button" class="btn primary nova-next" onclick="novaRegNext(1)">التالي <span>←</span></button></div>
+        <div class="nova-stage" data-reg-stage="1"><div class="nova-stage-label">PLAYER IDENTITY · 01/04</div><h3>أولاً، شكون نتا؟</h3><p class="muted">المعلومات الأساسية ديالك باش نبنيو هوية اللاعب.</p><label>الاسم الكامل</label><input id="regName" autocomplete="name" placeholder="كتب الاسم الكامل"><label>البريد الإلكتروني</label><input id="regEmail" type="email" autocomplete="email" placeholder="name@example.com"><label>البلد</label><select id="regCountry" autocomplete="country-name"><option value="MA" selected>🇲🇦 المغرب</option><option value="EG">🇪🇬 مصر</option><option value="DZ">🇩🇿 الجزائر</option><option value="TN">🇹🇳 تونس</option><option value="FR">🇫🇷 فرنسا</option><option value="SA">🇸🇦 السعودية</option><option value="AE">🇦🇪 الإمارات</option><option value="GB">🇬🇧 المملكة المتحدة</option><option value="US">🇺🇸 الولايات المتحدة</option><option value="OTHER">بلد آخر</option></select><label>تاريخ الازدياد</label><input id="regBirthDate" type="date" autocomplete="bday" onchange="novaUpdateRegAge()"><p id="regAgePreview" class="muted" aria-live="polite">دخل تاريخ الازدياد باش نحسبو العمر.</p><button type="button" class="btn primary nova-next" onclick="novaRegNext(1)">التالي <span>←</span></button></div>
         <div class="nova-stage hidden" data-reg-stage="2"><div class="nova-stage-label">CONTACT · 02/04</div><h3>كيفاش نتواصلو معاك؟</h3><p class="muted">رقم الهاتف غادي نستعملوه للتواصل معاك عند الحاجة.</p><label>رقم الهاتف</label><input id="regPhone" type="tel" autocomplete="tel" placeholder="مثال: 0612345678"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(2)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(2)">التالي ←</button></div></div>
         <div class="nova-stage hidden" data-reg-stage="3"><div class="nova-stage-label">SECURITY · 03/04</div><h3>أمّن حسابك</h3><p class="muted">اختار كلمة مرور قوية لحماية حساب NOVA ديالك.</p><label>كلمة المرور</label><input id="regPassword" type="password" autocomplete="new-password" placeholder="6 أحرف على الأقل"><div class="nova-stage-actions"><button type="button" class="btn" onclick="novaRegBack(3)">رجوع</button><button type="button" class="btn primary" onclick="novaRegNext(3)">التالي ←</button></div></div>
         <div class="nova-stage hidden" data-reg-stage="4"><div class="nova-stage-label">CREATE YOUR TEAM · 04/04</div><h3>أسّس فريقك الأول</h3><p class="muted">كل بطل كيحتاج فريق ينافس معاه.</p><label>اسم الفريق</label><input id="regTeam" placeholder="اسم فريقك"><label>تقييم الفريق (100 حتى 160)</label><input id="regOverall" type="number" min="100" max="160" value="100"><label>التشكيلة</label><select id="regFormation">
@@ -1044,10 +1044,28 @@ function novaRegShowStep(step){
   document.querySelectorAll('[data-step-dot]').forEach(el=>el.classList.toggle('active',Number(el.dataset.stepDot)<=step));
   const fill=document.getElementById('regProgressFill');if(fill)fill.style.width=(step*25)+'%';
 }
+function novaCalculateAge(dateValue){
+  if(!dateValue)return null;
+  const birth=new Date(dateValue+'T00:00:00');
+  if(Number.isNaN(birth.getTime())||birth>new Date())return null;
+  const today=new Date();let age=today.getFullYear()-birth.getFullYear();
+  const month=today.getMonth()-birth.getMonth();
+  if(month<0||(month===0&&today.getDate()<birth.getDate()))age--;
+  return age;
+}
+function novaUpdateRegAge(){
+  const input=document.getElementById('regBirthDate'),preview=document.getElementById('regAgePreview');
+  if(!input||!preview)return;
+  input.max=new Date().toISOString().slice(0,10);
+  const age=novaCalculateAge(input.value);
+  preview.textContent=!input.value?'دخل تاريخ الازدياد باش نحسبو العمر.':age===null?'تاريخ الازدياد غير صالح.':age<13?'العمر الأدنى للتسجيل هو 13 سنة.':'العمر ديالك: '+age+' سنة.';
+  preview.style.color=age!==null&&age<13?'#ff9fb7':'';
+}
 function novaRegNext(step){
-  const checks={1:[['regName','دخل الاسم الكامل'],['regEmail','دخل البريد الإلكتروني']] ,2:[['regPhone','دخل رقم الهاتف']],3:[['regPassword','دخل كلمة المرور']]};
+  const checks={1:[['regName','دخل الاسم الكامل'],['regEmail','دخل البريد الإلكتروني'],['regCountry','اختار البلد'],['regBirthDate','دخل تاريخ الازدياد']],2:[['regPhone','دخل رقم الهاتف']],3:[['regPassword','دخل كلمة المرور']]};
   for(const [id,message] of (checks[step]||[])){const input=document.getElementById(id);if(!input||!input.value.trim()){const err=document.getElementById('playerError');if(err)err.textContent=message;input?.focus();return;}}
   if(step===1){const email=document.getElementById('regEmail');if(email&&!email.checkValidity()){document.getElementById('playerError').textContent='تأكد من البريد الإلكتروني';email.focus();return;}}
+  if(step===1){const age=novaCalculateAge(document.getElementById('regBirthDate')?.value);if(age===null||age<13){document.getElementById('playerError').textContent=age===null?'تأكد من تاريخ الازدياد.':'التسجيل متاح ابتداءً من 13 سنة.';document.getElementById('regBirthDate')?.focus();return;}}
   if(step===3){const password=document.getElementById('regPassword');if(password&&password.value.length<6){document.getElementById('playerError').textContent='كلمة المرور خاصها تكون 6 أحرف على الأقل';password.focus();return;}}
   const err=document.getElementById('playerError');if(err)err.textContent='';novaRegShowStep(step+1);
 }
