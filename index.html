@@ -1262,6 +1262,17 @@ async function playerResetPassword(){
   }
   }
   
+function previewPlayerPhoto(input){
+  const file=input?.files?.[0];
+  const img=document.getElementById("playerPhotoPreview");
+  if(!file||!img)return;
+  if(!file.type.startsWith("image/")){input.value="";return;}
+  if(file.size>5*1024*1024){input.value="";alert("حجم الصورة خاصو يكون أقل من 5MB");return;}
+  const reader=new FileReader();
+  reader.onload=()=>{img.src=reader.result;};
+  reader.readAsDataURL(file);
+}
+
 async function playerDashboard(){
   const el=document.getElementById("app");
   const uid=currentUser?.uid;
@@ -1283,11 +1294,11 @@ async function playerDashboard(){
     el.innerHTML=`<div class="form">
       <h2>حساب اللاعب</h2>
       <div style="display:flex;align-items:center;gap:14px;margin:10px 0 16px">
-        <img src="${esc(p.photoUrl||'assets/nova-champions-logo.png')}" alt="الصورة الشخصية" style="width:88px;height:88px;object-fit:cover;border-radius:50%;border:2px solid #39A0FF;background:#101A2D">
+        <img id="playerPhotoPreview" src="${esc(p.photoUrl||p.photoURL||p.avatarUrl||'assets/nova-champions-logo.png')}" alt="الصورة الشخصية" onerror="this.onerror=null;this.src='assets/nova-champions-logo.png'" style="width:88px;height:88px;object-fit:cover;border-radius:50%;border:2px solid #39A0FF;background:#101A2D">
         <div><b>الصورة الشخصية</b><div class="muted">تقدر تبدّلها فأي وقت من حسابك.</div></div>
       </div>
       <label>تغيير الصورة الشخصية</label>
-      <input id="editPlayerPhoto" type="file" accept="image/*">
+      <input id="editPlayerPhoto" type="file" accept="image/*" onchange="previewPlayerPhoto(this)">
       <p class="small">خلي الاختيار فارغ إلا ما بغيتيش تبدّل الصورة. الحد الأقصى 5MB.</p>
       <label>الاسم الكامل</label>
       <input id="editPlayerName" value="${esc(p.name||"")}">
@@ -1525,6 +1536,8 @@ async function playerSave(){
     },{merge:true});
 
     err.textContent="تم حفظ التعديلات بنجاح ❤️";
+    const preview=document.getElementById("playerPhotoPreview");
+    if(preview&&photoUrl)preview.src=photoUrl;
   }catch(e){
     err.textContent="تعذر الحفظ: "+(e.message||e);
   }
