@@ -288,6 +288,82 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 .nova-player-card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
 @media(max-width:390px){.nova-player-card{padding:15px}.nova-player-card-photo{width:86px;height:86px;flex-basis:86px}.nova-player-card-name{font-size:18px}}
 
+
+
+/* GTA VI INSPIRED THEME — PLAYER CARD ONLY */
+.nova-player-card,
+.nova-player-card.elite,
+.nova-player-card.legend{
+  --card-a:#ffb5d8;
+  --card-b:#ff6b9e;
+  isolation:isolate;
+  border:2px solid #ff9bc7;
+  border-radius:8px 24px 8px 24px;
+  background:
+    radial-gradient(ellipse at 14% 4%,#ffb0cb66 0,transparent 38%),
+    radial-gradient(ellipse at 88% 92%,#ff8b5c55 0,transparent 42%),
+    linear-gradient(135deg,#170d35 0%,#321044 38%,#75204f 68%,#f05b69 100%);
+  box-shadow:0 18px 45px #080014aa,0 0 24px #ff5b9c55,inset 0 0 0 5px #180b2b99;
+}
+.nova-player-card:before{
+  content:"";
+  position:absolute;inset:0;width:auto;height:auto;right:0;top:0;
+  border:0;border-radius:inherit;pointer-events:none;z-index:-1;
+  background:
+    repeating-linear-gradient(135deg,transparent 0 26px,#ffffff09 27px 29px),
+    linear-gradient(110deg,transparent 48%,#ffcfb51c 49%,transparent 72%);
+  box-shadow:none;
+}
+.nova-player-card:after{
+  content:"VICE CITY  •  NOVA CHAMPIONS";
+  position:absolute;left:14px;bottom:78px;z-index:0;
+  color:#ffd5e2;font-size:9px;font-weight:1000;letter-spacing:3px;
+  opacity:.20;transform:rotate(-8deg);pointer-events:none;
+}
+.nova-player-card-head{padding:4px 0 12px;border-bottom:1px solid #ffb4d655}
+.nova-player-card-brand{
+  display:inline-flex;align-items:center;gap:7px;
+  color:#fff1f7;font-family:Impact,"Arial Black",sans-serif;
+  font-size:17px;line-height:1;letter-spacing:1.8px;font-weight:1000;
+  text-transform:uppercase;
+  background:linear-gradient(180deg,#fff 0%,#ffc3df 45%,#ff6c9f 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(2px 3px 0 #351039) drop-shadow(0 0 8px #ff6ca8aa);
+  text-shadow:none;
+}
+.nova-player-card-brand:before{content:"✦";font-size:19px;-webkit-text-fill-color:#ffd5e8;filter:drop-shadow(1px 2px 0 #351039)}
+.nova-player-card-tier{
+  color:#fff;border:1px solid #ffb7d8;border-radius:3px;
+  background:linear-gradient(110deg,#e84d88,#7b2a78 60%,#39205c);
+  box-shadow:0 0 12px #ff72ad55;font-weight:1000;
+}
+.nova-player-card-main{margin:22px 0 18px}
+.nova-player-card-photo{
+  border:3px solid #ffc0dc;border-radius:7px 18px 7px 18px;
+  box-shadow:5px 5px 0 #5a245d,0 0 24px #ff75aa88;
+}
+.nova-player-card-name{
+  color:#fff5fa;text-shadow:2px 3px 0 #4d1d56,0 0 12px #ff78a8aa;
+  font-family:Impact,"Arial Black",sans-serif;letter-spacing:.5px;
+}
+.nova-player-card-id{color:#ffc1dc;text-shadow:1px 1px 0 #351039}
+.nova-player-card-info>div{
+  border:1px solid #ffadd066;border-radius:5px 12px 5px 12px;
+  background:linear-gradient(135deg,#ffffff16,#2a123c88);
+  box-shadow:inset 0 1px #ffffff20;
+}
+.nova-player-card-info small,.nova-player-card-stats small{color:#ffd1e4}
+.nova-player-card-info b{color:#fff8fb}
+.nova-player-card-stats>div{
+  border:1px solid #ffadd066;border-radius:5px 12px 5px 12px;
+  background:linear-gradient(145deg,#ff77a52b,#28113eaa);
+}
+.nova-player-card-stats b{color:#ffb6d5;text-shadow:0 0 10px #ff6da5aa}
+.nova-player-card-footer{border-top:1px solid #ffb4d666;color:#ffd1e4}
+.nova-player-card-footer b{color:#fff!important;text-shadow:0 0 8px #ff78a8}
+.nova-player-card-qr{border:3px solid #ffc0dc;border-radius:4px}
+@media(max-width:390px){.nova-player-card-brand{font-size:14px;letter-spacing:1px}.nova-player-card-tier{font-size:9px}}
+
 </style></head>
 <body>
 <div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
