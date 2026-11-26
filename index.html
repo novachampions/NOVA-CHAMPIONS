@@ -7,7 +7,6 @@
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="assets/nova-champions-logo.png">
 <title>NOVA CHAMPIONS OFFICIAL</title>
-<!-- NOVA CHAT PLAYER CARD FIX: preserve peer profile and show player identity card in private chat -->
 <style>
 :root{--bg:#09090b;--panel:#151518;--gold:#d8b45a;--muted:#aaa;--line:#333}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f6f3ea;font-family:Arial,sans-serif}
@@ -213,10 +212,6 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 .nova-chat-note{font-size:11px;color:#8fa4c2;text-align:center;margin:12px 0}
 .nova-chat-full{position:fixed;inset:0;z-index:10000;background:#070b16;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);max-width:none!important}
 .nova-chat-full-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #263753;background:#0b1425}
-.nova-chat-player-card{display:flex;align-items:center;gap:13px;margin:10px 12px 0;padding:12px;border:1px solid rgba(80,160,255,.55);border-radius:15px;background:radial-gradient(circle at 100% 0%,rgba(128,87,245,.24),transparent 45%),linear-gradient(120deg,#101f39,#0c1427 65%,#171332);box-shadow:0 8px 24px #0005;direction:rtl}
-.nova-chat-player-photo{width:66px;height:66px;flex:0 0 66px;object-fit:cover;border-radius:12px;border:2px solid #55aaff; background:#101a2d}
-.nova-chat-player-info{min-width:0;flex:1}.nova-chat-player-name{font-weight:900;color:#f4f7ff;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nova-chat-player-team{font-size:11px;color:#a8b7d0;margin-top:5px}.nova-chat-player-tier{display:inline-flex;margin-top:7px;padding:5px 9px;border-radius:20px;background:linear-gradient(120deg,#238bff,#8057f5);color:#fff;font-size:10px;font-weight:900;letter-spacing:.5px}
-
 .nova-chat-back{border:1px solid #31547d;background:#101a2d;color:#c5e3ff;border-radius:10px;padding:9px 12px}
 .nova-chat-full-title{flex:1;min-width:0}
 .nova-chat-full-title b{display:block}
@@ -398,6 +393,7 @@ let liveRoomUnsub = null;
 let liveScreenStream = null;
 let liveLocalStream = null;
 let selectedTeamProfile="";
+let playerCardReturnToChat=false;
 let tableMode="league";
 let adminMatchLeague="";
 let adminMatchRound="";
@@ -410,6 +406,20 @@ function openPlayerCard(uid){
   selectedPlayerCardUid=target;
   page="playerCard";
   render();
+}
+function openPlayerCardFromChat(uid){
+  if(!uid)return;
+  playerCardReturnToChat=true;
+  openPlayerCard(uid);
+}
+function returnFromPlayerCard(){
+  if(playerCardReturnToChat){
+    playerCardReturnToChat=false;
+    page="chat";
+    render();
+    return;
+  }
+  go(currentUser?"player":"home");
 }
 function novaPlayerId(uid){return "NC-"+String(uid||"").slice(-8).toUpperCase();}
 async function publishPublicPlayerCard(uid,profile,team){
@@ -1001,7 +1011,7 @@ async function loadNovaChatPlayers(force=false){
     profilesSnap.forEach(doc=>{
       if(doc.id===currentUser.uid)return;
       const profile=doc.data()||{},team=teams[doc.id]||{},name=String(profile.name||"").trim();
-      if(name)novaChatPlayers.push({id:doc.id,name,teamName:String(team.name||"").trim(),photoUrl:String(profile.photoUrl||profile.photoURL||profile.avatarUrl||""),cardTier:["classic","bronze","silver","gold","elite","legend"].includes(profile.cardTier)?profile.cardTier:"classic",country:String(profile.country||""),initials:novaChatInitials(name)});
+      if(name)novaChatPlayers.push({id:doc.id,name,teamName:String(team.name||"").trim(),photoUrl:String(profile.photoUrl||profile.photoURL||profile.avatarUrl||""),initials:novaChatInitials(name)});
     });
     novaChatPlayers.sort((a,b)=>a.name.localeCompare(b.name));novaChatPlayersLoaded=true;
   }catch(e){novaChatPlayersError="تعذر تحميل اللاعبين: "+(e.message||e);}
@@ -1023,7 +1033,7 @@ async function messageTeamOwner(peerUid){
       const snap=await cloud.collection("playerProfiles").doc(peerUid).get();
       if(!snap.exists)throw new Error("ملف صاحب الفريق غير متوفر.");
       const profile=snap.data()||{};
-      peer={id:peerUid,name:String(profile.name||"لاعب NOVA"),teamName:"",photoUrl:String(profile.photoUrl||profile.photoURL||profile.avatarUrl||""),cardTier:["classic","bronze","silver","gold","elite","legend"].includes(profile.cardTier)?profile.cardTier:"classic",country:String(profile.country||""),initials:novaChatInitials(profile.name)};
+      peer={id:peerUid,name:String(profile.name||"لاعب NOVA"),teamName:"",initials:novaChatInitials(profile.name)};
       novaChatPlayers.push(peer);
     }
     novaChatPlayersLoaded=true;
@@ -1058,7 +1068,7 @@ function openNovaChat(id,peerUid){
   novaChatOpenId=id;
   if(novaChatMessagesUnsub){novaChatMessagesUnsub();novaChatMessagesUnsub=null;}
   const peer=novaChatPlayers.find(x=>x.id===peerUid)||novaChatCurrentPeer||{};
-  novaChatCurrentPeer={...peer,id:peerUid||peer.id||"",name:peer.name||novaChatPeerName(peerUid),initials:peer.initials||novaChatInitials(peer.name),photoUrl:String(peer.photoUrl||""),teamName:String(peer.teamName||""),cardTier:["classic","bronze","silver","gold","elite","legend"].includes(peer.cardTier)?peer.cardTier:"classic"};
+  novaChatCurrentPeer={id:peerUid||peer.id||"",name:peer.name||novaChatPeerName(peerUid),initials:peer.initials||novaChatInitials(peer.name)};
   novaChatMessages=[];novaChatMessageError="";
   novaChatMessagesUnsub=cloud.collection("conversations").doc(id).collection("messages").orderBy("createdAt","asc").limitToLast(100).onSnapshot(snap=>{
     novaChatMessages=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
@@ -1107,12 +1117,10 @@ function renderNovaChatIntoApp(){
   if(id){const next=document.getElementById(id);if(next){if(value!==undefined)next.value=value;next.focus();if(start!==null&&end!==null&&next.setSelectionRange)try{next.setSelectionRange(start,end)}catch(e){}}}
 }
 function setNovaChatTab(tab){novaChatTab=tab;if(tab==="search")loadNovaChatPlayers();renderNovaChatIntoApp();}
-function novaChatTierLabel(tier){const labels={classic:"NOVA CLASSIC",bronze:"NOVA BRONZE",silver:"NOVA SILVER",gold:"NOVA GOLD",elite:"NOVA ELITE",legend:"NOVA LEGEND"};return labels[tier]||labels.classic;}
-function novaChatPlayerCardMarkup(player){const u=player||{},photo=String(u.photoUrl||"");return `<div class="nova-chat-player-card"><img class="nova-chat-player-photo" src="${esc(photo||"assets/nova-champions-logo.png")}" alt="صورة اللاعب" onerror="this.onerror=null;this.src='assets/nova-champions-logo.png'"><div class="nova-chat-player-info"><div class="nova-chat-player-name">${esc(u.name||"لاعب NOVA")}</div><div class="nova-chat-player-team">${esc(u.teamName||"لاعب NOVA CHAMPIONS")}</div><span class="nova-chat-player-tier">${novaChatTierLabel(u.cardTier)}</span></div><button class="btn sm" type="button" onclick="openPlayerCard('${esc(u.id||"")}')">عرض البطاقة</button></div>`;}
 function renderNovaChatConversation(id){
   const u=novaChatCurrentPeer||{name:"لاعب NOVA",initials:"NC"};
   const messages=novaChatMessages.map(m=>`<div class="nova-chat-bubble ${m.senderUid===currentUser?.uid?'mine':''}">${esc(m.text||"")}<small>${novaChatTime(m.createdAt)}</small></div>`).join("");
-  return `<section class="nova-chat-full"><div class="nova-chat-full-head"><button class="nova-chat-back" onclick="backNovaChat()">← رجوع</button>${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-full-title"><b>${esc(u.name||"لاعب NOVA")}</b>${novaChatPresenceLine(u.id)}</span></div>${novaChatPlayerCardMarkup(u)}<div class="nova-chat-messages" id="novaChatMessages">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:messages||'<div class="nova-chat-empty">بداو المحادثة برسالة ترحيبية 👋</div>'}</div><div class="nova-chat-compose"><input id="novaChatInput" placeholder="اكتب رسالة..." maxlength="1000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendNovaChatMessage()}"><button class="btn primary" onclick="sendNovaChatMessage()" ${novaChatSending?'disabled':''}>${novaChatSending?'إرسال...':'إرسال'}</button></div></section>`;
+  return `<section class="nova-chat-full"><div class="nova-chat-full-head"><button class="nova-chat-back" onclick="backNovaChat()">← رجوع</button>${novaChatAvatar(u.name,u.id,u.initials)}<span class="nova-chat-full-title"><b>${esc(u.name||"لاعب NOVA")}</b>${novaChatPresenceLine(u.id)}</span><button class="btn sm" type="button" onclick="openPlayerCardFromChat('${esc(u.id)}')">بطاقة اللاعب</button></div><div class="nova-chat-messages" id="novaChatMessages">${novaChatMessageError?`<div class="nova-chat-empty">${esc(novaChatMessageError)}</div>`:messages||'<div class="nova-chat-empty">بداو المحادثة برسالة ترحيبية 👋</div>'}</div><div class="nova-chat-compose"><input id="novaChatInput" placeholder="اكتب رسالة..." maxlength="1000" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendNovaChatMessage()}"><button class="btn primary" onclick="sendNovaChatMessage()" ${novaChatSending?'disabled':''}>${novaChatSending?'إرسال...':'إرسال'}</button></div></section>`;
 }
 
 async function login(){
@@ -1465,7 +1473,7 @@ async function playerCardView(){
     const achievements=Array.isArray(card.achievements)?card.achievements.filter(Boolean):[];
     const shareUrl=location.origin+location.pathname+"?player="+encodeURIComponent(uid);
     const qrUrl="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=5&data="+encodeURIComponent(shareUrl);
-    el.innerHTML=`<button class="btn" onclick="go(currentUser?'player':'home')">← رجوع</button>
+    el.innerHTML=`<button class="btn" onclick="returnFromPlayerCard()">← رجوع</button>
       <article class="nova-player-card ${tier}">
         <div class="nova-player-card-head"><span class="nova-player-card-brand">NOVA CHAMPIONS</span><span class="nova-player-card-tier">${tierLabel}</span></div>
         <div class="nova-player-card-main">
@@ -1487,7 +1495,7 @@ async function playerCardView(){
       </article>
       <div class="card" style="margin:12px 0"><b>الإنجازات والبطولات</b>${achievements.length?`<div class="actions" style="margin-top:9px">${achievements.map(a=>`<span class="pill">${esc(a)}</span>`).join("")}</div>`:'<p class="muted">مازال ما تسجلو حتى إنجاز رسمي.</p>'}</div>
       <div class="nova-player-card-actions"><button class="btn primary" onclick="copyPlayerCardLink('${esc(uid)}')">🔗 نسخ رابط البطاقة</button>${currentUser?.uid===uid?'<button class="btn" onclick="go(&quot;player&quot;)">تعديل الحساب</button>':''}</div>`;
-  }catch(e){el.innerHTML=`<button class="btn" onclick="go(currentUser?'player':'home')">← رجوع</button><div class="card" style="margin-top:12px"><h2>تعذر عرض البطاقة</h2><p class="muted">${esc(e.message||e)}</p></div>`;}
+  }catch(e){el.innerHTML=`<button class="btn" onclick="returnFromPlayerCard()">← رجوع</button><div class="card" style="margin-top:12px"><h2>تعذر عرض البطاقة</h2><p class="muted">${esc(e.message||e)}</p></div>`;}
 }
 
 async function loadPlayerTeams(){
