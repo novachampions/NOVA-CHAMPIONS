@@ -989,7 +989,23 @@ if(page==="home"){el.innerHTML=`<section class="hero"><strong>${t("welcome")}</s
   m.as!==null&&m.as!==undefined&&
   Number.isFinite(Number(m.hs))&&
   Number.isFinite(Number(m.as))
-).slice(-5).reverse().map(m=>`<div class="row"><span>${esc(m.h)}</span><b style="color:var(--gold)">${m.hs} - ${m.as}</b><span>${esc(m.a)}</span></div>`).join("")||`<p class="muted">${t("noMatches")}</p>`}<p class="small">${t("demo")}</p>`}
+).slice(-5).reverse().map(m=>`<article class="home-result-card">
+  <div class="home-result-top">
+    <span>NOVA CHAMPIONS</span>
+    <span class="home-result-status">FINISHED</span>
+  </div>
+  <div class="home-result-teams">
+    <div class="home-result-team">
+      <span class="home-result-name">${esc(m.h)}</span>
+    </div>
+    <div class="home-result-score">
+      ${esc(String(m.hs))}<i>:</i>${esc(String(m.as))}
+    </div>
+    <div class="home-result-team">
+      <span class="home-result-name">${esc(m.a)}</span>
+    </div>
+  </div>
+</article>`).join("")||`<p class="muted">${t("noMatches")}</p>`}<p class="small">${t("demo")}</p>`}
 if(page==="news"){el.innerHTML=newsPage()}
 if(page==="predictions"){el.innerHTML=predictionsPage()}
 if(page==="leagues"){el.innerHTML=`<h2>${t("competitions")}</h2>${db.leagues.map(x=>`<div class="card row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.season)} • ${x.teams.length} ${t("teams")} • ${x.mode==="cup"?t("cupMode"):x.mode==="champions"?t("championsMode"):t("leagueMode")}</div></div><span class="pill">${x.teams.length}</span></div>`).join("")||`<p class="muted">${t("noLeagues")}</p>`}${isAdmin?`<div class="form"><h3>${t("createLeague")}</h3><input id="lname" placeholder="${t("leagueName")}"><input id="season" placeholder="${t("season")}" value="Season 1"><label>${t("competitionType")}</label><select id="competitionType" onchange="document.getElementById('cupFormatWrap').classList.toggle('hidden',this.value!=='cup');document.getElementById('championsFormatWrap').classList.toggle('hidden',this.value!=='champions')"><option value="league">${t("leagueMode")}</option><option value="cup">${t("cupMode")}</option><option value="champions">${t("championsMode")}</option></select><div id="championsFormatWrap" class="hidden"><label>${t("directQualifiers")}</label><input id="champDirect" type="number" min="0" step="1" value="8"><label>${t("playoffTeams")}</label><input id="champPlayoff" type="number" min="0" step="1" value="16"><label>${t("playoffFormat")}</label><select id="champPlayoffFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><label>${t("knockoutFormat")}</label><select id="champKnockoutFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select><p class="muted">8 مباريات لكل فريق • قرعة عشوائية بلا تكرار الخصوم</p></div><div id="cupFormatWrap" class="hidden"><label>${t("cupFormat")}</label><select id="cupFormat"><option value="single">${t("singleMatch")}</option><option value="homeAway">${t("homeAway")}</option></select></div><label>نوع اللعبة / Game</label><select id="leagueGame" onchange="loadPlayerTeams()"><option value="">اختار اللعبة أولاً</option><option value="fc_mobile">EA SPORTS FC Mobile</option><option value="efootball">eFootball</option><option value="fc27">EA SPORTS FC 27</option></select><label>الفرق المشاركة / Participating teams</label><div class="form" id="leagueTeamChoices"><p class="muted">اختار اللعبة باش تظهر فرق اللاعبين المسجلين فيها</p></div><button class="btn primary" onclick="addLeague()">${t("add")}</button></div>`:""}`}
