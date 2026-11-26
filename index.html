@@ -292,7 +292,7 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 
 /* NOVA CHAT — edge-to-edge responsive mobile layout */
 body.nova-chat-mode{min-height:100dvh;overflow-x:hidden}
-body.nova-chat-mode>header,body.nova-chat-mode>#nav,body.nova-chat-mode>footer{display:none!important}
+/* Keep the main site header, navigation and footer visible on the NOVA CHAT page. */
 body.nova-chat-mode>main#app{width:100%;max-width:none;margin:0;padding:0;min-height:100dvh;overflow-x:hidden}
 .nova-chat-shell{width:100%;max-width:none;margin:0;min-width:0;overflow-x:hidden}
 .nova-chat-hero{border-radius:0;margin:0;padding:clamp(12px,3vw,20px)}
@@ -311,6 +311,18 @@ body.nova-chat-mode>main#app{width:100%;max-width:none;margin:0;padding:0;min-he
 .nova-chat-compose input{flex:1 1 0;width:0;min-width:0}
 .nova-chat-compose button{flex:0 0 auto;padding-inline:12px}
 @media(max-width:380px){.nova-chat-full-head{gap:5px;padding-inline:7px}.nova-chat-back{font-size:10px;padding:7px}.nova-chat-full-head .btn.sm{font-size:10px;padding:7px 6px}.nova-chat-full-title b{font-size:12px}.nova-chat-full-title small{font-size:9px}.nova-chat-messages{padding:9px}.nova-chat-compose button{padding-inline:9px}}
+
+
+/* NOVA CHAMPIONS — collapsible main navigation */
+#nav{display:block!important;overflow:visible!important;padding:10px 12px!important;z-index:50}
+.site-menu-bar{display:flex;align-items:center;gap:12px;max-width:1100px;margin:0 auto}
+.site-menu-toggle{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:11px 16px;border:1px solid #397db5;border-radius:12px;background:#111d33;color:#d9edff;font-weight:800;cursor:pointer}
+.site-current-page{color:#b9dfff;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-menu-panel{display:none;flex-wrap:wrap;gap:8px;max-width:1100px;margin:10px auto 0;padding:12px;border:1px solid #29486f;border-radius:14px;background:rgba(8,16,31,.98);box-shadow:0 12px 30px #0008}
+.site-menu-panel.open{display:flex}
+.site-menu-panel button{flex:1 1 130px;min-width:0;white-space:normal}
+.site-menu-panel select{flex:0 1 150px}
+@media(max-width:520px){#nav{padding:8px!important}.site-menu-panel{padding:9px;gap:7px}.site-menu-panel button{flex:1 1 calc(50% - 7px);font-size:12px;padding:10px 7px}}
 
 </style></head>
 <body>
@@ -421,8 +433,16 @@ let tableMode="league";
 let adminMatchLeague="";
 let adminMatchRound="";
 let adminMatchLeg="home";
-function nav(){document.body.classList.toggle("nova-chat-mode",page==="chat");document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","chat","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
-function go(p){page=p;render()}
+let siteMenuOpen=false;
+function nav(){
+  document.body.classList.toggle("nova-chat-mode",page==="chat");
+  document.documentElement.lang=lang;document.documentElement.dir=dir();
+  const pages=["home","news","predictions","chat","leagues","matches","player","live","table","admin"];
+  const labels=pages.map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("");
+  document.getElementById("nav").innerHTML=`<div class="site-menu-bar"><button class="site-menu-toggle" type="button" aria-expanded="${siteMenuOpen}" onclick="toggleSiteMenu()">☰ <span>القائمة</span></button><span class="site-current-page">${page==="chat"?"NOVA CHAT":t(page)}</span></div><div class="site-menu-panel ${siteMenuOpen?'open':''}">${labels}<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select></div>`;
+}
+function toggleSiteMenu(){siteMenuOpen=!siteMenuOpen;nav()}
+function go(p){page=p;siteMenuOpen=false;render()}
 function openPlayerCard(uid){
   const target=uid||currentUser?.uid||"";
   if(!target)return;
