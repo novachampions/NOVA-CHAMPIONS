@@ -324,6 +324,92 @@ body.nova-chat-mode>main#app{width:100%;max-width:none;margin:0;padding:0;min-he
 .site-menu-panel select{flex:0 1 150px}
 @media(max-width:520px){#nav{padding:8px!important}.site-menu-panel{padding:9px;gap:7px}.site-menu-panel button{flex:1 1 calc(50% - 7px);font-size:12px;padding:10px 7px}}
 
+  /* HOME RESULTS CARDS */
+.home-result-card{
+  margin:10px 0;
+  padding:12px;
+  border:1px solid #31547d;
+  border-radius:15px;
+  background:linear-gradient(135deg,#11223b,#12142b);
+  box-shadow:0 8px 22px #0004;
+  overflow:hidden;
+}
+
+.home-result-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  color:#8fc9ff;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.home-result-status{
+  padding:3px 7px;
+  border:1px solid #2e765e;
+  border-radius:20px;
+  background:#12372f;
+  color:#8ce0bd;
+}
+
+.home-result-teams{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+}
+
+.home-result-team{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+  min-height:42px;
+  padding:5px;
+  border:1px solid #263d5c;
+  border-radius:10px;
+  background:#0b1629;
+  text-align:center;
+}
+
+.home-result-name{
+  display:-webkit-box;
+  max-width:100%;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow-wrap:anywhere;
+  line-height:1.35;
+  font-size:clamp(10px,3.1vw,14px);
+  font-weight:800;
+  color:#edf5ff;
+}
+
+.home-result-score{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-width:58px;
+  color:white;
+  font-size:clamp(18px,5vw,24px);
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.home-result-score i{
+  font-style:normal;
+  color:#62b4ff;
+}
+
+@media(max-width:360px){
+  .home-result-teams{gap:5px}
+  .home-result-score{min-width:48px;gap:4px}
+  .home-result-name{font-size:10px}
+}
+  
 </style></head>
 <body>
 <div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
