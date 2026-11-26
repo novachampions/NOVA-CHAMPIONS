@@ -1,3 +1,4 @@
+
 package com.novachampions.broadcast
 
 import android.webkit.JavascriptInterface
@@ -16,5 +17,10 @@ class NovaAndroidBridge(private val activity: MainActivity) {
         activity.runOnUiThread {
             activity.stopScreenBroadcast()
         }
+    }
+
+    @JavascriptInterface
+    fun setBannerVisible(visible: Boolean) {
+        activity.setBannerVisible(visible)
     }
 }
