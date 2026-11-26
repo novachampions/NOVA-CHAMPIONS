@@ -289,6 +289,29 @@ footer{color:#8FA4C2 !important;background:rgba(4,9,19,.55) !important}
 .nova-player-card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
 @media(max-width:520px){.nova-player-card{padding:13px;border-radius:15px}.nova-player-card-main{gap:11px;margin:16px 0 13px}.nova-player-card-photo{width:104px;height:112px;flex-basis:104px}.nova-player-card-name{font-size:18px}.nova-player-card-info>div{padding:8px}.nova-player-card-info b{font-size:12px}.nova-player-card-stats>div{padding:8px 3px}}
 
+
+/* NOVA CHAT — edge-to-edge responsive mobile layout */
+body.nova-chat-mode{min-height:100dvh;overflow-x:hidden}
+body.nova-chat-mode>header,body.nova-chat-mode>#nav,body.nova-chat-mode>footer{display:none!important}
+body.nova-chat-mode>main#app{width:100%;max-width:none;margin:0;padding:0;min-height:100dvh;overflow-x:hidden}
+.nova-chat-shell{width:100%;max-width:none;margin:0;min-width:0;overflow-x:hidden}
+.nova-chat-hero{border-radius:0;margin:0;padding:clamp(12px,3vw,20px)}
+.nova-chat-brand,.nova-chat-tabs,.nova-chat-list,.nova-chat-person{min-width:0;max-width:100%}
+.nova-chat-person{flex-wrap:wrap;overflow:hidden}
+.nova-chat-person-main{overflow:hidden;overflow-wrap:anywhere}
+.nova-chat-full{inset:0;width:100%;height:100vh;height:100dvh;min-width:0;overflow:hidden;box-sizing:border-box}
+.nova-chat-full-head{min-width:0;max-width:100%;flex-wrap:nowrap;gap:7px;padding:calc(9px + env(safe-area-inset-top)) 10px 9px}
+.nova-chat-full-head>.nova-chat-avatar-wrap{flex:0 0 40px;width:40px;height:40px}
+.nova-chat-full-head>.nova-chat-avatar-wrap .nova-chat-avatar{width:40px;height:40px;flex-basis:40px}
+.nova-chat-full-title{overflow:hidden;overflow-wrap:anywhere}
+.nova-chat-full-head .btn.sm,.nova-chat-back{font-size:11px;padding:8px 9px;white-space:nowrap}
+.nova-chat-messages{min-width:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:12px;overflow-wrap:anywhere}
+.nova-chat-bubble{max-width:min(82%,560px);min-width:0;overflow-wrap:anywhere;word-break:break-word}
+.nova-chat-compose{min-width:0;padding:9px 10px calc(9px + env(safe-area-inset-bottom));gap:7px}
+.nova-chat-compose input{flex:1 1 0;width:0;min-width:0}
+.nova-chat-compose button{flex:0 0 auto;padding-inline:12px}
+@media(max-width:380px){.nova-chat-full-head{gap:5px;padding-inline:7px}.nova-chat-back{font-size:10px;padding:7px}.nova-chat-full-head .btn.sm{font-size:10px;padding:7px 6px}.nova-chat-full-title b{font-size:12px}.nova-chat-full-title small{font-size:9px}.nova-chat-messages{padding:9px}.nova-chat-compose button{padding-inline:9px}}
+
 </style></head>
 <body>
 <div id="nova-splash-screen" role="img" aria-label="NOVA CHAMPIONS BY HOUSSNI"></div>
@@ -398,7 +421,7 @@ let tableMode="league";
 let adminMatchLeague="";
 let adminMatchRound="";
 let adminMatchLeg="home";
-function nav(){document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","chat","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
+function nav(){document.body.classList.toggle("nova-chat-mode",page==="chat");document.documentElement.lang=lang;document.documentElement.dir=dir();document.getElementById("nav").innerHTML=["home","news","predictions","chat","leagues","matches","player","live","table","admin"].map(p=>`<button class="${page===p?'active':''}" onclick="go('${p}')">${p==="chat"?"NOVA CHAT":t(p)}</button>`).join("")+`<select style="width:auto;margin:0" onchange="setLang(this.value)"><option value="ar" ${lang==="ar"?"selected":""}>العربية</option><option value="fr" ${lang==="fr"?"selected":""}>Français</option><option value="en" ${lang==="en"?"selected":""}>English</option></select>`}
 function go(p){page=p;render()}
 function openPlayerCard(uid){
   const target=uid||currentUser?.uid||"";
